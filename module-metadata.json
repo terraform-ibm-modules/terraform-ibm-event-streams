@@ -1,12 +1,385 @@
 {
   "path": ".",
-  "variables": {},
-  "outputs": {},
+  "variables": {
+    "backup_encryption_key_crn": {
+      "name": "backup_encryption_key_crn",
+      "type": "string",
+      "description": "(Optional) The CRN of a key protect key, that you want to use for encrypting disk that holds deployment backups. If null, will use 'key_protect_key_crn' as encryption key. If 'key_protect_key_crn' is also null, database is encrypted by using randomly generated keys.",
+      "pos": {
+        "filename": "variables.tf",
+        "line": 132
+      }
+    },
+    "cleanup_policy": {
+      "name": "cleanup_policy",
+      "type": "list(string)",
+      "description": "Supported types - delete, compact. delete - deletes segments after the retention time. compact - retains the latest value",
+      "source": [
+        "ibm_event_streams_topic.es_topic.config"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 102
+      }
+    },
+    "create_timeout": {
+      "name": "create_timeout",
+      "type": "string",
+      "description": "Creation timeout value of the Event Streams module.",
+      "default": "3h",
+      "pos": {
+        "filename": "variables.tf",
+        "line": 138
+      }
+    },
+    "delete_timeout": {
+      "name": "delete_timeout",
+      "type": "string",
+      "description": "Deleting timeout value of the Event Streams module",
+      "default": "15m",
+      "pos": {
+        "filename": "variables.tf",
+        "line": 150
+      }
+    },
+    "es_name": {
+      "name": "es_name",
+      "type": "string",
+      "description": "Name of the resource instance",
+      "required": true,
+      "source": [
+        "ibm_resource_instance.es_instance.name"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 6
+      }
+    },
+    "key_protect_key_crn": {
+      "name": "key_protect_key_crn",
+      "type": "string",
+      "description": "(Optional) CRN of the existing key protect to be used",
+      "pos": {
+        "filename": "variables.tf",
+        "line": 126
+      }
+    },
+    "partitions": {
+      "name": "partitions",
+      "type": "list(number)",
+      "description": "The number of partitions in which the topics are to be divided",
+      "default": [
+        1,
+        1,
+        1
+      ],
+      "source": [
+        "ibm_event_streams_topic.es_topic.partitions"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 90
+      }
+    },
+    "plan": {
+      "name": "plan",
+      "type": "string",
+      "description": "Plan for the event streams instance : lite, standard or enterprise-3nodes-2tb",
+      "required": true,
+      "source": [
+        "ibm_resource_instance.es_instance.plan"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 11
+      }
+    },
+    "private_ip_allowlist": {
+      "name": "private_ip_allowlist",
+      "type": "string",
+      "description": "Range of IPs that have the access.",
+      "pos": {
+        "filename": "variables.tf",
+        "line": 58
+      }
+    },
+    "region": {
+      "name": "region",
+      "type": "string",
+      "description": "IBM Cloud region where event streams will be created",
+      "default": "us-south",
+      "required": true,
+      "source": [
+        "ibm_resource_instance.es_instance.location"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 27
+      },
+      "cloud_data_type": "region",
+      "immutable": true
+    },
+    "resource_group_id": {
+      "name": "resource_group_id",
+      "type": "string",
+      "description": "ID of resource group to use when creating the event stream instance",
+      "required": true,
+      "source": [
+        "ibm_resource_instance.es_instance.resource_group_id"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 1
+      },
+      "cloud_data_type": "resource_group",
+      "immutable": true,
+      "computed": true,
+      "cloud_data_range": [
+        "resolved_to:id"
+      ]
+    },
+    "retention_bytes": {
+      "name": "retention_bytes",
+      "type": "list(number)",
+      "description": "Length of messages to be retained in bytes",
+      "pos": {
+        "filename": "variables.tf",
+        "line": 120
+      }
+    },
+    "retention_ms": {
+      "name": "retention_ms",
+      "type": "list(number)",
+      "description": "Time in ms for which the messages will be retained",
+      "pos": {
+        "filename": "variables.tf",
+        "line": 114
+      }
+    },
+    "schemas": {
+      "name": "schemas",
+      "type": "list(object(\n    {\n      schema_id = string\n      schema = object({\n        type = string\n        name = string\n      })\n    }\n  ))",
+      "description": "The list of schema object which contains schema id and format of the schema",
+      "default": [],
+      "source": [
+        "ibm_event_streams_schema.es_schema.count",
+        "ibm_event_streams_schema.es_schema.schema",
+        "ibm_event_streams_schema.es_schema.schema_id"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 64
+      }
+    },
+    "segment_bytes": {
+      "name": "segment_bytes",
+      "type": "list(number)",
+      "description": "The maximum size of a partition in bytes",
+      "pos": {
+        "filename": "variables.tf",
+        "line": 96
+      }
+    },
+    "service_endpoints": {
+      "name": "service_endpoints",
+      "type": "string",
+      "description": "The type of service endpoint(public,private or public-and-private) to be used for connection.",
+      "source": [
+        "ibm_resource_instance.es_instance.parameters"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 48
+      }
+    },
+    "storage_size": {
+      "name": "storage_size",
+      "type": "number",
+      "description": "Storage size of the event streams in GB.",
+      "pos": {
+        "filename": "variables.tf",
+        "line": 39
+      }
+    },
+    "tags": {
+      "name": "tags",
+      "type": "list(string)",
+      "description": "List of tags associated with the Event Steams instance",
+      "default": [],
+      "source": [
+        "ibm_resource_instance.es_instance.tags"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 21
+      },
+      "min_length": 1,
+      "max_length": 128,
+      "matches": "^[A-Za-z0-9:_ .-]+$",
+      "computed": true,
+      "elem": {
+        "type": "TypeString"
+      }
+    },
+    "throughput": {
+      "name": "throughput",
+      "type": "number",
+      "description": "Throughput capacity in MB per second.",
+      "default": "150",
+      "pos": {
+        "filename": "variables.tf",
+        "line": 33
+      }
+    },
+    "topic_names": {
+      "name": "topic_names",
+      "type": "list(string)",
+      "description": "The name of the topic instance",
+      "default": [
+        "topic_1",
+        "topic_2",
+        "topic_3"
+      ],
+      "required": true,
+      "source": [
+        "ibm_event_streams_topic.es_topic.count",
+        "ibm_event_streams_topic.es_topic.name"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 78
+      }
+    },
+    "update_timeout": {
+      "name": "update_timeout",
+      "type": "string",
+      "description": "Updating timeout value of the Event Streams module.",
+      "default": "1h",
+      "pos": {
+        "filename": "variables.tf",
+        "line": 144
+      }
+    }
+  },
+  "outputs": {
+    "crn": {
+      "name": "crn",
+      "description": "Event Streams crn",
+      "value": "ibm_resource_instance.es_instance.crn",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 10
+      },
+      "type": "TypeString",
+      "cloud_data_type": "crn"
+    },
+    "guid": {
+      "name": "guid",
+      "description": "Event Streams guid",
+      "value": "ibm_resource_instance.es_instance.guid",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 15
+      },
+      "type": "TypeString"
+    },
+    "id": {
+      "name": "id",
+      "description": "Event Streams instance id",
+      "value": "ibm_resource_instance.es_instance.id",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 5
+      }
+    },
+    "kafka_brokers_sasl": {
+      "name": "kafka_brokers_sasl",
+      "description": "(Array of Strings) Kafka brokers use for interacting with Kafka native API",
+      "value": "ibm_event_streams_topic.es_topic.kafka_brokers_sasl",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 20
+      },
+      "type": "TypeList"
+    },
+    "kafka_http_url": {
+      "name": "kafka_http_url",
+      "description": "The API endpoint to interact with Event Streams REST API",
+      "value": "ibm_resource_instance.es_instance.extensions.kafka_http_url",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 25
+      }
+    }
+  },
   "required_core": [
-    "\u003e= 1.0.0"
+    "\u003e= 1.3.0"
   ],
-  "required_providers": {},
-  "managed_resources": {},
+  "required_providers": {
+    "ibm": {
+      "source": "IBM-Cloud/ibm",
+      "version_constraints": [
+        "\u003e= 1.49.0"
+      ]
+    }
+  },
+  "managed_resources": {
+    "ibm_event_streams_schema.es_schema": {
+      "mode": "managed",
+      "type": "ibm_event_streams_schema",
+      "name": "es_schema",
+      "attributes": {
+        "count": "schemas",
+        "schema": "schemas",
+        "schema_id": "schemas"
+      },
+      "provider": {
+        "name": "ibm"
+      },
+      "pos": {
+        "filename": "main.tf",
+        "line": 73
+      }
+    },
+    "ibm_event_streams_topic.es_topic": {
+      "mode": "managed",
+      "type": "ibm_event_streams_topic",
+      "name": "es_topic",
+      "attributes": {
+        "config": "cleanup_policy",
+        "count": "topic_names",
+        "name": "topic_names",
+        "partitions": "partitions"
+      },
+      "provider": {
+        "name": "ibm"
+      },
+      "pos": {
+        "filename": "main.tf",
+        "line": 84
+      }
+    },
+    "ibm_resource_instance.es_instance": {
+      "mode": "managed",
+      "type": "ibm_resource_instance",
+      "name": "es_instance",
+      "attributes": {
+        "location": "region",
+        "name": "es_name",
+        "parameters": "service_endpoints",
+        "plan": "plan",
+        "resource_group_id": "resource_group_id",
+        "tags": "tags"
+      },
+      "provider": {
+        "name": "ibm"
+      },
+      "pos": {
+        "filename": "main.tf",
+        "line": 45
+      }
+    }
+  },
   "data_resources": {},
   "module_calls": {}
 }

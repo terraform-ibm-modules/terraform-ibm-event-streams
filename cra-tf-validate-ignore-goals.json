@@ -1,3 +1,34 @@
 {
-    "scc_goals": []
+    "scc_goals": [
+        {
+            "scc_goal_id": "33000260",
+            "description": "Check whether Event Streams has at least # users with the IAM manager role no_of_managers_for_mongo_db = 3",
+            "ignore_reason": "Tracking in https://github.ibm.com/GoldenEye/issues/issues/3880",
+            "is_valid": true
+        },
+        {
+            "scc_goal_id": "3000261",
+            "description": "Check whether Event Streams has at least # service IDs with the IAM manager role no_of_service_id_managers_for_mongo_db = 3",
+            "ignore_reason": "Tracking in https://github.ibm.com/GoldenEye/issues/issues/3880",
+            "is_valid": true
+        },
+        {
+            "scc_goal_id": "3000306",
+            "description": " Check whether Event Streams is accessible only by using private endpoints Found in: resource_address: module.event_streams.ibm_resource_instance.es_instance",
+            "ignore_reason": "Tracking in https://github.ibm.com/GoldenEye/issues/issues/3880",
+            "is_valid": true
+        },
+        {
+            "scc_goal_id": "3000402",
+            "description": "Check whether Cloud Internet Services (CIS) has DDoS protection enabled",
+            "ignore_reason": "Tracking in https://github.ibm.com/GoldenEye/issues/issues/3880",
+            "is_valid": true
+        },
+        {
+            "scc_goal_id": "3000418",
+            "description": "Check whether account has at least one VPN or Direct Link configured",
+            "ignore_reason": "Tracking in https://github.ibm.com/GoldenEye/issues/issues/3880",
+            "is_valid": true
+        }
+    ]
 }

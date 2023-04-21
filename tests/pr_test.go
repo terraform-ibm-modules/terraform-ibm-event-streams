@@ -9,23 +9,18 @@ import (
 )
 
 // Use existing resource group
-const resourceGroup = "geretain-test-resources"
+const resourceGroup = "geretain-test-event-streams"
 const defaultExampleTerraformDir = "examples/default"
-
-func setupOptions(t *testing.T, prefix string, dir string) *testhelper.TestOptions {
-	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
-		Testing:       t,
-		TerraformDir:  dir,
-		Prefix:        prefix,
-		ResourceGroup: resourceGroup,
-	})
-	return options
-}
 
 func TestRunDefaultExample(t *testing.T) {
 	t.Parallel()
 
-	options := setupOptions(t, "mod-template", defaultExampleTerraformDir)
+	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
+		Testing:       t,
+		TerraformDir:  defaultExampleTerraformDir,
+		Prefix:        "event-streams-default",
+		ResourceGroup: resourceGroup,
+	})
 
 	output, err := options.RunTestConsistency()
 	assert.Nil(t, err, "This should not have errored")
@@ -35,10 +30,12 @@ func TestRunDefaultExample(t *testing.T) {
 func TestRunUpgradeExample(t *testing.T) {
 	t.Parallel()
 
-	// TODO: Remove this line after the first merge to primary branch is complete to enable upgrade test
-	t.Skip("Skipping upgrade test until initial code is in primary branch")
-
-	options := setupOptions(t, "mod-template-upg", defaultExampleTerraformDir)
+	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
+		Testing:       t,
+		TerraformDir:  defaultExampleTerraformDir,
+		Prefix:        "event-streams-upg",
+		ResourceGroup: resourceGroup,
+	})
 
 	output, err := options.RunTestUpgrade()
 	if !options.UpgradeTestSkipped {
