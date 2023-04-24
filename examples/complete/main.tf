@@ -67,7 +67,7 @@ resource "ibm_resource_instance" "secrets_manager" {
     create = "30m" # Extending provisioning time to 30 minutes
   }
 }
-
+ 
 ##############################################################################
 # Events-streams-instance
 ##############################################################################
