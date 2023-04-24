@@ -7,9 +7,6 @@ locals {
     (!local.validate_sm_region_cnd
       ? local.validate_sm_region_msg
   : ""))
-
-  sm_guid   = var.existing_sm_instance_guid == null ? ibm_resource_instance.secrets_manager[0].guid : var.existing_sm_instance_guid
-  sm_region = var.existing_sm_instance_region == null ? var.region : var.existing_sm_instance_region
 }
 
 
@@ -69,19 +66,6 @@ resource "ibm_resource_instance" "secrets_manager" {
   timeouts {
     create = "30m" # Extending provisioning time to 30 minutes
   }
-}
-
-# Add a Secrets Group to the secret manager instance
-module "secrets_manager_secrets_group" {
-  providers = {
-    restapi = restapi.sm
-  }
-  source               = "git::https://github.ibm.com/GoldenEye/secrets-manager-secret-group-module.git?ref=1.5.2"
-  region               = local.sm_region
-  secrets_manager_guid = local.sm_guid
-  #tfsec:ignore:general-secrets-no-plaintext-exposure
-  secret_group_name        = "${var.prefix}-secrets"
-  secret_group_description = "service secret-group" #tfsec:ignore:general-secrets-no-plaintext-exposure
 }
 
 ##############################################################################
