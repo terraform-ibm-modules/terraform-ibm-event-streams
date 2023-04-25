@@ -7,7 +7,7 @@
       "description": "(Optional) The CRN of a Key Protect Key to use for encrypting backups. If left null, the value passed for the 'kms_key_crn' variable will be used. Take note that Hyper Protect Crypto Services for IBM Cloud® Databases backups is not currently supported.",
       "pos": {
         "filename": "variables.tf",
-        "line": 132
+        "line": 129
       }
     },
     "cleanup_policy": {
@@ -19,17 +19,17 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 102
+        "line": 99
       }
     },
     "create_timeout": {
       "name": "create_timeout",
       "type": "string",
-      "description": "Creation timeout value of the Event Streams module.",
+      "description": "Creation timeout value of the Event Streams module. Use 3h when creating enterprise instance, add more 1h for each level of non-default throughput, add more 30m for each level of non-default storage_size",
       "default": "3h",
       "pos": {
         "filename": "variables.tf",
-        "line": 138
+        "line": 135
       }
     },
     "delete_timeout": {
@@ -39,7 +39,7 @@
       "default": "15m",
       "pos": {
         "filename": "variables.tf",
-        "line": 150
+        "line": 147
       }
     },
     "es_name": {
@@ -61,7 +61,7 @@
       "description": "(Optional) The root key CRN of a Key Management Service like Key Protect or Hyper Protect Crypto Service (HPCS) that you want to use for disk encryption. If null, database is encrypted by using randomly generated keys. See https://cloud.ibm.com/docs/cloud-databases?topic=cloud-databases-key-protect\u0026interface=ui#key-byok for current list of supported regions for BYOK",
       "pos": {
         "filename": "variables.tf",
-        "line": 126
+        "line": 123
       }
     },
     "partitions": {
@@ -78,7 +78,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 90
+        "line": 87
       }
     },
     "plan": {
@@ -98,10 +98,11 @@
     "private_ip_allowlist": {
       "name": "private_ip_allowlist",
       "type": "string",
-      "description": "Range of IPs that have the access.",
+      "description": "Range of IPs that have the access. For enterprise instance only. Specify 1 or more IP range in CIDR format.",
+      "default": "[]",
       "pos": {
         "filename": "variables.tf",
-        "line": 58
+        "line": 55
       }
     },
     "region": {
@@ -142,10 +143,10 @@
     "retention_bytes": {
       "name": "retention_bytes",
       "type": "list(number)",
-      "description": "Length of messages to be retained in bytes",
+      "description": "Length of messages to be retained in bytes. For standard plan retention bytes should be in the range [100 KiB, 1 GiB] and for enterprise plan it should be in the range [100 KiB, 2 TiB]",
       "pos": {
         "filename": "variables.tf",
-        "line": 120
+        "line": 117
       }
     },
     "retention_ms": {
@@ -154,7 +155,7 @@
       "description": "Time in ms for which the messages will be retained",
       "pos": {
         "filename": "variables.tf",
-        "line": 114
+        "line": 111
       }
     },
     "schemas": {
@@ -169,7 +170,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 64
+        "line": 61
       }
     },
     "segment_bytes": {
@@ -178,7 +179,7 @@
       "description": "The maximum size of a partition in bytes",
       "pos": {
         "filename": "variables.tf",
-        "line": 96
+        "line": 93
       }
     },
     "service_endpoints": {
@@ -191,13 +192,13 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 48
+        "line": 45
       }
     },
     "storage_size": {
       "name": "storage_size",
       "type": "number",
-      "description": "Storage size of the event streams in GB.",
+      "description": "Storage size of the event streams in GB. for enterprise instance only. Options are: 2048, 4096, 6144, 8192, 10240, 12288. Default is 2048.      Note: When throughput is 300, storage_size starts from 4096,  when throughput is 450, storage_size starts from 6144.",
       "default": "2048",
       "pos": {
         "filename": "variables.tf",
@@ -227,7 +228,7 @@
     "throughput": {
       "name": "throughput",
       "type": "number",
-      "description": "Throughput capacity in MB per second. For lite and standard plan, the allowed value of throughput is 150 MB per second. For enterprise plan it can take any value.",
+      "description": "Throughput capacity in MB per second. for enterprise instance only. Options are: 150, 300, 450. Default is 150.",
       "default": "150",
       "pos": {
         "filename": "variables.tf",
@@ -250,17 +251,17 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 78
+        "line": 75
       }
     },
     "update_timeout": {
       "name": "update_timeout",
       "type": "string",
-      "description": "Updating timeout value of the Event Streams module.",
+      "description": "Updating timeout value of the Event Streams module. Use 1h when updating enterprise instance, add more 1h for each level of non-default throughput, add more 30m for each level of non-default storage_size.",
       "default": "1h",
       "pos": {
         "filename": "variables.tf",
-        "line": 144
+        "line": 141
       }
     }
   },

@@ -32,17 +32,14 @@ variable "region" {
 
 variable "throughput" {
   type        = number
-  description = "Throughput capacity in MB per second. For lite and standard plan, the allowed value of throughput is 150 MB per second. For enterprise plan it can take any value."
+  description = "Throughput capacity in MB per second. for enterprise instance only. Options are: 150, 300, 450. Default is 150."
   default     = "150"
 }
 
 variable "storage_size" {
   type        = number
-  description = "Storage size of the event streams in GB."
-  # For lite and standard plan, the allowed value is 2048 GB. For enterprise plan refer (https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-ES_scaling_capacity#ES_storage_capacity) for allowed values.
-  # Storage capacity cannot be scaled down once instance is created.
-  # Storage capacity cannot be scaled up in lite and standard plan.
-  default = "2048"
+  description = "Storage size of the event streams in GB. for enterprise instance only. Options are: 2048, 4096, 6144, 8192, 10240, 12288. Default is 2048.      Note: When throughput is 300, storage_size starts from 4096,  when throughput is 450, storage_size starts from 6144."
+  default     = "2048"
 }
 
 variable "service_endpoints" {
@@ -57,8 +54,8 @@ variable "service_endpoints" {
 
 variable "private_ip_allowlist" {
   type        = string
-  description = "Range of IPs that have the access."
-  default     = null
+  description = "Range of IPs that have the access. For enterprise instance only. Specify 1 or more IP range in CIDR format."
+  default     = "[]"
 }
 
 variable "schemas" {
@@ -119,8 +116,8 @@ variable "retention_ms" {
 
 variable "retention_bytes" {
   type        = list(number)
-  description = "Length of messages to be retained in bytes"
-  default     = null # for standard plan retention bytes should be in the range [100 KiB, 1 GiB] and for enterprise plan it should be in the range [100 KiB, 2 TiB]
+  description = "Length of messages to be retained in bytes. For standard plan retention bytes should be in the range [100 KiB, 1 GiB] and for enterprise plan it should be in the range [100 KiB, 2 TiB]"
+  default     = null
 }
 
 variable "kms_key_crn" {
@@ -137,13 +134,13 @@ variable "backup_encryption_key_crn" {
 
 variable "create_timeout" {
   type        = string
-  description = "Creation timeout value of the Event Streams module." # use 3h when creating enterprise instance, add more 1h for each level of non-default throughput, add more 30m for each level of non-default storage_size
+  description = "Creation timeout value of the Event Streams module. Use 3h when creating enterprise instance, add more 1h for each level of non-default throughput, add more 30m for each level of non-default storage_size"
   default     = "3h"
 }
 
 variable "update_timeout" {
   type        = string
-  description = "Updating timeout value of the Event Streams module." # use 1h when updating enterprise instance, add more 1h for each level of non-default throughput, add more 30m for each level of non-default storage_size
+  description = "Updating timeout value of the Event Streams module. Use 1h when updating enterprise instance, add more 1h for each level of non-default throughput, add more 30m for each level of non-default storage_size."
   default     = "1h"
 }
 
