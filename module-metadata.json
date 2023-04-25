@@ -7,19 +7,7 @@
       "description": "(Optional) The CRN of a Key Protect Key to use for encrypting backups. If left null, the value passed for the 'kms_key_crn' variable will be used. Take note that Hyper Protect Crypto Services for IBM Cloud® Databases backups is not currently supported.",
       "pos": {
         "filename": "variables.tf",
-        "line": 129
-      }
-    },
-    "cleanup_policy": {
-      "name": "cleanup_policy",
-      "type": "list(string)",
-      "description": "Supported types - delete, compact. delete - deletes segments after the retention time. compact - retains the latest value",
-      "source": [
-        "ibm_event_streams_topic.es_topic.config"
-      ],
-      "pos": {
-        "filename": "variables.tf",
-        "line": 99
+        "line": 131
       }
     },
     "create_timeout": {
@@ -29,7 +17,7 @@
       "default": "3h",
       "pos": {
         "filename": "variables.tf",
-        "line": 135
+        "line": 137
       }
     },
     "delete_timeout": {
@@ -39,7 +27,7 @@
       "default": "15m",
       "pos": {
         "filename": "variables.tf",
-        "line": 147
+        "line": 149
       }
     },
     "es_name": {
@@ -61,24 +49,7 @@
       "description": "(Optional) The root key CRN of a Key Management Service like Key Protect or Hyper Protect Crypto Service (HPCS) that you want to use for disk encryption. If null, database is encrypted by using randomly generated keys. See https://cloud.ibm.com/docs/cloud-databases?topic=cloud-databases-key-protect\u0026interface=ui#key-byok for current list of supported regions for BYOK",
       "pos": {
         "filename": "variables.tf",
-        "line": 123
-      }
-    },
-    "partitions": {
-      "name": "partitions",
-      "type": "list(number)",
-      "description": "The number of partitions in which the topics are to be divided",
-      "default": [
-        1,
-        1,
-        1
-      ],
-      "source": [
-        "ibm_event_streams_topic.es_topic.partitions"
-      ],
-      "pos": {
-        "filename": "variables.tf",
-        "line": 87
+        "line": 125
       }
     },
     "plan": {
@@ -140,24 +111,6 @@
         "resolved_to:id"
       ]
     },
-    "retention_bytes": {
-      "name": "retention_bytes",
-      "type": "list(number)",
-      "description": "Length of messages to be retained in bytes. For standard plan retention bytes should be in the range [100 KiB, 1 GiB] and for enterprise plan it should be in the range [100 KiB, 2 TiB]",
-      "pos": {
-        "filename": "variables.tf",
-        "line": 117
-      }
-    },
-    "retention_ms": {
-      "name": "retention_ms",
-      "type": "list(number)",
-      "description": "Time in ms for which the messages will be retained",
-      "pos": {
-        "filename": "variables.tf",
-        "line": 111
-      }
-    },
     "schemas": {
       "name": "schemas",
       "type": "list(object(\n    {\n      schema_id = string\n      schema = object({\n        type = string\n        name = string\n      })\n    }\n  ))",
@@ -171,15 +124,6 @@
       "pos": {
         "filename": "variables.tf",
         "line": 61
-      }
-    },
-    "segment_bytes": {
-      "name": "segment_bytes",
-      "type": "list(number)",
-      "description": "The maximum size of a partition in bytes",
-      "pos": {
-        "filename": "variables.tf",
-        "line": 93
       }
     },
     "service_endpoints": {
@@ -244,14 +188,46 @@
         "topic_2",
         "topic_3"
       ],
-      "required": true,
-      "source": [
-        "ibm_event_streams_topic.es_topic.count",
-        "ibm_event_streams_topic.es_topic.name"
-      ],
       "pos": {
         "filename": "variables.tf",
         "line": 75
+      }
+    },
+    "topics": {
+      "name": "topics",
+      "type": "list(object(\n    {\n      name       = string\n      partitions = number\n      config = object({\n        cleanup_policy  = string\n        retention_ms    = string\n        retention_bytes = string\n        segment_bytes   = string\n      })\n    }\n  ))",
+      "description": "List of topics. For lite plan only one topic is allowed.",
+      "default": [
+        {
+          "config": {
+            "cleanup_policy": "delete",
+            "retention_bytes": "10485760",
+            "retention_ms": "86400000",
+            "segment_bytes": "10485760"
+          },
+          "name": "topic-1",
+          "partitions": 1
+        },
+        {
+          "config": {
+            "cleanup_policy": "delete",
+            "retention_bytes": "10485760",
+            "retention_ms": "86400000",
+            "segment_bytes": "10485760"
+          },
+          "name": "topic-2",
+          "partitions": 1
+        }
+      ],
+      "source": [
+        "ibm_event_streams_topic.es_topic.config",
+        "ibm_event_streams_topic.es_topic.count",
+        "ibm_event_streams_topic.es_topic.name",
+        "ibm_event_streams_topic.es_topic.partitions"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 87
       }
     },
     "update_timeout": {
@@ -261,7 +237,7 @@
       "default": "1h",
       "pos": {
         "filename": "variables.tf",
-        "line": 141
+        "line": 143
       }
     }
   },
@@ -342,7 +318,7 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 73
+        "line": 49
       }
     },
     "ibm_event_streams_topic.es_topic": {
@@ -350,17 +326,17 @@
       "type": "ibm_event_streams_topic",
       "name": "es_topic",
       "attributes": {
-        "config": "cleanup_policy",
-        "count": "topic_names",
-        "name": "topic_names",
-        "partitions": "partitions"
+        "config": "topics",
+        "count": "topics",
+        "name": "topics",
+        "partitions": "topics"
       },
       "provider": {
         "name": "ibm"
       },
       "pos": {
         "filename": "main.tf",
-        "line": 84
+        "line": 60
       }
     },
     "ibm_resource_instance.es_instance": {
@@ -380,7 +356,7 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 45
+        "line": 21
       }
     }
   },

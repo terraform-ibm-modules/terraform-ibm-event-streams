@@ -24,11 +24,5 @@ module "event_streams" {
   private_ip_allowlist = var.private_ip_allowlist
   throughput           = var.throughput
   storage_size         = var.storage_size
-  topic_names          = var.topic_names
-  partitions           = var.partitions
-  cleanup_policy       = var.cleanup_policy
-  retention_ms         = var.retention_ms
-  retention_bytes      = var.retention_bytes
-  segment_bytes        = var.segment_bytes
   schemas              = var.schemas
 }

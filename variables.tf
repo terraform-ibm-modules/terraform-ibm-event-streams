@@ -84,40 +84,42 @@ variable "topic_names" {
   }
 }
 
-variable "partitions" {
-  type        = list(number)
-  description = "The number of partitions in which the topics are to be divided"
-  default     = [1, 1, 1] # For lite plan only one partition per topic is allowed. For the standard plan partition value should not exceed 100 per topic. For enterprise plan it can be set to any value depending upon the capacity.
-}
-
-variable "segment_bytes" {
-  type        = list(number)
-  description = "The maximum size of a partition in bytes"
-  default     = null # For standard plan the range of allowed value is [100 KiB,500 MiB] and for enterprise plan the range of allowed value is [100KiB, 2 TiB]
-}
-
-variable "cleanup_policy" {
-  type        = list(string)
-  description = "Supported types - delete, compact. delete - deletes segments after the retention time. compact - retains the latest value"
-  default     = null
-  validation {
-    condition = alltrue([
-      for policy in var.cleanup_policy : contains(["delete", "compact", "compact,delete"], policy)
-    ])
-    error_message = "Cleanup policy can only take ['delete','compact','compact,delete'] as values"
-  }
-}
-
-variable "retention_ms" {
-  type        = list(number)
-  description = "Time in ms for which the messages will be retained"
-  default     = null
-}
-
-variable "retention_bytes" {
-  type        = list(number)
-  description = "Length of messages to be retained in bytes. For standard plan retention bytes should be in the range [100 KiB, 1 GiB] and for enterprise plan it should be in the range [100 KiB, 2 TiB]"
-  default     = null
+variable "topics" {
+  type = list(object(
+    {
+      name       = string
+      partitions = number
+      config = object({
+        cleanup_policy  = string
+        retention_ms    = string
+        retention_bytes = string
+        segment_bytes   = string
+      })
+    }
+  ))
+  description = "List of topics. For lite plan only one topic is allowed."
+  default = [
+    {
+      name       = "topic-1"
+      partitions = 1
+      config = {
+        "cleanup_policy"  = "delete"
+        "retention_ms"    = "86400000"
+        "retention_bytes" = "10485760"
+        "segment_bytes"   = "10485760"
+      }
+    },
+    {
+      name       = "topic-2"
+      partitions = 1
+      config = {
+        "cleanup_policy"  = "delete"
+        "retention_ms"    = "86400000"
+        "retention_bytes" = "10485760"
+        "segment_bytes"   = "10485760"
+      }
+    }
+  ]
 }
 
 variable "kms_key_crn" {
