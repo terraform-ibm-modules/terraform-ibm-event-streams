@@ -104,14 +104,14 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_backup_encryption_key_crn"></a> [backup\_encryption\_key\_crn](#input\_backup\_encryption\_key\_crn) | (Optional) The CRN of a key protect key, that you want to use for encrypting disk that holds deployment backups. If null, will use 'key\_protect\_key\_crn' as encryption key. If 'key\_protect\_key\_crn' is also null, database is encrypted by using randomly generated keys. | `string` | `null` | no |
+| <a name="input_backup_encryption_key_crn"></a> [backup\_encryption\_key\_crn](#input\_backup\_encryption\_key\_crn) | (Optional) The CRN of a Key Protect Key to use for encrypting backups. If left null, the value passed for the 'kms\_key\_crn' variable will be used. Take note that Hyper Protect Crypto Services for IBM Cloud® Databases backups is not currently supported. | `string` | `null` | no |
 | <a name="input_cleanup_policy"></a> [cleanup\_policy](#input\_cleanup\_policy) | Supported types - delete, compact. delete - deletes segments after the retention time. compact - retains the latest value | `list(string)` | `null` | no |
 | <a name="input_create_timeout"></a> [create\_timeout](#input\_create\_timeout) | Creation timeout value of the Event Streams module. | `string` | `"3h"` | no |
 | <a name="input_delete_timeout"></a> [delete\_timeout](#input\_delete\_timeout) | Deleting timeout value of the Event Streams module | `string` | `"15m"` | no |
-| <a name="input_es_name"></a> [es\_name](#input\_es\_name) | Name of the resource instance | `string` | n/a | yes |
-| <a name="input_key_protect_key_crn"></a> [key\_protect\_key\_crn](#input\_key\_protect\_key\_crn) | (Optional) CRN of the existing key protect to be used | `string` | `null` | no |
+| <a name="input_es_name"></a> [es\_name](#input\_es\_name) | The name to give the IBM Event Streams instance created by this module. | `string` | n/a | yes |
+| <a name="input_kms_key_crn"></a> [kms\_key\_crn](#input\_kms\_key\_crn) | (Optional) The root key CRN of a Key Management Service like Key Protect or Hyper Protect Crypto Service (HPCS) that you want to use for disk encryption. If null, database is encrypted by using randomly generated keys. See https://cloud.ibm.com/docs/cloud-databases?topic=cloud-databases-key-protect&interface=ui#key-byok for current list of supported regions for BYOK | `string` | `null` | no |
 | <a name="input_partitions"></a> [partitions](#input\_partitions) | The number of partitions in which the topics are to be divided | `list(number)` | <pre>[<br>  1,<br>  1,<br>  1<br>]</pre> | no |
-| <a name="input_plan"></a> [plan](#input\_plan) | Plan for the event streams instance : lite, standard or enterprise-3nodes-2tb | `string` | `null` | no |
+| <a name="input_plan"></a> [plan](#input\_plan) | Plan for the event streams instance : lite, standard or enterprise-3nodes-2tb | `string` | `"standard"` | no |
 | <a name="input_private_ip_allowlist"></a> [private\_ip\_allowlist](#input\_private\_ip\_allowlist) | Range of IPs that have the access. | `string` | `null` | no |
 | <a name="input_region"></a> [region](#input\_region) | IBM Cloud region where event streams will be created | `string` | `"us-south"` | no |
 | <a name="input_resource_group_id"></a> [resource\_group\_id](#input\_resource\_group\_id) | ID of resource group to use when creating the event stream instance | `string` | n/a | yes |
@@ -119,10 +119,10 @@ No modules.
 | <a name="input_retention_ms"></a> [retention\_ms](#input\_retention\_ms) | Time in ms for which the messages will be retained | `list(number)` | `null` | no |
 | <a name="input_schemas"></a> [schemas](#input\_schemas) | The list of schema object which contains schema id and format of the schema | <pre>list(object(<br>    {<br>      schema_id = string<br>      schema = object({<br>        type = string<br>        name = string<br>      })<br>    }<br>  ))</pre> | `[]` | no |
 | <a name="input_segment_bytes"></a> [segment\_bytes](#input\_segment\_bytes) | The maximum size of a partition in bytes | `list(number)` | `null` | no |
-| <a name="input_service_endpoints"></a> [service\_endpoints](#input\_service\_endpoints) | The type of service endpoint(public,private or public-and-private) to be used for connection. | `string` | `null` | no |
-| <a name="input_storage_size"></a> [storage\_size](#input\_storage\_size) | Storage size of the event streams in GB. | `number` | `null` | no |
+| <a name="input_service_endpoints"></a> [service\_endpoints](#input\_service\_endpoints) | The type of service endpoint(public,private or public-and-private) to be used for connection. | `string` | `"private"` | no |
+| <a name="input_storage_size"></a> [storage\_size](#input\_storage\_size) | Storage size of the event streams in GB. | `number` | `"2048"` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | List of tags associated with the Event Steams instance | `list(string)` | `[]` | no |
-| <a name="input_throughput"></a> [throughput](#input\_throughput) | Throughput capacity in MB per second. | `number` | `"150"` | no |
+| <a name="input_throughput"></a> [throughput](#input\_throughput) | Throughput capacity in MB per second. For lite and standard plan, the allowed value of throughput is 150 MB per second. For enterprise plan it can take any value. | `number` | `"150"` | no |
 | <a name="input_topic_names"></a> [topic\_names](#input\_topic\_names) | The name of the topic instance | `list(string)` | <pre>[<br>  "topic_1",<br>  "topic_2",<br>  "topic_3"<br>]</pre> | no |
 | <a name="input_update_timeout"></a> [update\_timeout](#input\_update\_timeout) | Updating timeout value of the Event Streams module. | `string` | `"1h"` | no |
 

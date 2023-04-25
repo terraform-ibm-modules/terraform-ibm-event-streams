@@ -4,7 +4,7 @@
     "backup_encryption_key_crn": {
       "name": "backup_encryption_key_crn",
       "type": "string",
-      "description": "(Optional) The CRN of a key protect key, that you want to use for encrypting disk that holds deployment backups. If null, will use 'key_protect_key_crn' as encryption key. If 'key_protect_key_crn' is also null, database is encrypted by using randomly generated keys.",
+      "description": "(Optional) The CRN of a Key Protect Key to use for encrypting backups. If left null, the value passed for the 'kms_key_crn' variable will be used. Take note that Hyper Protect Crypto Services for IBM Cloud® Databases backups is not currently supported.",
       "pos": {
         "filename": "variables.tf",
         "line": 132
@@ -45,7 +45,7 @@
     "es_name": {
       "name": "es_name",
       "type": "string",
-      "description": "Name of the resource instance",
+      "description": "The name to give the IBM Event Streams instance created by this module.",
       "required": true,
       "source": [
         "ibm_resource_instance.es_instance.name"
@@ -55,10 +55,10 @@
         "line": 6
       }
     },
-    "key_protect_key_crn": {
-      "name": "key_protect_key_crn",
+    "kms_key_crn": {
+      "name": "kms_key_crn",
       "type": "string",
-      "description": "(Optional) CRN of the existing key protect to be used",
+      "description": "(Optional) The root key CRN of a Key Management Service like Key Protect or Hyper Protect Crypto Service (HPCS) that you want to use for disk encryption. If null, database is encrypted by using randomly generated keys. See https://cloud.ibm.com/docs/cloud-databases?topic=cloud-databases-key-protect\u0026interface=ui#key-byok for current list of supported regions for BYOK",
       "pos": {
         "filename": "variables.tf",
         "line": 126
@@ -85,6 +85,7 @@
       "name": "plan",
       "type": "string",
       "description": "Plan for the event streams instance : lite, standard or enterprise-3nodes-2tb",
+      "default": "standard",
       "required": true,
       "source": [
         "ibm_resource_instance.es_instance.plan"
@@ -184,6 +185,7 @@
       "name": "service_endpoints",
       "type": "string",
       "description": "The type of service endpoint(public,private or public-and-private) to be used for connection.",
+      "default": "private",
       "source": [
         "ibm_resource_instance.es_instance.parameters"
       ],
@@ -196,6 +198,7 @@
       "name": "storage_size",
       "type": "number",
       "description": "Storage size of the event streams in GB.",
+      "default": "2048",
       "pos": {
         "filename": "variables.tf",
         "line": 39
@@ -224,7 +227,7 @@
     "throughput": {
       "name": "throughput",
       "type": "number",
-      "description": "Throughput capacity in MB per second.",
+      "description": "Throughput capacity in MB per second. For lite and standard plan, the allowed value of throughput is 150 MB per second. For enterprise plan it can take any value.",
       "default": "150",
       "pos": {
         "filename": "variables.tf",
