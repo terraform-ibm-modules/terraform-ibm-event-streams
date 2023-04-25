@@ -46,6 +46,12 @@ variable "service_credentials" {
   default     = ["event-streams_credential_microservices", "event-streams_credential_dev_1", "event-streams_credential_dev_2"]
 }
 
+variable "service_endpoints" {
+  type        = string
+  description = "The type of service endpoint(public,private or public-and-private) to be used for connection. Default is public for Standard and lite plans"
+  default     = "public"
+}
+
 variable "existing_sm_instance_region" {
   type        = string
   description = "Required if value is passed into var.existing_sm_instance_guid"

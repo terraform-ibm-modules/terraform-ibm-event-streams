@@ -51,6 +51,7 @@ module "event_streams" {
   schemas                    = var.schemas
   tags                       = var.resource_tags
   topics                     = var.topics
+  service_endpoints          = var.service_endpoints
 }
 
 ##############################################################################

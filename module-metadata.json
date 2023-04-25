@@ -267,12 +267,10 @@
     "kafka_brokers_sasl": {
       "name": "kafka_brokers_sasl",
       "description": "(Array of Strings) Kafka brokers use for interacting with Kafka native API",
-      "value": "ibm_event_streams_topic.es_topic.kafka_brokers_sasl",
       "pos": {
         "filename": "outputs.tf",
         "line": 20
-      },
-      "type": "TypeList"
+      }
     },
     "kafka_http_url": {
       "name": "kafka_http_url",
