@@ -34,28 +34,10 @@ variable "resource_tags" {
   default     = []
 }
 
-variable "existing_sm_instance_guid" {
-  type        = string
-  description = "Existing Secrets Manager GUID. If not provided an new instance will be provisioned"
-  default     = null
-}
-
-variable "service_credentials" {
-  type        = list(string)
-  description = "A list of service credentials that you want to create for the database"
-  default     = ["event-streams_credential_microservices", "event-streams_credential_dev_1", "event-streams_credential_dev_2"]
-}
-
 variable "service_endpoints" {
   type        = string
   description = "The type of service endpoint(public,private or public-and-private) to be used for connection. Default is public for Standard and lite plans"
   default     = "public"
-}
-
-variable "existing_sm_instance_region" {
-  type        = string
-  description = "Required if value is passed into var.existing_sm_instance_guid"
-  default     = null
 }
 
 variable "schemas" {

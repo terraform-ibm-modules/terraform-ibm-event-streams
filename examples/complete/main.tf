@@ -1,15 +1,3 @@
-locals {
-  validate_sm_region_cnd = var.existing_sm_instance_guid != null && var.existing_sm_instance_region == null
-  validate_sm_region_msg = "existing_sm_instance_region must also be set when value given for existing_sm_instance_guid."
-  # tflint-ignore: terraform_unused_declarations
-  validate_sm_region_chk = regex(
-    "^${local.validate_sm_region_msg}$",
-    (!local.validate_sm_region_cnd
-      ? local.validate_sm_region_msg
-  : ""))
-}
-
-
 ##############################################################################
 # Resource Group
 ##############################################################################
@@ -21,11 +9,9 @@ module "resource_group" {
   existing_resource_group_name = var.resource_group
 }
 
-
 ##############################################################################
 # Key Protect All Inclusive
 ##############################################################################
-
 
 module "key_protect_all_inclusive" {
   source                    = "git::https://github.com/terraform-ibm-modules/terraform-ibm-key-protect-all-inclusive.git?ref=v4.0.0"
@@ -52,15 +38,4 @@ module "event_streams" {
   tags                       = var.resource_tags
   topics                     = var.topics
   service_endpoints          = var.service_endpoints
-}
-
-##############################################################################
-# Service Credentials
-##############################################################################
-
-resource "ibm_resource_key" "service_credentials" {
-  count                = length(var.service_credentials)
-  name                 = var.service_credentials[count.index]
-  resource_instance_id = module.event_streams.id
-  tags                 = var.resource_tags
 }
