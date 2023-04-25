@@ -73,17 +73,13 @@ resource "ibm_resource_instance" "secrets_manager" {
 ##############################################################################
 
 module "event_streams" {
-  source               = "../../"
-  resource_group_id    = module.resource_group.resource_group_id
-  es_name              = "${var.prefix}-es"
-  plan                 = var.plan
-  kms_key_crn          = module.key_protect_all_inclusive.keys["es.${var.prefix}-es"].crn
-  tags                 = var.resource_tags
-  service_endpoints    = var.service_endpoints
-  private_ip_allowlist = var.private_ip_allowlist
-  throughput           = var.throughput
-  storage_size         = var.storage_size
-  schemas              = var.schemas
+  source            = "../../"
+  resource_group_id = module.resource_group.resource_group_id
+  es_name           = "${var.prefix}-es"
+  plan              = var.plan
+  kms_key_crn       = module.key_protect_all_inclusive.keys["es.${var.prefix}-es"].crn
+  schemas           = var.schemas
+  tags              = var.resource_tags
 }
 
 ##############################################################################

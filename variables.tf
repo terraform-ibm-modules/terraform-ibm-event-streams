@@ -77,12 +77,7 @@ variable "topics" {
     {
       name       = string
       partitions = number
-      config = object({
-        cleanup_policy  = string
-        retention_ms    = string
-        retention_bytes = string
-        segment_bytes   = string
-      })
+      config     = object({})
     }
   ))
   description = "List of topics. For lite plan only one topic is allowed."
@@ -91,20 +86,20 @@ variable "topics" {
       name       = "topic-1"
       partitions = 1
       config = {
-        "cleanup_policy"  = "delete"
-        "retention_ms"    = "86400000"
-        "retention_bytes" = "10485760"
-        "segment_bytes"   = "10485760"
+        "cleanup.policy"  = "delete"
+        "retention.ms"    = "86400000"
+        "retention.bytes" = "10485760"
+        "segment.bytes"   = "10485760"
       }
     },
     {
       name       = "topic-2"
       partitions = 1
       config = {
-        "cleanup_policy"  = "delete"
-        "retention_ms"    = "86400000"
-        "retention_bytes" = "10485760"
-        "segment_bytes"   = "10485760"
+        "cleanup.policy"  = "delete"
+        "retention.ms"    = "86400000"
+        "retention.bytes" = "10485760"
+        "segment.bytes"   = "10485760"
       }
     }
   ]

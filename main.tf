@@ -28,7 +28,6 @@ resource "ibm_resource_instance" "es_instance" {
   }
 
   parameters = {
-
     service-endpoints         = var.service_endpoints
     private_ip_allowlist      = var.private_ip_allowlist
     throughput                = var.throughput

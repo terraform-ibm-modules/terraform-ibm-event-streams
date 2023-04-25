@@ -92,27 +92,3 @@ variable "schemas" {
     }
   ]
 }
-
-variable "throughput" {
-  type        = number
-  description = "Throughput capacity in MB per second."
-  default     = "150" # For lite and standard plan, the allowed value of throughput is 150 MB per second. For enterprise plan it can take any value.
-}
-
-variable "storage_size" {
-  type        = number
-  description = "Storage size of the event streams in GB."
-  default     = "2048"
-}
-
-variable "service_endpoints" {
-  type        = string
-  description = "The type of service endpoint(public,private or public-and-private) to be used for connection."
-  default     = "private"
-}
-
-variable "private_ip_allowlist" {
-  type        = string
-  description = "Range of IPs that have the access."
-  default     = null
-}
