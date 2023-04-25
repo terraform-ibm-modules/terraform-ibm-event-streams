@@ -5,13 +5,13 @@ variable "resource_group_id" {
 
 variable "es_name" {
   type        = string
-  description = "Name of the resource instance"
+  description = "The name to give the IBM Event Streams instance created by this module."
 }
 
 variable "plan" {
   type        = string
   description = "Plan for the event streams instance : lite, standard or enterprise-3nodes-2tb"
-  default     = null
+  default     = "standard"
   validation {
     condition     = contains(["lite", "standard", "enterprise-3nodes-2tb"], var.plan)
     error_message = "The specified plan is not a valid selection! Supported plans are: lite, standard or enterprise-3nodes-2tb."
@@ -32,8 +32,8 @@ variable "region" {
 
 variable "throughput" {
   type        = number
-  description = "Throughput capacity in MB per second."
-  default     = "150" # For lite and standard plan, the allowed value of throughput is 150 MB per second. For enterprise plan it can take any value.
+  description = "Throughput capacity in MB per second. For lite and standard plan, the allowed value of throughput is 150 MB per second. For enterprise plan it can take any value."
+  default     = "150"
 }
 
 variable "storage_size" {
@@ -42,13 +42,13 @@ variable "storage_size" {
   # For lite and standard plan, the allowed value is 2048 GB. For enterprise plan refer (https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-ES_scaling_capacity#ES_storage_capacity) for allowed values.
   # Storage capacity cannot be scaled down once instance is created.
   # Storage capacity cannot be scaled up in lite and standard plan.
-  default = null
+  default = "2048"
 }
 
 variable "service_endpoints" {
   type        = string
   description = "The type of service endpoint(public,private or public-and-private) to be used for connection."
-  default     = null
+  default     = "private"
   validation {
     condition     = contains(["public", "public-and-private", "private"], var.service_endpoints)
     error_message = "The specified service endpoint is not a valid selection! Supported options are: public, public-and-private or private."
@@ -123,15 +123,15 @@ variable "retention_bytes" {
   default     = null # for standard plan retention bytes should be in the range [100 KiB, 1 GiB] and for enterprise plan it should be in the range [100 KiB, 2 TiB]
 }
 
-variable "key_protect_key_crn" {
+variable "kms_key_crn" {
   type        = string
-  description = "(Optional) CRN of the existing key protect to be used"
+  description = "(Optional) The root key CRN of a Key Management Service like Key Protect or Hyper Protect Crypto Service (HPCS) that you want to use for disk encryption. If null, database is encrypted by using randomly generated keys. See https://cloud.ibm.com/docs/cloud-databases?topic=cloud-databases-key-protect&interface=ui#key-byok for current list of supported regions for BYOK"
   default     = null
 }
 
 variable "backup_encryption_key_crn" {
   type        = string
-  description = "(Optional) The CRN of a key protect key, that you want to use for encrypting disk that holds deployment backups. If null, will use 'key_protect_key_crn' as encryption key. If 'key_protect_key_crn' is also null, database is encrypted by using randomly generated keys."
+  description = "(Optional) The CRN of a Key Protect Key to use for encrypting backups. If left null, the value passed for the 'kms_key_crn' variable will be used. Take note that Hyper Protect Crypto Services for IBM Cloud® Databases backups is not currently supported."
   default     = null
 }
 

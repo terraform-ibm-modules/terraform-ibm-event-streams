@@ -11,6 +11,7 @@ import (
 // Use existing resource group
 const resourceGroup = "geretain-test-event-streams"
 const defaultExampleTerraformDir = "examples/default"
+const completeExampleTerraformDir = "examples/complete"
 
 func TestRunDefaultExample(t *testing.T) {
 	t.Parallel()
@@ -19,6 +20,21 @@ func TestRunDefaultExample(t *testing.T) {
 		Testing:       t,
 		TerraformDir:  defaultExampleTerraformDir,
 		Prefix:        "event-streams-default",
+		ResourceGroup: resourceGroup,
+	})
+
+	output, err := options.RunTestConsistency()
+	assert.Nil(t, err, "This should not have errored")
+	assert.NotNil(t, output, "Expected some output")
+}
+
+func TestRunCompleteExample(t *testing.T) {
+	t.Parallel()
+
+	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
+		Testing:       t,
+		TerraformDir:  completeExampleTerraformDir,
+		Prefix:        "event-streams-complete",
 		ResourceGroup: resourceGroup,
 	})
 

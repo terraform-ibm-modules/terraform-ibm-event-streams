@@ -3,7 +3,7 @@
 #######################################################################################
 
 locals {
-  kp_backup_crn = var.backup_encryption_key_crn != null ? var.backup_encryption_key_crn : var.key_protect_key_crn
+  kp_backup_crn = var.backup_encryption_key_crn != null ? var.backup_encryption_key_crn : var.kms_key_crn
   # tflint-ignore: terraform_unused_declarations
   validate_es_inputs_lite_standard_and_enterprise = ((length(var.topic_names) == length(var.partitions)) && (length(var.topic_names) == length(var.cleanup_policy)) && (length(var.topic_names) == length(var.retention_ms)) && (length(var.topic_names) == length(var.retention_bytes)) && (length(var.topic_names) == length(var.segment_bytes))) ? true : tobool("The number of topic_name, partitions, cleanup_policy, retention_ms, retention_bytes and segment bytes should be of same length.")
   # tflint-ignore: terraform_unused_declarations
@@ -61,7 +61,7 @@ resource "ibm_resource_instance" "es_instance" {
     private_ip_allowlist      = var.private_ip_allowlist
     throughput                = var.throughput
     storage_size              = var.storage_size # Storage capacity cannot be scaled down once instance is created.
-    key_protect_key           = var.key_protect_key_crn
+    key_protect_key           = var.kms_key_crn
     backup_encryption_key_crn = local.kp_backup_crn
   }
 }
