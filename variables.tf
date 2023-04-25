@@ -55,7 +55,7 @@ variable "service_endpoints" {
 variable "private_ip_allowlist" {
   type        = string
   description = "Range of IPs that have the access. For enterprise instance only. Specify 1 or more IP range in CIDR format."
-  default     = "[]"
+  default     = null
 }
 
 variable "schemas" {
