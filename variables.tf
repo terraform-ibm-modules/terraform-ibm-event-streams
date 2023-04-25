@@ -61,7 +61,7 @@ variable "private_ip_allowlist" {
 variable "skip_iam_authorization_policy" {
   type        = bool
   description = "Whether or not you want to skip applying an authorization policy to your kms instance."
-  default     = true
+  default     = false
 }
 
 variable "schemas" {
@@ -87,28 +87,7 @@ variable "topics" {
     }
   ))
   description = "List of topics. For lite plan only one topic is allowed."
-  default = [
-    {
-      name       = "topic-1"
-      partitions = 1
-      config = {
-        "cleanup.policy"  = "delete"
-        "retention.ms"    = "86400000"
-        "retention.bytes" = "10485760"
-        "segment.bytes"   = "10485760"
-      }
-    },
-    {
-      name       = "topic-2"
-      partitions = 1
-      config = {
-        "cleanup.policy"  = "compact,delete"
-        "retention.ms"    = "86400000"
-        "retention.bytes" = "1073741824"
-        "segment.bytes"   = "536870912"
-      }
-    }
-  ]
+  default     = []
 }
 
 variable "kms_key_crn" {

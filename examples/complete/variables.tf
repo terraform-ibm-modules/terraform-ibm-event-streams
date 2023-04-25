@@ -13,7 +13,7 @@ variable "region" {
 variable "plan" {
   type        = string
   description = "Plan for the event stream instance. lite, standard or enterprise-3nodes-2tb"
-  default     = "enterprise-3nodes-2tb"
+  default     = "standard"
 }
 
 variable "prefix" {
@@ -38,12 +38,6 @@ variable "existing_sm_instance_guid" {
   type        = string
   description = "Existing Secrets Manager GUID. If not provided an new instance will be provisioned"
   default     = null
-}
-
-variable "sm_service_plan" {
-  type        = string
-  description = "Service plan to be used to provision Secrets Manager"
-  default     = "trial"
 }
 
 variable "service_credentials" {
@@ -88,6 +82,39 @@ variable "schemas" {
       schema = {
         type = "string"
         name = "name_3"
+      }
+    }
+  ]
+}
+
+variable "topics" {
+  type = list(object(
+    {
+      name       = string
+      partitions = number
+      config     = object({})
+    }
+  ))
+  description = "List of topics. For lite plan only one topic is allowed."
+  default = [
+    {
+      name       = "topic-1"
+      partitions = 1
+      config = {
+        "cleanup.policy"  = "delete"
+        "retention.ms"    = "86400000"
+        "retention.bytes" = "10485760"
+        "segment.bytes"   = "10485760"
+      }
+    },
+    {
+      name       = "topic-2"
+      partitions = 1
+      config = {
+        "cleanup.policy"  = "compact,delete"
+        "retention.ms"    = "86400000"
+        "retention.bytes" = "1073741824"
+        "segment.bytes"   = "536870912"
       }
     }
   ]

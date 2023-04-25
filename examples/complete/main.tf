@@ -37,26 +37,6 @@ module "key_protect_all_inclusive" {
   enable_metrics            = false
 }
 
-
-##############################################################################
-# Create Secrets Manager layer
-##############################################################################
-
-# Create Secrets Manager Instance
-resource "ibm_resource_instance" "secrets_manager" {
-  count             = var.existing_sm_instance_guid == null ? 1 : 0
-  name              = "${var.prefix}-sm" #checkov:skip=CKV_SECRET_6: does not require high entropy string as is static value
-  service           = "secrets-manager"
-  service_endpoints = "public-and-private"
-  plan              = var.sm_service_plan
-  location          = var.region
-  resource_group_id = module.resource_group.resource_group_id
-
-  timeouts {
-    create = "30m" # Extending provisioning time to 30 minutes
-  }
-}
-
 ##############################################################################
 # Events-streams-instance
 ##############################################################################
@@ -70,7 +50,7 @@ module "event_streams" {
   existing_kms_instance_guid = module.key_protect_all_inclusive.key_protect_guid
   schemas                    = var.schemas
   tags                       = var.resource_tags
-
+  topics                     = var.topics
 }
 
 ##############################################################################
