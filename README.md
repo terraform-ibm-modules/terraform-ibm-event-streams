@@ -98,6 +98,7 @@ No modules.
 |------|------|
 | [ibm_event_streams_schema.es_schema](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/event_streams_schema) | resource |
 | [ibm_event_streams_topic.es_topic](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/event_streams_topic) | resource |
+| [ibm_iam_authorization_policy.kms_policy](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/iam_authorization_policy) | resource |
 | [ibm_resource_instance.es_instance](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/resource_instance) | resource |
 
 ## Inputs
@@ -108,6 +109,7 @@ No modules.
 | <a name="input_create_timeout"></a> [create\_timeout](#input\_create\_timeout) | Creation timeout value of the Event Streams module. Use 3h when creating enterprise instance, add more 1h for each level of non-default throughput, add more 30m for each level of non-default storage\_size | `string` | `"3h"` | no |
 | <a name="input_delete_timeout"></a> [delete\_timeout](#input\_delete\_timeout) | Deleting timeout value of the Event Streams module | `string` | `"15m"` | no |
 | <a name="input_es_name"></a> [es\_name](#input\_es\_name) | The name to give the IBM Event Streams instance created by this module. | `string` | n/a | yes |
+| <a name="input_existing_kms_instance_guid"></a> [existing\_kms\_instance\_guid](#input\_existing\_kms\_instance\_guid) | (Optional) The GUID of the Hyper Protect or Key Protect instance in which the key specified in var.kms\_key\_crn is coming from. Only required if skip\_iam\_authorization\_policy is false | `string` | `null` | no |
 | <a name="input_kms_key_crn"></a> [kms\_key\_crn](#input\_kms\_key\_crn) | (Optional) The root key CRN of a Key Management Service like Key Protect or Hyper Protect Crypto Service (HPCS) that you want to use for disk encryption. If null, database is encrypted by using randomly generated keys. See https://cloud.ibm.com/docs/cloud-databases?topic=cloud-databases-key-protect&interface=ui#key-byok for current list of supported regions for BYOK | `string` | `null` | no |
 | <a name="input_plan"></a> [plan](#input\_plan) | Plan for the event streams instance : lite, standard or enterprise-3nodes-2tb | `string` | `"standard"` | no |
 | <a name="input_private_ip_allowlist"></a> [private\_ip\_allowlist](#input\_private\_ip\_allowlist) | Range of IPs that have the access. For enterprise instance only. Specify 1 or more IP range in CIDR format. | `string` | `null` | no |
@@ -115,6 +117,7 @@ No modules.
 | <a name="input_resource_group_id"></a> [resource\_group\_id](#input\_resource\_group\_id) | ID of resource group to use when creating the event stream instance | `string` | n/a | yes |
 | <a name="input_schemas"></a> [schemas](#input\_schemas) | The list of schema object which contains schema id and format of the schema | <pre>list(object(<br>    {<br>      schema_id = string<br>      schema = object({<br>        type = string<br>        name = string<br>      })<br>    }<br>  ))</pre> | `[]` | no |
 | <a name="input_service_endpoints"></a> [service\_endpoints](#input\_service\_endpoints) | The type of service endpoint(public,private or public-and-private) to be used for connection. | `string` | `"private"` | no |
+| <a name="input_skip_iam_authorization_policy"></a> [skip\_iam\_authorization\_policy](#input\_skip\_iam\_authorization\_policy) | Whether or not you want to skip applying an authorization policy to your kms instance. | `bool` | `true` | no |
 | <a name="input_storage_size"></a> [storage\_size](#input\_storage\_size) | Storage size of the event streams in GB. for enterprise instance only. Options are: 2048, 4096, 6144, 8192, 10240, 12288. Default is 2048.      Note: When throughput is 300, storage\_size starts from 4096,  when throughput is 450, storage\_size starts from 6144. | `number` | `"2048"` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | List of tags associated with the Event Steams instance | `list(string)` | `[]` | no |
 | <a name="input_throughput"></a> [throughput](#input\_throughput) | Throughput capacity in MB per second. for enterprise instance only. Options are: 150, 300, 450. Default is 150. | `number` | `"150"` | no |

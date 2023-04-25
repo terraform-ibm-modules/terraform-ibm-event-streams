@@ -7,7 +7,7 @@
       "description": "(Optional) The CRN of a Key Protect Key to use for encrypting backups. If left null, the value passed for the 'kms_key_crn' variable will be used. Take note that Hyper Protect Crypto Services for IBM Cloud® Databases backups is not currently supported.",
       "pos": {
         "filename": "variables.tf",
-        "line": 114
+        "line": 126
       }
     },
     "create_timeout": {
@@ -17,7 +17,7 @@
       "default": "3h",
       "pos": {
         "filename": "variables.tf",
-        "line": 120
+        "line": 132
       }
     },
     "delete_timeout": {
@@ -27,7 +27,7 @@
       "default": "15m",
       "pos": {
         "filename": "variables.tf",
-        "line": 132
+        "line": 144
       }
     },
     "es_name": {
@@ -43,13 +43,27 @@
         "line": 6
       }
     },
+    "existing_kms_instance_guid": {
+      "name": "existing_kms_instance_guid",
+      "type": "string",
+      "description": "(Optional) The GUID of the Hyper Protect or Key Protect instance in which the key specified in var.kms_key_crn is coming from. Only required if skip_iam_authorization_policy is false",
+      "source": [
+        "ibm_iam_authorization_policy.kms_policy.target_resource_instance_id"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 120
+      },
+      "immutable": true,
+      "computed": true
+    },
     "kms_key_crn": {
       "name": "kms_key_crn",
       "type": "string",
       "description": "(Optional) The root key CRN of a Key Management Service like Key Protect or Hyper Protect Crypto Service (HPCS) that you want to use for disk encryption. If null, database is encrypted by using randomly generated keys. See https://cloud.ibm.com/docs/cloud-databases?topic=cloud-databases-key-protect\u0026interface=ui#key-byok for current list of supported regions for BYOK",
       "pos": {
         "filename": "variables.tf",
-        "line": 108
+        "line": 114
       }
     },
     "plan": {
@@ -97,6 +111,7 @@
       "description": "ID of resource group to use when creating the event stream instance",
       "required": true,
       "source": [
+        "ibm_iam_authorization_policy.kms_policy.source_resource_group_id",
         "ibm_resource_instance.es_instance.resource_group_id"
       ],
       "pos": {
@@ -122,7 +137,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 61
+        "line": 67
       }
     },
     "service_endpoints": {
@@ -136,6 +151,19 @@
       "pos": {
         "filename": "variables.tf",
         "line": 45
+      }
+    },
+    "skip_iam_authorization_policy": {
+      "name": "skip_iam_authorization_policy",
+      "type": "bool",
+      "description": "Whether or not you want to skip applying an authorization policy to your kms instance.",
+      "default": true,
+      "source": [
+        "ibm_iam_authorization_policy.kms_policy.count"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 61
       }
     },
     "storage_size": {
@@ -212,7 +240,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 75
+        "line": 81
       }
     },
     "update_timeout": {
@@ -222,7 +250,7 @@
       "default": "1h",
       "pos": {
         "filename": "variables.tf",
-        "line": 126
+        "line": 138
       }
     }
   },
@@ -303,7 +331,7 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 44
+        "line": 51
       }
     },
     "ibm_event_streams_topic.es_topic": {
@@ -321,7 +349,24 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 55
+        "line": 62
+      }
+    },
+    "ibm_iam_authorization_policy.kms_policy": {
+      "mode": "managed",
+      "type": "ibm_iam_authorization_policy",
+      "name": "kms_policy",
+      "attributes": {
+        "count": "skip_iam_authorization_policy",
+        "source_resource_group_id": "resource_group_id",
+        "target_resource_instance_id": "existing_kms_instance_guid"
+      },
+      "provider": {
+        "name": "ibm"
+      },
+      "pos": {
+        "filename": "main.tf",
+        "line": 76
       }
     },
     "ibm_resource_instance.es_instance": {
@@ -341,7 +386,7 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 17
+        "line": 24
       }
     }
   },

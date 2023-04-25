@@ -44,10 +44,20 @@ func setupOptions(t *testing.T, prefix string, dir string) *testhelper.TestOptio
 		Prefix:        prefix,
 		ResourceGroup: resourceGroup,
 		Region:        region,
-		TerraformVars: map[string]interface{}{
-			"existing_sm_instance_guid": permanentResources["secretsManagerGuid"],
-		},
 	})
+	if dir == completeExampleTerraformDir {
+		options = testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
+			Testing:       t,
+			TerraformDir:  dir,
+			Prefix:        prefix,
+			ResourceGroup: resourceGroup,
+			Region:        region,
+			TerraformVars: map[string]interface{}{
+				"existing_sm_instance_guid":   permanentResources["secretsManagerGuid"],
+				"existing_sm_instance_region": permanentResources["secretsManagerRegion"],
+			},
+		})
+	}
 	return options
 }
 

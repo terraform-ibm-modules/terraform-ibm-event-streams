@@ -28,24 +28,13 @@ module "resource_group" {
 
 
 module "key_protect_all_inclusive" {
-  providers = {
-    restapi = restapi.kp
-  }
-  source                    = "git::https://github.com/terraform-ibm-modules/terraform-ibm-key-protect-all-inclusive.git?ref=v3.1.2"
+  source                    = "git::https://github.com/terraform-ibm-modules/terraform-ibm-key-protect-all-inclusive.git?ref=v4.0.0"
   key_protect_instance_name = "${var.prefix}-kp"
   resource_group_id         = module.resource_group.resource_group_id
   region                    = var.region
   resource_tags             = var.resource_tags
   key_map                   = { "es" = ["${var.prefix}-es"] }
   enable_metrics            = false
-}
-
-resource "ibm_iam_authorization_policy" "policy" {
-  source_service_name         = "messagehub"
-  source_resource_group_id    = module.resource_group.resource_group_id
-  target_service_name         = "kms"
-  target_resource_instance_id = module.key_protect_all_inclusive.key_protect_guid
-  roles                       = ["Reader"]
 }
 
 
@@ -73,13 +62,15 @@ resource "ibm_resource_instance" "secrets_manager" {
 ##############################################################################
 
 module "event_streams" {
-  source            = "../../"
-  resource_group_id = module.resource_group.resource_group_id
-  es_name           = "${var.prefix}-es"
-  plan              = var.plan
-  kms_key_crn       = module.key_protect_all_inclusive.keys["es.${var.prefix}-es"].crn
-  schemas           = var.schemas
-  tags              = var.resource_tags
+  source                     = "../../"
+  resource_group_id          = module.resource_group.resource_group_id
+  es_name                    = "${var.prefix}-es"
+  plan                       = var.plan
+  kms_key_crn                = module.key_protect_all_inclusive.keys["es.${var.prefix}-es"].crn
+  existing_kms_instance_guid = module.key_protect_all_inclusive.key_protect_guid
+  schemas                    = var.schemas
+  tags                       = var.resource_tags
+
 }
 
 ##############################################################################
