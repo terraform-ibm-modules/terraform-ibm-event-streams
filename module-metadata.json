@@ -223,10 +223,10 @@
         },
         {
           "config": {
-            "cleanup.policy": "delete",
-            "retention.bytes": "10485760",
+            "cleanup.policy": "compact,delete",
+            "retention.bytes": "1073741824",
             "retention.ms": "86400000",
-            "segment.bytes": "10485760"
+            "segment.bytes": "536870912"
           },
           "name": "topic-2",
           "partitions": 1

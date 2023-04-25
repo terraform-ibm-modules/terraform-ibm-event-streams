@@ -102,10 +102,10 @@ variable "topics" {
       name       = "topic-2"
       partitions = 1
       config = {
-        "cleanup.policy"  = "delete"
+        "cleanup.policy"  = "compact,delete"
         "retention.ms"    = "86400000"
-        "retention.bytes" = "10485760"
-        "segment.bytes"   = "10485760"
+        "retention.bytes" = "1073741824"
+        "segment.bytes"   = "536870912"
       }
     }
   ]
