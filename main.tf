@@ -5,8 +5,6 @@
 locals {
   kp_backup_crn = var.backup_encryption_key_crn != null ? var.backup_encryption_key_crn : var.kms_key_crn
   # tflint-ignore: terraform_unused_declarations
-  validate_es_inputs_schema_enterprise = ((var.plan == "lite") || (var.plan == "standard") || (var.plan == "enterprise-3nodes-2tb" && (length(var.topic_names) == length(var.schemas)))) ? true : tobool("The number of topic_name, schemas, partitions, cleanup_policy, retention_ms, retention_bytes and segment bytes should be of same length.")
-  # tflint-ignore: terraform_unused_declarations
   validate_throughput_lite_standard = ((var.plan == "lite" || var.plan == "standard") && var.throughput != 150) ? tobool("Throughput value cannot be changed in lite and standard plan. Default value is 150.") : true
   # tflint-ignore: terraform_unused_declarations
   validate_storage_size_lite_standard = ((var.plan == "lite" || var.plan == "standard") && var.storage_size != 2048) ? tobool("Storage size value cannot be changed in lite and standard plan. Default value is 2048.") : true
@@ -14,8 +12,6 @@ locals {
   validate_service_end_points_lite_standard = ((var.plan == "lite" || var.plan == "standard") && var.service_endpoints != "public") ? tobool("Service endpoint cannot be changed in lite and standard plan. Default is public.") : true
   # tflint-ignore: terraform_unused_declarations
   validate_private_ip_allowlist_lite_standard = ((var.plan == "lite" || var.plan == "standard") && var.private_ip_allowlist != null) ? tobool("Private ip allowlist cannot be changed in lite and standard plan.") : true
-  # tflint-ignore: terraform_unused_declarations
-  validate_number_of_topic_lite = (var.plan == "lite" && length(var.topic_names) > 1) ? tobool("Only one topic is allowed in lite plan") : true
 }
 
 resource "ibm_resource_instance" "es_instance" {

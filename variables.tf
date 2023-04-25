@@ -72,18 +72,6 @@ variable "schemas" {
   default     = []
 }
 
-variable "topic_names" {
-  type        = list(string)
-  description = "The name of the topic instance"
-  default     = ["topic_1", "topic_2", "topic_3"] # For lite plan only one topic is allowed
-  validation {
-    condition = alltrue([
-      for name in var.topic_names : length(name) <= 200
-    ])
-    error_message = "Topic name should not be more than 200 characters long"
-  }
-}
-
 variable "topics" {
   type = list(object(
     {

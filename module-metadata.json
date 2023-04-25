@@ -7,7 +7,7 @@
       "description": "(Optional) The CRN of a Key Protect Key to use for encrypting backups. If left null, the value passed for the 'kms_key_crn' variable will be used. Take note that Hyper Protect Crypto Services for IBM Cloud® Databases backups is not currently supported.",
       "pos": {
         "filename": "variables.tf",
-        "line": 131
+        "line": 119
       }
     },
     "create_timeout": {
@@ -17,7 +17,7 @@
       "default": "3h",
       "pos": {
         "filename": "variables.tf",
-        "line": 137
+        "line": 125
       }
     },
     "delete_timeout": {
@@ -27,7 +27,7 @@
       "default": "15m",
       "pos": {
         "filename": "variables.tf",
-        "line": 149
+        "line": 137
       }
     },
     "es_name": {
@@ -49,7 +49,7 @@
       "description": "(Optional) The root key CRN of a Key Management Service like Key Protect or Hyper Protect Crypto Service (HPCS) that you want to use for disk encryption. If null, database is encrypted by using randomly generated keys. See https://cloud.ibm.com/docs/cloud-databases?topic=cloud-databases-key-protect\u0026interface=ui#key-byok for current list of supported regions for BYOK",
       "pos": {
         "filename": "variables.tf",
-        "line": 125
+        "line": 113
       }
     },
     "plan": {
@@ -179,20 +179,6 @@
         "line": 33
       }
     },
-    "topic_names": {
-      "name": "topic_names",
-      "type": "list(string)",
-      "description": "The name of the topic instance",
-      "default": [
-        "topic_1",
-        "topic_2",
-        "topic_3"
-      ],
-      "pos": {
-        "filename": "variables.tf",
-        "line": 75
-      }
-    },
     "topics": {
       "name": "topics",
       "type": "list(object(\n    {\n      name       = string\n      partitions = number\n      config = object({\n        cleanup_policy  = string\n        retention_ms    = string\n        retention_bytes = string\n        segment_bytes   = string\n      })\n    }\n  ))",
@@ -227,7 +213,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 87
+        "line": 75
       }
     },
     "update_timeout": {
@@ -237,7 +223,7 @@
       "default": "1h",
       "pos": {
         "filename": "variables.tf",
-        "line": 143
+        "line": 131
       }
     }
   },
@@ -318,7 +304,7 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 49
+        "line": 45
       }
     },
     "ibm_event_streams_topic.es_topic": {
@@ -336,7 +322,7 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 60
+        "line": 56
       }
     },
     "ibm_resource_instance.es_instance": {
@@ -356,7 +342,7 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 21
+        "line": 17
       }
     }
   },
