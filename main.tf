@@ -4,11 +4,14 @@
 
 locals {
   kp_backup_crn = var.backup_encryption_key_crn != null ? var.backup_encryption_key_crn : var.kms_key_crn
+  # tflint-ignore: terraform_unused_declarations
   kms_service = var.kms_key_crn != null ? (
     can(regex(".*kms.*", var.kms_key_crn)) ? "kms" : (
       can(regex(".*hs-crypto.*", var.kms_key_crn)) ? "hs-crypto" : null
     )
   ) : null
+  # tflint-ignore: terraform_unused_declarations
+  validate_skip_iam_authorization_policy = var.skip_iam_authorization_policy && local.kms_service == null ? tobool("var.kms_key_crn cannot be null if var.skip_iam_authorization_policy is true.") : true
   # tflint-ignore: terraform_unused_declarations
   validate_throughput_lite_standard = ((var.plan == "lite" || var.plan == "standard") && var.throughput != 150) ? tobool("Throughput value cannot be changed in lite and standard plan. Default value is 150.") : true
   # tflint-ignore: terraform_unused_declarations

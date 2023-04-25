@@ -34,4 +34,5 @@ module "event_streams" {
   service_endpoints          = var.service_endpoints
   tags                       = var.resource_tags
   existing_kms_instance_guid = module.key_protect_all_inclusive.key_protect_guid
+  kms_key_crn                = module.key_protect_all_inclusive.keys["es.${var.prefix}-es"].crn
 }

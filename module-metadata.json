@@ -310,7 +310,7 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 51
+        "line": 54
       }
     },
     "ibm_event_streams_topic.es_topic": {
@@ -328,7 +328,7 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 62
+        "line": 65
       }
     },
     "ibm_iam_authorization_policy.kms_policy": {
@@ -345,7 +345,7 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 76
+        "line": 79
       }
     },
     "ibm_resource_instance.es_instance": {
@@ -365,7 +365,7 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 24
+        "line": 27
       }
     }
   },
