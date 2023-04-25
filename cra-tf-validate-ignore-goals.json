@@ -1,1 +1,10 @@
-{}
+{
+    "scc_goals": [
+        {
+            "scc_goal_id": "3000306",
+            "description": " Check whether Event Streams is accessible only by using private endpoints Found in: resource_address: module.event_streams.ibm_resource_instance.es_instance",
+            "ignore_reason": "Tracking in https://github.ibm.com/GoldenEye/issues/issues/3880",
+            "is_valid": true
+        }
+    ]
+}
