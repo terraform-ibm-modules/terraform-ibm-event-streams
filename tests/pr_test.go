@@ -17,28 +17,8 @@ const completeExampleTerraformDir = "examples/complete"
 // Use existing group for tests
 const resourceGroup = "geretain-test-event-streams"
 
-// Not all regions provide cross region support so value must be hardcoded https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-service-availability.
-const region = "us-south"
-
-// Define a struct with fields that match the structure of the YAML data
-const yamlLocation = "../common-dev-assets/common-go-assets/common-permanent-resources.yaml"
-
 // Set up tests to only use supported BYOK regions
 const regionSelectionPath = "../common-dev-assets/common-go-assets/icd-region-prefs.yaml"
-
-var permanentResources map[string]interface{}
-
-// TestMain will be run before any parallel tests, used to read data from yaml for use with tests
-func TestMain(m *testing.M) {
-
-	var err error
-	permanentResources, err = common.LoadMapFromYaml(yamlLocation)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	os.Exit(m.Run())
-}
 
 func setupOptions(t *testing.T, prefix string, dir string) *testhelper.TestOptions {
 	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
