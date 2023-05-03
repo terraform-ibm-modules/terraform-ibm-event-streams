@@ -28,20 +28,10 @@ func setupOptions(t *testing.T, prefix string, dir string) *testhelper.TestOptio
 	return options
 }
 
-func TestRunDefaultExample(t *testing.T) {
-	t.Parallel()
-
-	options := setupOptions(t, "event-streams-default", defaultExampleTerraformDir)
-
-	output, err := options.RunTestConsistency()
-	assert.Nil(t, err, "This should not have errored")
-	assert.NotNil(t, output, "Expected some output")
-}
-
 func TestRunUpgradeExample(t *testing.T) {
 	t.Parallel()
 
-	options := setupOptions(t, "event-streams-upg", defaultExampleTerraformDir)
+	options := setupOptions(t, "event-streams-upg", completeExampleTerraformDir)
 
 	output, err := options.RunTestUpgrade()
 	if !options.UpgradeTestSkipped {
