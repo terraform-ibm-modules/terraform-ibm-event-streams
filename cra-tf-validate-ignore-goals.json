@@ -5,12 +5,6 @@
         "description": " Check whether Event Streams is accessible only by using private endpoints Found in: resource_address: module.event_streams.ibm_resource_instance.es_instance",
         "ignore_reason": "Private endpoint option is not available in Standard plan which the complete example uses. When we create an FSCloud profile example for this module, the CRA scan will be done against that, and that should use private endpoint only. (Tracked at https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/issues/5)",
         "is_valid": true
-      },
-      {
-        "scc_rule_id": "rule-564ed93b-1927-4562-8a90-fbae173cdee1",
-        "description": "Check whether Cloud Internet Services (CIS) has DDoS protection enabled",
-        "ignore_reason": "Tracking in https://github.ibm.com/GoldenEye/issues/issues/3905",
-        "is_valid": true
       }
     ]
   }
