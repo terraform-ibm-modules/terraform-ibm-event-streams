@@ -38,7 +38,7 @@ variable "throughput" {
 
 variable "storage_size" {
   type        = number
-  description = "Storage size of the event streams in GB. for enterprise instance only. Options are: 2048, 4096, 6144, 8192, 10240, 12288. Default is 2048.      Note: When throughput is 300, storage_size starts from 4096,  when throughput is 450, storage_size starts from 6144."
+  description = "Storage size of the event streams in GB. For enterprise instance only. Options are: 2048, 4096, 6144, 8192, 10240, 12288, and the default is 2048. Note: When throughput is 300, storage_size starts from 4096, when throughput is 450, storage_size starts from 6144."
   default     = "2048"
 }
 

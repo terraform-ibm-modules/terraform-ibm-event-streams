@@ -3,13 +3,13 @@
 <!-- Update the title to match the module name and add a description -->
 # Event Streams Module
 <!-- UPDATE BADGES:
-1. Make sure that the badge link for the current status of the module is correct. For the status options, see https://github.com/terraform-ibm-modules/documentation/blob/master/status.md.
+1. Make sure that the badge link for the current status of the module is correct. For the status options, see https://github.com/terraform-ibm-modules/documentation/blob/main/status.md.
 2. Update the "Build Status" badge to point to the travis pipeline for the module. Replace "module-template" in two places.
 3. Update the "latest release" badge to point to the new module. Replace "module-template" in two places.
 -->
 
-[![Incubating (Not yet consumable)](https://img.shields.io/badge/status-Incubating%20(Not%20yet%20consumable)-red)](https://terraform-ibm-modules.github.io/documentation/#/badge-status)
-[![Build Status](https://github.com/terraform-ibm-modules/terraform-ibm-cos/actions/workflows/ci.yml/badge.svg)](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/actions/workflows/ci.yml)
+[![Stable (With quality checks)](https://img.shields.io/badge/Status-Stable%20(With%20quality%20checks)-green)](https://terraform-ibm-modules.github.io/documentation/#/badge-status)
+[![Build Status](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/actions/workflows/ci.yml/badge.svg)](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/actions/workflows/ci.yml)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 [![latest release](https://img.shields.io/github/v/release/terraform-ibm-modules/terraform-ibm-cos?logo=GitHub&sort=semver)](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/releases/latest)
@@ -28,13 +28,54 @@ unless real values don't help users know what to change.
 
 ```hcl
 module "event_streams" {
-  # replace "master" with a GIT release version to lock into a specific release
+  # replace "main" with a GIT release version to lock into a specific release
   source               = "git::https://github.com/terraform-ibm-modules/terraform-ibm-event-streams?ref=main"
-  resource_group_id    = module.resource_group.resource_group_id
-  plan                 = var.plan
-  topic_name           = var.topic_name
-  schema_id            = var.schema_id
-  schema               = var.schema
+  resource_group    = "event-streams-rg"
+  plan                 = "standard"
+  topics           = [
+    {
+      name       = "topic-1"
+      partitions = 1
+      config = {
+        "cleanup.policy"  = "delete"
+        "retention.ms"    = "86400000"
+        "retention.bytes" = "10485760"
+        "segment.bytes"   = "10485760"
+      }
+    },
+    {
+      name       = "topic-2"
+      partitions = 1
+      config = {
+        "cleanup.policy"  = "compact,delete"
+        "retention.ms"    = "86400000"
+        "retention.bytes" = "1073741824"
+        "segment.bytes"   = "536870912"
+      }
+    }
+  ]
+  schema_id            = [{
+    schema_id = "my-es-schema_1"
+    schema = {
+      type = "string"
+      name = "name_1"
+    }
+    },
+    {
+      schema_id = "my-es-schema_2"
+      schema = {
+        type = "string"
+        name = "name_2"
+      }
+    },
+    {
+      schema_id = "my-es-schema_3"
+      schema = {
+        type = "string"
+        name = "name_3"
+      }
+    }
+  ]
 }
 ```
 <!--
@@ -71,8 +112,15 @@ https://csrc.nist.gov/Projects/risk-management/sp800-53-controls/release-search#
 You need the following permissions to run this module.
 
 - Account Management
+    - **Resource Group** service
+        - `Viewer` platform access
+- IAM Services
+    - **IBM Authorization Policy**
+        - `Editor` platform access
+        - `Manager` service access
     - **Event Streams** service
-        - `Editor` role access
+        - `Editor` platform access
+        - `Manager` service access
 
 
 ## Examples
@@ -118,7 +166,7 @@ No modules.
 | <a name="input_schemas"></a> [schemas](#input\_schemas) | The list of schema object which contains schema id and format of the schema | <pre>list(object(<br>    {<br>      schema_id = string<br>      schema = object({<br>        type = string<br>        name = string<br>      })<br>    }<br>  ))</pre> | `[]` | no |
 | <a name="input_service_endpoints"></a> [service\_endpoints](#input\_service\_endpoints) | The type of service endpoint(public,private or public-and-private) to be used for connection. | `string` | `"private"` | no |
 | <a name="input_skip_iam_authorization_policy"></a> [skip\_iam\_authorization\_policy](#input\_skip\_iam\_authorization\_policy) | Whether or not you want to skip applying an authorization policy to your kms instance. | `bool` | `false` | no |
-| <a name="input_storage_size"></a> [storage\_size](#input\_storage\_size) | Storage size of the event streams in GB. for enterprise instance only. Options are: 2048, 4096, 6144, 8192, 10240, 12288. Default is 2048.      Note: When throughput is 300, storage\_size starts from 4096,  when throughput is 450, storage\_size starts from 6144. | `number` | `"2048"` | no |
+| <a name="input_storage_size"></a> [storage\_size](#input\_storage\_size) | Storage size of the event streams in GB. For enterprise instance only. Options are: 2048, 4096, 6144, 8192, 10240, 12288, and the default is 2048. Note: When throughput is 300, storage\_size starts from 4096, when throughput is 450, storage\_size starts from 6144. | `number` | `"2048"` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | List of tags associated with the Event Steams instance | `list(string)` | `[]` | no |
 | <a name="input_throughput"></a> [throughput](#input\_throughput) | Throughput capacity in MB per second. for enterprise instance only. Options are: 150, 300, 450. Default is 150. | `number` | `"150"` | no |
 | <a name="input_topics"></a> [topics](#input\_topics) | List of topics. For lite plan only one topic is allowed. | <pre>list(object(<br>    {<br>      name       = string<br>      partitions = number<br>      config     = object({})<br>    }<br>  ))</pre> | `[]` | no |
