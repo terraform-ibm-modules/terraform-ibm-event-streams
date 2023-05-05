@@ -1,4 +1,4 @@
-# Complete example with key protect and secret manager
+# Complete example with key protect
 
 An end-to-end example that creates an event streams instance with key protect.
 This example uses the IBM Cloud terraform provider to:
