@@ -38,7 +38,7 @@ resource "ibm_resource_instance" "es_instance" {
   parameters = {
     service-endpoints         = var.service_endpoints
     throughput                = var.throughput
-    storage_size              = var.storage_size # Storage capacity cannot be scaled down once instance is created.
+    storage_size              = var.storage_size
     key_protect_key           = var.kms_key_crn
     backup_encryption_key_crn = local.kp_backup_crn
   }
@@ -72,10 +72,10 @@ resource "ibm_event_streams_topic" "es_topic" {
 # IAM Authorization Policy
 ##############################################################################
 
-# Create IAM Authorization Policies to allow postgresql to access kms for the encryption key
+# Create IAM Authorization Policies to allow messagehub to access kms for the encryption key
 resource "ibm_iam_authorization_policy" "kms_policy" {
   count                       = var.skip_iam_authorization_policy ? 0 : 1
-  source_service_name         = "databases-for-postgresql"
+  source_service_name         = "messagehub"
   source_resource_group_id    = var.resource_group_id
   target_service_name         = local.kms_service
   target_resource_instance_id = var.existing_kms_instance_guid
