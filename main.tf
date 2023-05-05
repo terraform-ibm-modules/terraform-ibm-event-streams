@@ -75,6 +75,7 @@ resource "ibm_event_streams_topic" "es_topic" {
 # Create IAM Authorization Policies to allow messagehub to access kms for the encryption key
 resource "ibm_iam_authorization_policy" "kms_policy" {
   count                       = var.skip_iam_authorization_policy ? 0 : 1
+  depends_on                  = [ibm_resource_instance.es_instance]
   source_service_name         = "messagehub"
   source_resource_group_id    = var.resource_group_id
   target_service_name         = local.kms_service
