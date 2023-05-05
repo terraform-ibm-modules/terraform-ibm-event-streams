@@ -52,12 +52,6 @@ variable "service_endpoints" {
   }
 }
 
-variable "private_ip_allowlist" {
-  type        = string
-  description = "Range of IPs that have the access. For enterprise instance only. Specify 1 or more IP range in CIDR format."
-  default     = null
-}
-
 variable "skip_iam_authorization_policy" {
   type        = bool
   description = "Whether or not you want to skip applying an authorization policy to your kms instance."
@@ -92,7 +86,7 @@ variable "topics" {
 
 variable "kms_key_crn" {
   type        = string
-  description = "(Optional) The root key CRN of a Key Management Service like Key Protect or Hyper Protect Crypto Service (HPCS) that you want to use for disk encryption. If null, database is encrypted by using randomly generated keys. See https://cloud.ibm.com/docs/cloud-databases?topic=cloud-databases-key-protect&interface=ui#key-byok for current list of supported regions for BYOK"
+  description = "(Optional) The root key CRN of a Key Management Service like Key Protect or Hyper Protect Crypto Service (HPCS) that you want to use for disk encryption. If null, database is encrypted by using randomly generated keys. See https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-managing_encryption for more info."
   default     = null
 }
 
@@ -104,7 +98,7 @@ variable "existing_kms_instance_guid" {
 
 variable "backup_encryption_key_crn" {
   type        = string
-  description = "(Optional) The CRN of a Key Protect Key to use for encrypting backups. If left null, the value passed for the 'kms_key_crn' variable will be used. Take note that Hyper Protect Crypto Services for IBM Cloud® Databases backups is not currently supported."
+  description = "(Optional) The CRN of a Key Protect Key to use for encrypting backups. If left null, the value passed for the 'kms_key_crn' variable will be used."
   default     = null
 }
 

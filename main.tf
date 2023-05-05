@@ -19,8 +19,6 @@ locals {
   # tflint-ignore: terraform_unused_declarations
   validate_service_end_points_lite_standard = ((var.plan == "lite" || var.plan == "standard") && var.service_endpoints != "public") ? tobool("Service endpoint cannot be changed in lite and standard plan. Default is public.") : true
   # tflint-ignore: terraform_unused_declarations
-  validate_private_ip_allowlist_lite_standard = ((var.plan == "lite" || var.plan == "standard") && var.private_ip_allowlist != null) ? tobool("Private ip allowlist cannot be changed in lite and standard plan.") : true
-  # tflint-ignore: terraform_unused_declarations
   validate_hpcs_guid_input = var.skip_iam_authorization_policy == false && var.existing_kms_instance_guid == null ? tobool("A value must be passed for var.existing_kms_instance_guid when creating an instance, var.skip_iam_authorization_policy is false.") : true
 }
 
@@ -39,7 +37,6 @@ resource "ibm_resource_instance" "es_instance" {
 
   parameters = {
     service-endpoints         = var.service_endpoints
-    private_ip_allowlist      = var.private_ip_allowlist
     throughput                = var.throughput
     storage_size              = var.storage_size # Storage capacity cannot be scaled down once instance is created.
     key_protect_key           = var.kms_key_crn

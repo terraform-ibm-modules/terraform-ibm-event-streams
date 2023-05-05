@@ -4,10 +4,10 @@
     "backup_encryption_key_crn": {
       "name": "backup_encryption_key_crn",
       "type": "string",
-      "description": "(Optional) The CRN of a Key Protect Key to use for encrypting backups. If left null, the value passed for the 'kms_key_crn' variable will be used. Take note that Hyper Protect Crypto Services for IBM Cloud® Databases backups is not currently supported.",
+      "description": "(Optional) The CRN of a Key Protect Key to use for encrypting backups. If left null, the value passed for the 'kms_key_crn' variable will be used.",
       "pos": {
         "filename": "variables.tf",
-        "line": 105
+        "line": 99
       }
     },
     "create_timeout": {
@@ -17,7 +17,7 @@
       "default": "3h",
       "pos": {
         "filename": "variables.tf",
-        "line": 111
+        "line": 105
       }
     },
     "delete_timeout": {
@@ -27,7 +27,7 @@
       "default": "15m",
       "pos": {
         "filename": "variables.tf",
-        "line": 123
+        "line": 117
       }
     },
     "es_name": {
@@ -52,7 +52,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 99
+        "line": 93
       },
       "immutable": true,
       "computed": true
@@ -60,10 +60,10 @@
     "kms_key_crn": {
       "name": "kms_key_crn",
       "type": "string",
-      "description": "(Optional) The root key CRN of a Key Management Service like Key Protect or Hyper Protect Crypto Service (HPCS) that you want to use for disk encryption. If null, database is encrypted by using randomly generated keys. See https://cloud.ibm.com/docs/cloud-databases?topic=cloud-databases-key-protect\u0026interface=ui#key-byok for current list of supported regions for BYOK",
+      "description": "(Optional) The root key CRN of a Key Management Service like Key Protect or Hyper Protect Crypto Service (HPCS) that you want to use for disk encryption. If null, database is encrypted by using randomly generated keys. See https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-managing_encryption for more info.",
       "pos": {
         "filename": "variables.tf",
-        "line": 93
+        "line": 87
       }
     },
     "plan": {
@@ -78,15 +78,6 @@
       "pos": {
         "filename": "variables.tf",
         "line": 11
-      }
-    },
-    "private_ip_allowlist": {
-      "name": "private_ip_allowlist",
-      "type": "string",
-      "description": "Range of IPs that have the access. For enterprise instance only. Specify 1 or more IP range in CIDR format.",
-      "pos": {
-        "filename": "variables.tf",
-        "line": 55
       }
     },
     "region": {
@@ -137,7 +128,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 67
+        "line": 61
       }
     },
     "service_endpoints": {
@@ -163,7 +154,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 61
+        "line": 55
       }
     },
     "storage_size": {
@@ -219,7 +210,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 81
+        "line": 75
       }
     },
     "update_timeout": {
@@ -229,7 +220,7 @@
       "default": "1h",
       "pos": {
         "filename": "variables.tf",
-        "line": 117
+        "line": 111
       }
     }
   },
@@ -308,7 +299,7 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 54
+        "line": 51
       }
     },
     "ibm_event_streams_topic.es_topic": {
@@ -326,7 +317,7 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 65
+        "line": 62
       }
     },
     "ibm_iam_authorization_policy.kms_policy": {
@@ -343,7 +334,7 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 79
+        "line": 76
       }
     },
     "ibm_resource_instance.es_instance": {
@@ -363,7 +354,7 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 27
+        "line": 25
       }
     }
   },
