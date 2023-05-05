@@ -1,3 +1,4 @@
+// Tests in this file are NOT run in the PR pipeline. They are run in the continuous testing pipeline along with the ones in pr_test.go
 // Tests in this file are run in the PR pipeline
 package test
 
@@ -8,7 +9,7 @@ import (
 	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/testhelper"
 )
 
-const completeExampleTerraformDir = "examples/complete"
+const defaultExampleTerraformDir = "examples/default"
 
 // Use existing group for tests
 const resourceGroup = "geretain-test-event-streams"
@@ -30,7 +31,7 @@ func setupOptions(t *testing.T, prefix string, dir string) *testhelper.TestOptio
 func TestRunUpgradeExample(t *testing.T) {
 	t.Parallel()
 
-	options := setupOptions(t, "event-streams-upg", completeExampleTerraformDir)
+	options := setupOptions(t, "event-streams-upg", defaultExampleTerraformDir)
 
 	output, err := options.RunTestUpgrade()
 	if !options.UpgradeTestSkipped {
@@ -39,10 +40,10 @@ func TestRunUpgradeExample(t *testing.T) {
 	}
 }
 
-func TestRunCompleteExample(t *testing.T) {
+func TestRunDefaultExample(t *testing.T) {
 	t.Parallel()
 
-	options := setupOptions(t, "event-streams-complete", completeExampleTerraformDir)
+	options := setupOptions(t, "event-streams-default", defaultExampleTerraformDir)
 
 	output, err := options.RunTestConsistency()
 	assert.Nil(t, err, "This should not have errored")
