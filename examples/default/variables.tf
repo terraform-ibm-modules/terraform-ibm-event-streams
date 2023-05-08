@@ -13,7 +13,7 @@ variable "region" {
 variable "prefix" {
   type        = string
   description = "Prefix to append to all resources created by this example"
-  default     = "terraform"
+  default     = "event_streams"
 }
 
 variable "resource_group" {
@@ -24,6 +24,6 @@ variable "resource_group" {
 
 variable "resource_tags" {
   type        = list(string)
-  description = "Optional list of tags to be added to created resources"
+  description = "List of tags associated with the Event Steams instance"
   default     = []
 }

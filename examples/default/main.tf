@@ -9,11 +9,14 @@ module "resource_group" {
   existing_resource_group_name = var.resource_group
 }
 
-resource "ibm_resource_instance" "cos_instance" {
-  name              = "${var.prefix}-cos"
-  resource_group_id = module.resource_group.resource_group_id
-  service           = "cloud-object-storage"
-  plan              = "standard"
-  location          = "global"
-  tags              = var.resource_tags
+##############################################################################
+# Events-streams-instance
+##############################################################################
+
+module "event_streams" {
+  source                        = "../../"
+  resource_group_id             = module.resource_group.resource_group_id
+  es_name                       = "${var.prefix}-es"
+  tags                          = var.resource_tags
+  skip_iam_authorization_policy = true
 }

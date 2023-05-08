@@ -8,41 +8,43 @@ import (
 	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/testhelper"
 )
 
-// Use existing resource group
-const resourceGroup = "geretain-test-resources"
-const defaultExampleTerraformDir = "examples/default"
+const completeExampleTerraformDir = "examples/complete"
+
+// Use existing group for tests
+const resourceGroup = "geretain-test-event-streams"
+
+// Set up tests to only use supported BYOK regions
+const regionSelectionPath = "../common-dev-assets/common-go-assets/icd-region-prefs.yaml"
 
 func setupOptions(t *testing.T, prefix string, dir string) *testhelper.TestOptions {
 	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
-		Testing:       t,
-		TerraformDir:  dir,
-		Prefix:        prefix,
-		ResourceGroup: resourceGroup,
+		Testing:            t,
+		TerraformDir:       dir,
+		Prefix:             prefix,
+		ResourceGroup:      resourceGroup,
+		BestRegionYAMLPath: regionSelectionPath,
 	})
 	return options
-}
-
-func TestRunDefaultExample(t *testing.T) {
-	t.Parallel()
-
-	options := setupOptions(t, "mod-template", defaultExampleTerraformDir)
-
-	output, err := options.RunTestConsistency()
-	assert.Nil(t, err, "This should not have errored")
-	assert.NotNil(t, output, "Expected some output")
 }
 
 func TestRunUpgradeExample(t *testing.T) {
 	t.Parallel()
 
-	// TODO: Remove this line after the first merge to primary branch is complete to enable upgrade test
-	t.Skip("Skipping upgrade test until initial code is in primary branch")
-
-	options := setupOptions(t, "mod-template-upg", defaultExampleTerraformDir)
+	options := setupOptions(t, "event-streams-upg", completeExampleTerraformDir)
 
 	output, err := options.RunTestUpgrade()
 	if !options.UpgradeTestSkipped {
 		assert.Nil(t, err, "This should not have errored")
 		assert.NotNil(t, output, "Expected some output")
 	}
+}
+
+func TestRunCompleteExample(t *testing.T) {
+	t.Parallel()
+
+	options := setupOptions(t, "event-streams-complete", completeExampleTerraformDir)
+
+	output, err := options.RunTestConsistency()
+	assert.Nil(t, err, "This should not have errored")
+	assert.NotNil(t, output, "Expected some output")
 }
