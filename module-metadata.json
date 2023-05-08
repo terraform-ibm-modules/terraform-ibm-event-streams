@@ -1,15 +1,6 @@
 {
   "path": ".",
   "variables": {
-    "backup_encryption_key_crn": {
-      "name": "backup_encryption_key_crn",
-      "type": "string",
-      "description": "(Optional) The CRN of a Key Protect Key to use for encrypting backups. If left null, the value passed for the 'kms_key_crn' variable will be used.",
-      "pos": {
-        "filename": "variables.tf",
-        "line": 99
-      }
-    },
     "create_timeout": {
       "name": "create_timeout",
       "type": "string",
@@ -17,7 +8,7 @@
       "default": "3h",
       "pos": {
         "filename": "variables.tf",
-        "line": 105
+        "line": 99
       }
     },
     "delete_timeout": {
@@ -27,7 +18,7 @@
       "default": "15m",
       "pos": {
         "filename": "variables.tf",
-        "line": 117
+        "line": 111
       }
     },
     "es_name": {
@@ -135,7 +126,7 @@
       "name": "service_endpoints",
       "type": "string",
       "description": "The type of service endpoint(public,private or public-and-private) to be used for connection.",
-      "default": "private",
+      "default": "public",
       "source": [
         "ibm_resource_instance.es_instance.parameters"
       ],
@@ -220,7 +211,7 @@
       "default": "1h",
       "pos": {
         "filename": "variables.tf",
-        "line": 111
+        "line": 105
       }
     }
   },
@@ -299,7 +290,7 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 51
+        "line": 49
       }
     },
     "ibm_event_streams_topic.es_topic": {
@@ -317,7 +308,7 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 62
+        "line": 60
       }
     },
     "ibm_iam_authorization_policy.kms_policy": {
@@ -334,7 +325,7 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 76
+        "line": 74
       }
     },
     "ibm_resource_instance.es_instance": {
@@ -354,7 +345,7 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 25
+        "line": 24
       }
     }
   },

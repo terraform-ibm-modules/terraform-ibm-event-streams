@@ -3,7 +3,6 @@
 #######################################################################################
 
 locals {
-  kp_backup_crn = var.backup_encryption_key_crn != null ? var.backup_encryption_key_crn : var.kms_key_crn
   # tflint-ignore: terraform_unused_declarations
   kms_service = var.kms_key_crn != null ? (
     can(regex(".*kms.*", var.kms_key_crn)) ? "kms" : (
@@ -36,11 +35,10 @@ resource "ibm_resource_instance" "es_instance" {
   }
 
   parameters = {
-    service-endpoints         = var.service_endpoints
-    throughput                = var.throughput
-    storage_size              = var.storage_size
-    key_protect_key           = var.kms_key_crn
-    backup_encryption_key_crn = local.kp_backup_crn
+    service-endpoints = var.service_endpoints
+    throughput        = var.throughput
+    storage_size      = var.storage_size
+    key_protect_key   = var.kms_key_crn
   }
 }
 

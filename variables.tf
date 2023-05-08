@@ -45,7 +45,7 @@ variable "storage_size" {
 variable "service_endpoints" {
   type        = string
   description = "The type of service endpoint(public,private or public-and-private) to be used for connection."
-  default     = "private"
+  default     = "public"
   validation {
     condition     = contains(["public", "public-and-private", "private"], var.service_endpoints)
     error_message = "The specified service endpoint is not a valid selection! Supported options are: public, public-and-private or private."
@@ -93,12 +93,6 @@ variable "kms_key_crn" {
 variable "existing_kms_instance_guid" {
   description = "(Optional) The GUID of the Hyper Protect or Key Protect instance in which the key specified in var.kms_key_crn is coming from. Only required if skip_iam_authorization_policy is false"
   type        = string
-  default     = null
-}
-
-variable "backup_encryption_key_crn" {
-  type        = string
-  description = "(Optional) The CRN of a Key Protect Key to use for encrypting backups. If left null, the value passed for the 'kms_key_crn' variable will be used."
   default     = null
 }
 
