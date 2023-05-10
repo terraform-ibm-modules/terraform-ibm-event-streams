@@ -125,7 +125,7 @@ You need the following permissions to run this module.
 
 ## Examples
 
-- [ Complete example with key protect and secret manager](examples/complete)
+- [ Complete example with key protect](examples/complete)
 - [ Default Example](examples/default)
 <!-- END EXAMPLES HOOK -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
