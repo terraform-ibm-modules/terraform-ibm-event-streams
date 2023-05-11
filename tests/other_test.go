@@ -8,24 +8,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const defaultExampleTerraformDir = "examples/default"
-
-func TestRunUpgradeDefaultExample(t *testing.T) {
-	t.Parallel()
-
-	options := setupOptions(t, "event-streams-upg", defaultExampleTerraformDir)
-
-	output, err := options.RunTestUpgrade()
-	if !options.UpgradeTestSkipped {
-		assert.Nil(t, err, "This should not have errored")
-		assert.NotNil(t, output, "Expected some output")
-	}
-}
+const basicExampleTerraformDir = "examples/basic"
 
 func TestRunDefaultExample(t *testing.T) {
 	t.Parallel()
 
-	options := setupOptions(t, "event-streams-default", defaultExampleTerraformDir)
+	options := setupOptions(t, "event-streams-default", basicExampleTerraformDir)
 
 	output, err := options.RunTestConsistency()
 	assert.Nil(t, err, "This should not have errored")

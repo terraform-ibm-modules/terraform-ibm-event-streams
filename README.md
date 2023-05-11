@@ -122,11 +122,11 @@ You need the following permissions to run this module.
         - `Editor` platform access
         - `Manager` service access
 
-
+<!-- BEGIN EXAMPLES HOOK -->
 ## Examples
 
-- [ Complete example with key protect and secret manager](examples/complete)
-- [ Default Example](examples/default)
+- [ Basic example](examples/basic)
+- [ Complete example with BYOK encryption](examples/complete)
 <!-- END EXAMPLES HOOK -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
