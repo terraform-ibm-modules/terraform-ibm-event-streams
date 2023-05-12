@@ -13,7 +13,7 @@ variable "region" {
 variable "plan" {
   type        = string
   description = "Plan for the event stream instance. lite, standard or enterprise-3nodes-2tb"
-  default     = "standard"
+  default     = "enterprise-3nodes-2tb"
 }
 
 variable "prefix" {

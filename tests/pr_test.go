@@ -43,10 +43,6 @@ func setupOptions(t *testing.T, prefix string, dir string) *testhelper.TestOptio
 		Prefix:             prefix,
 		ResourceGroup:      resourceGroup,
 		BestRegionYAMLPath: regionSelectionPath,
-		TerraformVars: map[string]interface{}{
-			"existing_kms_instance_guid": permanentResources["hpcs_south"],
-			"kms_key_crn":                permanentResources["hpcs_south_root_key_crn"],
-		},
 	})
 	return options
 }
@@ -76,7 +72,19 @@ func TestRunCompleteExample(t *testing.T) {
 func TestRunFSCloudExample(t *testing.T) {
 	t.Parallel()
 
-	options := setupOptions(t, "event-streams-fscloud", fsCloudTerraformDir)
+	// options := setupOptions(t, "event-streams-fscloud", fsCloudTerraformDir)
+
+	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
+		Testing:            t,
+		TerraformDir:       fsCloudTerraformDir,
+		Prefix:             "es-fscloud",
+		ResourceGroup:      resourceGroup,
+		BestRegionYAMLPath: regionSelectionPath,
+		TerraformVars: map[string]interface{}{
+			"existing_kms_instance_guid": permanentResources["hpcs_south"],
+			"kms_key_crn":                permanentResources["hpcs_south_root_key_crn"],
+		},
+	})
 
 	output, err := options.RunTestConsistency()
 	assert.Nil(t, err, "This should not have errored")
