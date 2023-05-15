@@ -10,7 +10,9 @@ locals {
     )
   ) : null
   # tflint-ignore: terraform_unused_declarations
-  validate_skip_iam_authorization_policy = var.skip_iam_authorization_policy == false && (var.kms_key_crn == null || var.existing_kms_instance_guid == null) ? tobool("When var.skip_iam_authorization_policy is set to false, a value must be passed for var.existing_kms_instance_guid and var.kms_key_crn. Alternatively, if opting to use default encryption, set var.skip_iam_authorization_policy to true to skip creating any KMS auth policy creation.") : true
+  validate_kms_vars = var.kms_encryption_enabled && var.kms_key_crn == null ? tobool("When setting var.kms_encryption_enabled to true, a value must be passed for var.kms_key_crn.") : true
+  # tflint-ignore: terraform_unused_declarations
+  validate_auth_policy = var.kms_encryption_enabled && var.skip_iam_authorization_policy == false && var.existing_kms_instance_guid == null ? tobool("When var.skip_iam_authorization_policy is set to false, and var.kms_encryption_enabled to true, a value must be passed for var.existing_kms_instance_guid in order to create the auth policy.") : true
   # tflint-ignore: terraform_unused_declarations
   validate_throughput_lite_standard = ((var.plan == "lite" || var.plan == "standard") && var.throughput != 150) ? tobool("Throughput value cannot be changed in lite and standard plan. Default value is 150.") : true
   # tflint-ignore: terraform_unused_declarations
@@ -70,7 +72,7 @@ resource "ibm_event_streams_topic" "es_topic" {
 
 # Create IAM Authorization Policies to allow messagehub to access kms for the encryption key
 resource "ibm_iam_authorization_policy" "kms_policy" {
-  count                       = var.skip_iam_authorization_policy ? 0 : 1
+  count                       = var.kms_encryption_enabled == false || var.skip_iam_authorization_policy ? 0 : 1
   depends_on                  = [ibm_resource_instance.es_instance]
   source_service_name         = "messagehub"
   source_resource_group_id    = var.resource_group_id

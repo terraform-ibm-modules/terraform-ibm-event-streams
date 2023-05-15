@@ -72,8 +72,6 @@ func TestRunCompleteExample(t *testing.T) {
 func TestRunFSCloudExample(t *testing.T) {
 	t.Parallel()
 
-	// options := setupOptions(t, "event-streams-fscloud", fsCloudTerraformDir)
-
 	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
 		Testing:            t,
 		TerraformDir:       fsCloudTerraformDir,

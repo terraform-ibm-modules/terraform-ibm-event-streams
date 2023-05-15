@@ -32,6 +32,7 @@ module "event_streams" {
   resource_group_id          = module.resource_group.resource_group_id
   es_name                    = "${var.prefix}-es"
   plan                       = var.plan
+  kms_encryption_enabled     = true
   kms_key_crn                = module.key_protect_all_inclusive.keys["es.${var.prefix}-es"].crn
   existing_kms_instance_guid = module.key_protect_all_inclusive.key_protect_guid
   schemas                    = var.schemas
