@@ -13,7 +13,7 @@ variable "region" {
 variable "prefix" {
   type        = string
   description = "Prefix to append to all resources created by this example"
-  default     = "event_streams"
+  default     = "event-streams"
 }
 
 variable "resource_group" {

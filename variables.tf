@@ -1,5 +1,9 @@
+##############################################################################
+# Input Variables
+##############################################################################
+
 variable "resource_group_id" {
-  description = "ID of resource group to use when creating the event stream instance"
+  description = "The resource group ID where the Event Streams instance will be created."
   type        = string
 }
 
@@ -32,19 +36,38 @@ variable "region" {
 
 variable "throughput" {
   type        = number
-  description = "Throughput capacity in MB per second. for enterprise instance only. Options are: 150, 300, 450. Default is 150."
+  description = "Throughput capacity in MB per second. For enterprise instance only. Options are: 150, 300, 450."
   default     = "150"
+  validation {
+    condition = anytrue([
+      var.throughput == 150,
+      var.throughput == 300,
+      var.throughput == 450,
+    ])
+    error_message = "Supported throughput values are: 150, 300, 450."
+  }
 }
 
 variable "storage_size" {
   type        = number
-  description = "Storage size of the event streams in GB. For enterprise instance only. Options are: 2048, 4096, 6144, 8192, 10240, 12288, and the default is 2048. Note: When throughput is 300, storage_size starts from 4096, when throughput is 450, storage_size starts from 6144. Storage capacity cannot be scaled down once instance is created."
+  description = "Storage size of the event streams in GB. For enterprise instance only. Options are: 2048, 4096, 6144, 8192, 10240, 12288,. Note: When throughput is 300, storage_size starts from 4096, when throughput is 450, storage_size starts from 6144. Storage capacity cannot be scaled down once instance is created."
   default     = "2048"
+  validation {
+    condition = anytrue([
+      var.storage_size == 2048,
+      var.storage_size == 4096,
+      var.storage_size == 6144,
+      var.storage_size == 8192,
+      var.storage_size == 10240,
+      var.storage_size == 12288,
+    ])
+    error_message = "Supported throughput values are: 2048, 4096, 6144, 8192, 10240, 12288."
+  }
 }
 
 variable "service_endpoints" {
   type        = string
-  description = "The type of service endpoint(public,private or public-and-private) to be used for connection."
+  description = "Specify whether you want to enable the public, private, or both service endpoints. Supported values are 'public', 'private', or 'public-and-private'."
   default     = "public"
   validation {
     condition     = contains(["public", "public-and-private", "private"], var.service_endpoints)
@@ -54,7 +77,7 @@ variable "service_endpoints" {
 
 variable "skip_iam_authorization_policy" {
   type        = bool
-  description = "Whether or not you want to skip applying an authorization policy to your kms instance."
+  description = "Set to true to skip the creation of an IAM authorization policy that permits all Event Streams database instances in the resource group to read the encryption key from the KMS instance. If set to false, pass in a value for the KMS instance in the existing_kms_instance_guid variable. In addition, no policy is created if var.kms_encryption_enabled is set to false."
   default     = false
 }
 
@@ -84,14 +107,28 @@ variable "topics" {
   default     = []
 }
 
+variable "kms_encryption_enabled" {
+  type        = bool
+  description = "Set this to true to control the encryption keys used to encrypt the data that you store in IBM Cloud® Databases. If set to false, the data is encrypted by using randomly generated keys. For more info on Key Protect integration, see https://cloud.ibm.com/docs/cloud-databases?topic=cloud-databases-key-protect. For more info on HPCS integration, see https://cloud.ibm.com/docs/cloud-databases?topic=cloud-databases-hpcs"
+  default     = false
+}
+
 variable "kms_key_crn" {
   type        = string
-  description = "(Optional) The root key CRN of a Key Management Service like Key Protect or Hyper Protect Crypto Service (HPCS) that you want to use for disk encryption. If null, database is encrypted by using randomly generated keys. See https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-managing_encryption for more info."
+  description = "The root key CRN of a Key Management Services like Key Protect or Hyper Protect Crypto Services (HPCS) that you want to use for disk encryption. Only used if var.kms_encryption_enabled is set to true."
   default     = null
+  validation {
+    condition = anytrue([
+      var.kms_key_crn == null,
+      can(regex(".*kms.*", var.kms_key_crn)),
+      can(regex(".*hs-crypto.*", var.kms_key_crn)),
+    ])
+    error_message = "Value must be the root key CRN from either the Key Protect or Hyper Protect Crypto Service (HPCS)"
+  }
 }
 
 variable "existing_kms_instance_guid" {
-  description = "(Optional) The GUID of the Hyper Protect or Key Protect instance in which the key specified in var.kms_key_crn is coming from. Only required if skip_iam_authorization_policy is false"
+  description = "The GUID of the Hyper Protect Crypto Services or Key Protect instance in which the key specified in var.kms_key_crn is coming from. Required only if var.kms_encryption_enabled is set to true, var.skip_iam_authorization_policy is set to false, and you pass a value for var.kms_key_crn."
   type        = string
   default     = null
 }
