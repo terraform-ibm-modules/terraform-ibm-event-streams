@@ -31,11 +31,10 @@ module "event_streams" {
   source                     = "../../"
   resource_group_id          = module.resource_group.resource_group_id
   es_name                    = "${var.prefix}-es"
-  plan                       = var.plan
+  kms_encryption_enabled     = true
   kms_key_crn                = module.key_protect_all_inclusive.keys["es.${var.prefix}-es"].crn
   existing_kms_instance_guid = module.key_protect_all_inclusive.key_protect_guid
   schemas                    = var.schemas
   tags                       = var.resource_tags
   topics                     = var.topics
-  service_endpoints          = var.service_endpoints
 }
