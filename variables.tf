@@ -150,9 +150,3 @@ variable "delete_timeout" {
   description = "Deleting timeout value of the Event Streams module"
   default     = "15m"
 }
-
-variable "kms_encryption_enabled" {
-  type        = bool
-  description = "Set this to true to control the encryption keys used to encrypt the message payload data in Event Streams. If set to false, the data is encrypted by using randomly generated keys. For more info on Key Protect integration, see https://cloud.ibm.com/docs/cloud-databases?topic=cloud-databases-key-protect. For more info on HPCS integration, see https://cloud.ibm.com/docs/cloud-databases?topic=cloud-databases-hpcs"
-  default     = false
-}
