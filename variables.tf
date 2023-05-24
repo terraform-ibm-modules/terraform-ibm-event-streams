@@ -150,3 +150,23 @@ variable "delete_timeout" {
   description = "Deleting timeout value of the Event Streams module"
   default     = "15m"
 }
+
+##############################################################
+# Context-based restriction (CBR)
+##############################################################
+
+variable "cbr_rules" {
+  type = list(object({
+    description = string
+    account_id  = string
+    rule_contexts = list(object({
+      attributes = optional(list(object({
+        name  = string
+        value = string
+    }))) }))
+    enforcement_mode = string
+  }))
+  description = "(Optional, list) List of CBR rules to create"
+  default     = []
+  # Validation happens in the rule module
+}
