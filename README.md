@@ -119,6 +119,7 @@ You need the following permissions to run this module.
 
 - [ Basic example](examples/basic)
 - [ Complete example with BYOK encryption and CBR rules](examples/complete)
+- [ Financial Services Cloud profile example](examples/fscloud)
 <!-- END EXAMPLES HOOK -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
