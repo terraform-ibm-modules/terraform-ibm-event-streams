@@ -84,3 +84,34 @@ resource "ibm_iam_authorization_policy" "kms_policy" {
   target_resource_instance_id = var.existing_kms_instance_guid
   roles                       = ["Reader"]
 }
+
+##############################################################################
+# Context Based Restrictions
+##############################################################################
+module "cbr_rule" {
+  count            = length(var.cbr_rules) > 0 ? length(var.cbr_rules) : 0
+  source           = "git::https://github.com/terraform-ibm-modules/terraform-ibm-cbr//cbr-rule-module?ref=v1.2.0"
+  rule_description = var.cbr_rules[count.index].description
+  enforcement_mode = var.cbr_rules[count.index].enforcement_mode
+  rule_contexts    = var.cbr_rules[count.index].rule_contexts
+  resources = [{
+    attributes = [
+      {
+        name     = "accountId"
+        value    = var.cbr_rules[count.index].account_id
+        operator = "stringEquals"
+      },
+      {
+        name     = "serviceInstance"
+        value    = ibm_resource_instance.es_instance.guid
+        operator = "stringEquals"
+      },
+      {
+        name     = "serviceName"
+        value    = "messagehub"
+        operator = "stringEquals"
+      }
+    ]
+  }]
+  operations = []
+}
