@@ -103,3 +103,23 @@ variable "skip_iam_authorization_policy" {
   description = "Set to true to skip the creation of an IAM authorization policy that permits all mongodb instances in the provided resource group reader access to the instance specified in the existing_kms_instance_guid variable."
   default     = false
 }
+
+##############################################################
+# Context-based restriction (CBR)
+##############################################################
+
+variable "cbr_rules" {
+  type = list(object({
+    description = string
+    account_id  = string
+    rule_contexts = list(object({
+      attributes = optional(list(object({
+        name  = string
+        value = string
+    }))) }))
+    enforcement_mode = string
+  }))
+  description = "(Optional, list) List of CBR rules to create"
+  default     = []
+  # Validation happens in the rule module
+}
