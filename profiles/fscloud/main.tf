@@ -2,7 +2,7 @@ module "event_streams" {
   source                        = "../../"
   resource_group_id             = var.resource_group_id
   es_name                       = var.es_name
-  plan                          = var.plan
+  plan                          = "enterprise-3nodes-2tb"
   kms_encryption_enabled        = true
   skip_iam_authorization_policy = var.skip_iam_authorization_policy
   kms_key_crn                   = var.kms_key_crn
