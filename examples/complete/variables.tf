@@ -10,16 +10,10 @@ variable "region" {
   default     = "us-south"
 }
 
-variable "plan" {
-  type        = string
-  description = "Plan for the event stream instance. lite, standard or enterprise-3nodes-2tb"
-  default     = "standard"
-}
-
 variable "prefix" {
   type        = string
   description = "Prefix to append to all resources created by this example"
-  default     = "event_streams"
+  default     = "event-streams-com"
 }
 
 variable "resource_group" {
@@ -32,12 +26,6 @@ variable "resource_tags" {
   type        = list(string)
   description = "List of tags associated with the Event Steams instance"
   default     = []
-}
-
-variable "service_endpoints" {
-  type        = string
-  description = "The type of service endpoint(public,private or public-and-private) to be used for connection. Default is public for Standard and lite plans"
-  default     = "public"
 }
 
 variable "schemas" {
