@@ -39,6 +39,14 @@ resource "ibm_is_vpc" "example_vpc" {
   tags           = var.resource_tags
 }
 
+resource "ibm_is_subnet" "testacc_subnet" {
+  name                     = "${var.prefix}-subnet"
+  vpc                      = ibm_is_vpc.example_vpc.id
+  zone                     = "${var.region}-1"
+  total_ipv4_address_count = 256
+  resource_group           = module.resource_group.resource_group_id
+}
+
 ##############################################################################
 # Create CBR Zone
 ##############################################################################

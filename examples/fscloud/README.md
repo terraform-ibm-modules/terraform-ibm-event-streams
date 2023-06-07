@@ -1,12 +1,17 @@
-# Financial Services Cloud profile example
+ # Financial Services Cloud profile example
 
-## *Note:* This example is only deploying Event Streams in a compliant manner the other infrastructure may not necessarily compliant.
+An end-to-end example that uses the [Profile for IBM Cloud Framework for Financial Services](../../profiles/fscloud/) to deploy an instance of Event Streams.
 
-### Requirements
-This example expects you to have Hyper Protect Crypto Service instances in the region you wish to deploy your Event Streams instance.
+The example uses the IBM Cloud Terraform provider to create the following infrastructure:
 
-### Deploys
-An end-to-end example that creates an event streams instance with key protect.
-This example uses the IBM Cloud terraform provider to:
- - Create a new resource group if one is not passed in.
- - Create a new event streams instance in the resource group and region provided, encrypted with the root key.
+- A resource group, if one is not passed in.
+- An IAM authorization between all Event Stream instances in the given resource group and the Hyper Protect Crypto Services instance that is passed in.
+- An Event Streams instance that is encrypted with the Hyper Protect Crypto Services root key that is passed in.
+- A sample virtual private cloud (VPC).
+- A context-based restriction (CBR) rule to only allow Event Streams to be accessible from within the VPC.
+
+:exclamation: **Important:** In this example, only the Event Streams instance complies with the IBM Cloud Framework for Financial Services. Other parts of the infrastructure do not necessarily comply.
+
+## Before you begin
+
+- You need a Hyper Protect Crypto Services instance and root key available in the region that you want to deploy your Event Streams instance to.

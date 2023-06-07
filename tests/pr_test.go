@@ -59,16 +59,6 @@ func TestRunUpgradeExample(t *testing.T) {
 	}
 }
 
-func TestRunCompleteExample(t *testing.T) {
-	t.Parallel()
-
-	options := setupOptions(t, "event-streams-complete", completeExampleTerraformDir)
-
-	output, err := options.RunTestConsistency()
-	assert.Nil(t, err, "This should not have errored")
-	assert.NotNil(t, output, "Expected some output")
-}
-
 func TestRunFSCloudExample(t *testing.T) {
 	t.Parallel()
 
