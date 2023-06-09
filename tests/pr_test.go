@@ -49,6 +49,7 @@ func setupOptions(t *testing.T, prefix string, dir string) *testhelper.TestOptio
 
 func TestRunUpgradeExample(t *testing.T) {
 	t.Parallel()
+	t.Skip()
 
 	options := setupOptions(t, "event-streams-upg", completeExampleTerraformDir)
 

@@ -1,4 +1,4 @@
-# Complete example with topics and schema creation, BYOK encryption and CBR rules
+# Complete example with topics and schema creation and BYOK encryption
 
 An end-to-end example that creates an event streams instance with key protect.
 This example uses the IBM Cloud terraform provider to:

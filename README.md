@@ -117,7 +117,7 @@ You need the following permissions to run this module.
 ## Examples
 
 - [ Basic example](examples/basic)
-- [ Complete example with topics and schema creation, BYOK encryption and CBR rules](examples/complete)
+- [ Complete example with topics and schema creation and BYOK encryption](examples/complete)
 - [ Financial Services Cloud profile example](examples/fscloud)
 <!-- END EXAMPLES HOOK -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
