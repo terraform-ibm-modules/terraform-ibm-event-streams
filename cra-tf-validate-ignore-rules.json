@@ -2,13 +2,13 @@
   "scc_rules": [
     {
       "scc_rule_id": "rule-3b2768e5-d783-4b0c-a47f-81479af34689",
-      "description": " Check whether Event Streams is accessible only by using private endpoints Found in: resource_address: module.event_streams.ibm_resource_instance.es_instance",
-      "ignore_reason": "Private endpoint option is not available in Standard plan which the complete example uses. When we create an FSCloud profile example for this module, the CRA scan will be done against that, and that should use private endpoint only. (Tracked at https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/issues/5)",
-      "is_valid": true
+      "description": " Check whether Event Streams is accessible only by using private endpoints.",
+      "ignore_reason": "Failing due to known CRA bug (https://github.ibm.com/oneibmcloud/CD-CRA/issues/1820)",
+      "is_valid": false
     },
     {
       "scc_rule_id": "rule-216e2449-27d7-4afc-929a-b66e196a9cf9",
-      "description": "Check whether Flow Logs for VPC are enabled Found in: resource_address: module.event_streams.ibm_resource_instance.es_instance",
+      "description": "Check whether Flow Logs for VPC are enabled.",
       "ignore_reason": "This rule is not relevant to the module itself, just the VPC resource is used in the example that is scanned",
       "is_valid": false
     }

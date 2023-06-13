@@ -19,5 +19,5 @@ module "event_streams" {
   resource_group_id = module.resource_group.resource_group_id
   es_name           = "${var.prefix}-es"
   tags              = var.resource_tags
-  plan              = "lite"
+  plan              = "standard"
 }
