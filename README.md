@@ -19,8 +19,8 @@ unless real values don't help users know what to change.
 
 ```hcl
 module "event_streams" {
-  # replace "main" with a GIT release version to lock into a specific release
-  source               = "git::https://github.com/terraform-ibm-modules/terraform-ibm-event-streams?ref=main"
+  source  = "terraform-ibm-modules/event-streams/ibm"
+  version = "latest" # Replace "latest" with a release version to lock into a specific release
   resource_group    = "event-streams-rg"
   plan                 = "standard"
   topics           = [
@@ -132,7 +132,7 @@ You need the following permissions to run this module.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_cbr_rule"></a> [cbr\_rule](#module\_cbr\_rule) | git::https://github.com/terraform-ibm-modules/terraform-ibm-cbr//cbr-rule-module | v1.2.0 |
+| <a name="module_cbr_rule"></a> [cbr\_rule](#module\_cbr\_rule) | terraform-ibm-modules/cbr/ibm//cbr-rule-module | 1.2.0 |
 
 ## Resources
 
