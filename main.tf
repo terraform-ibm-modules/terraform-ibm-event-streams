@@ -5,6 +5,8 @@
 locals {
   # Validation (approach based on https://github.com/hashicorp/terraform/issues/25609#issuecomment-1057614400)
   # tflint-ignore: terraform_unused_declarations
+  validate_kms_plan = var.kms_encryption_enabled != null && var.plan != "enterprise-3nodes-2tb" ? tobool("kms encryption is only supported for enterprise plan") : true
+  # tflint-ignore: terraform_unused_declarations
   validate_kms_values = !var.kms_encryption_enabled && var.kms_key_crn != null ? tobool("When passing values for var.kms_key_crn, you must set var.kms_encryption_enabled to true. Otherwise unset them to use default encryption") : true
   # tflint-ignore: terraform_unused_declarations
   validate_kms_vars = var.kms_encryption_enabled && var.kms_key_crn == null ? tobool("When setting var.kms_encryption_enabled to true, a value must be passed for var.kms_key_crn and/or var.backup_encryption_key_crn") : true
