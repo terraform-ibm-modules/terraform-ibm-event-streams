@@ -5,6 +5,8 @@
 locals {
   # Validation (approach based on https://github.com/hashicorp/terraform/issues/25609#issuecomment-1057614400)
   # tflint-ignore: terraform_unused_declarations
+  validate_kms_plan = var.kms_encryption_enabled && var.plan != "enterprise-3nodes-2tb" ? tobool("kms encryption is only supported for enterprise plan") : true
+  # tflint-ignore: terraform_unused_declarations
   validate_kms_values = !var.kms_encryption_enabled && var.kms_key_crn != null ? tobool("When passing values for var.kms_key_crn, you must set var.kms_encryption_enabled to true. Otherwise unset them to use default encryption") : true
   # tflint-ignore: terraform_unused_declarations
   validate_kms_vars = var.kms_encryption_enabled && var.kms_key_crn == null ? tobool("When setting var.kms_encryption_enabled to true, a value must be passed for var.kms_key_crn and/or var.backup_encryption_key_crn") : true
@@ -39,7 +41,7 @@ resource "ibm_resource_instance" "es_instance" {
   }
 
   parameters = {
-    service-endpoints = var.service_endpoints
+    service_endpoints = var.service_endpoints
     throughput        = var.throughput
     storage_size      = var.storage_size
     key_protect_key   = var.kms_key_crn
@@ -90,7 +92,8 @@ resource "ibm_iam_authorization_policy" "kms_policy" {
 ##############################################################################
 module "cbr_rule" {
   count            = length(var.cbr_rules) > 0 ? length(var.cbr_rules) : 0
-  source           = "git::https://github.com/terraform-ibm-modules/terraform-ibm-cbr//cbr-rule-module?ref=v1.2.0"
+  source           = "terraform-ibm-modules/cbr/ibm//cbr-rule-module"
+  version          = "1.2.0"
   rule_description = var.cbr_rules[count.index].description
   enforcement_mode = var.cbr_rules[count.index].enforcement_mode
   rule_contexts    = var.cbr_rules[count.index].rule_contexts
