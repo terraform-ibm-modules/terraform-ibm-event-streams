@@ -41,7 +41,7 @@ resource "ibm_resource_instance" "es_instance" {
   }
 
   parameters = {
-    service-endpoints = var.service_endpoints
+    service_endpoints = var.service_endpoints
     throughput        = var.throughput
     storage_size      = var.storage_size
     key_protect_key   = var.kms_key_crn
