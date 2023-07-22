@@ -121,20 +121,20 @@ You need the following permissions to run this module.
 - [ Financial Services Cloud profile example](examples/fscloud)
 <!-- END EXAMPLES HOOK -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
-## Requirements
+### Requirements
 
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.0 |
 | <a name="requirement_ibm"></a> [ibm](#requirement\_ibm) | >= 1.54.0, < 2.0.0 |
 
-## Modules
+### Modules
 
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_cbr_rule"></a> [cbr\_rule](#module\_cbr\_rule) | terraform-ibm-modules/cbr/ibm//cbr-rule-module | 1.3.2 |
 
-## Resources
+### Resources
 
 | Name | Type |
 |------|------|
@@ -143,7 +143,7 @@ You need the following permissions to run this module.
 | [ibm_iam_authorization_policy.kms_policy](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/iam_authorization_policy) | resource |
 | [ibm_resource_instance.es_instance](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/resource_instance) | resource |
 
-## Inputs
+### Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
@@ -166,7 +166,7 @@ You need the following permissions to run this module.
 | <a name="input_topics"></a> [topics](#input\_topics) | List of topics. For lite plan only one topic is allowed. | <pre>list(object(<br>    {<br>      name       = string<br>      partitions = number<br>      config     = object({})<br>    }<br>  ))</pre> | `[]` | no |
 | <a name="input_update_timeout"></a> [update\_timeout](#input\_update\_timeout) | Updating timeout value of the Event Streams module. Use 1h when updating enterprise instance, add more 1h for each level of non-default throughput, add more 30m for each level of non-default storage\_size. | `string` | `"1h"` | no |
 
-## Outputs
+### Outputs
 
 | Name | Description |
 |------|-------------|
