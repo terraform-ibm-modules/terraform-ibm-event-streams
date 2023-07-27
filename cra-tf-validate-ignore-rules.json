@@ -1,6 +1,12 @@
 {
   "scc_rules": [
     {
+      "scc_rule_id": "rule-3b2768e5-d783-4b0c-a47f-81479af34689",
+      "description": " Check whether Event Streams is accessible only by using private endpoints.",
+      "ignore_reason": "Failing due to known CRA bug (https://github.ibm.com/oneibmcloud/CD-CRA/issues/1820)",
+      "is_valid": false
+    },
+    {
       "scc_rule_id": "rule-216e2449-27d7-4afc-929a-b66e196a9cf9",
       "description": "Check whether Flow Logs for VPC are enabled.",
       "ignore_reason": "This rule is not relevant to the module itself, just the VPC resource is used in the example that is scanned",
