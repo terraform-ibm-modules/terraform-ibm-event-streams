@@ -300,6 +300,12 @@
       "version_constraints": [
         "\u003e= 1.54.0, \u003c 2.0.0"
       ]
+    },
+    "time": {
+      "source": "hashicorp/time",
+      "version_constraints": [
+        "\u003e= 0.9.1"
+      ]
     }
   },
   "managed_resources": {
@@ -317,7 +323,7 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 55
+        "line": 62
       }
     },
     "ibm_event_streams_topic.es_topic": {
@@ -335,7 +341,7 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 66
+        "line": 73
       }
     },
     "ibm_iam_authorization_policy.kms_policy": {
@@ -352,7 +358,7 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 80
+        "line": 87
       }
     },
     "ibm_resource_instance.es_instance": {
@@ -372,7 +378,19 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 30
+        "line": 37
+      }
+    },
+    "time_sleep.wait_for_authorization_policy": {
+      "mode": "managed",
+      "type": "time_sleep",
+      "name": "wait_for_authorization_policy",
+      "provider": {
+        "name": "time"
+      },
+      "pos": {
+        "filename": "main.tf",
+        "line": 31
       }
     }
   },
@@ -452,7 +470,7 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 93
+        "line": 100
       }
     }
   }
