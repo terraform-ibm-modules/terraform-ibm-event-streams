@@ -100,7 +100,7 @@ resource "ibm_iam_authorization_policy" "kms_policy" {
 module "cbr_rule" {
   count            = length(var.cbr_rules) > 0 ? length(var.cbr_rules) : 0
   source           = "terraform-ibm-modules/cbr/ibm//cbr-rule-module"
-  version          = "1.3.2"
+  version          = "1.6.1"
   rule_description = var.cbr_rules[count.index].description
   enforcement_mode = var.cbr_rules[count.index].enforcement_mode
   rule_contexts    = var.cbr_rules[count.index].rule_contexts
