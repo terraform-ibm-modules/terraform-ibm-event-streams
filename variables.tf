@@ -136,7 +136,7 @@ variable "existing_kms_instance_guid" {
 variable "create_timeout" {
   type        = string
   description = "Creation timeout value of the Event Streams module. Use 3h when creating enterprise instance, add more 1h for each level of non-default throughput, add more 30m for each level of non-default storage_size"
-  default     = "3h"
+  default     = "4h"
 }
 
 variable "update_timeout" {
