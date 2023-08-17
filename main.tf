@@ -27,6 +27,13 @@ locals {
   ) : null
 }
 
+# workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
+resource "time_sleep" "wait_for_authorization_policy" {
+  depends_on = [ibm_iam_authorization_policy.kms_policy]
+
+  create_duration = "30s"
+}
+
 resource "ibm_resource_instance" "es_instance" {
   name              = var.es_name
   service           = "messagehub"
@@ -93,7 +100,7 @@ resource "ibm_iam_authorization_policy" "kms_policy" {
 module "cbr_rule" {
   count            = length(var.cbr_rules) > 0 ? length(var.cbr_rules) : 0
   source           = "terraform-ibm-modules/cbr/ibm//cbr-rule-module"
-  version          = "1.3.2"
+  version          = "1.6.1"
   rule_description = var.cbr_rules[count.index].description
   enforcement_mode = var.cbr_rules[count.index].enforcement_mode
   rule_contexts    = var.cbr_rules[count.index].rule_contexts
