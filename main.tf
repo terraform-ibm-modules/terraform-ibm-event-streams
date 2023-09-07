@@ -92,6 +92,7 @@ resource "ibm_iam_authorization_policy" "kms_policy" {
   target_service_name         = local.kms_service
   target_resource_instance_id = var.existing_kms_instance_guid
   roles                       = ["Reader"]
+  description                 = "Allow all es instances in the resource group ${var.resource_group_id} to read from the ${local.kms_service} instance GUID ${var.existing_kms_instance_guid}"
 }
 
 ##############################################################################

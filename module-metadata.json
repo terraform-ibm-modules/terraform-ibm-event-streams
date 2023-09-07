@@ -123,6 +123,7 @@
       "description": "The resource group ID where the Event Streams instance will be created.",
       "required": true,
       "source": [
+        "ibm_iam_authorization_policy.kms_policy.description",
         "ibm_iam_authorization_policy.kms_policy.source_resource_group_id",
         "ibm_resource_instance.es_instance.resource_group_id"
       ],
@@ -350,6 +351,7 @@
       "name": "kms_policy",
       "attributes": {
         "count": "kms_encryption_enabled",
+        "description": "resource_group_id",
         "source_resource_group_id": "resource_group_id",
         "target_resource_instance_id": "existing_kms_instance_guid"
       },
@@ -470,7 +472,7 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 100
+        "line": 101
       }
     }
   }
