@@ -124,5 +124,9 @@ module "cbr_rule" {
       }
     ]
   }]
-  operations = []
+  operations = [{
+    api_types = [{
+      api_type_id = "crn:v1:bluemix:public:context-based-restrictions::::api-type:"
+    }]
+  }]
 }
