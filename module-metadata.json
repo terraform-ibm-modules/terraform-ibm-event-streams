@@ -293,7 +293,7 @@
     }
   },
   "required_core": [
-    "\u003e= 1.3.0"
+    "\u003e= 1.3.0, \u003c1.6.0"
   ],
   "required_providers": {
     "ibm": {
@@ -401,7 +401,7 @@
     "cbr_rule": {
       "name": "cbr_rule",
       "source": "terraform-ibm-modules/cbr/ibm//modules/cbr-rule-module",
-      "version": "1.12.2",
+      "version": "1.15.0",
       "attributes": {
         "count": "cbr_rules",
         "enforcement_mode": "cbr_rules",
