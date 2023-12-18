@@ -8,7 +8,19 @@
 
 This module implements Event Streams with topics, partitions, throughput, storage size, cleanup policy, retention time, retention size, segment size and schema.
 
-## Usage
+<!-- Below content is automatically populated via pre-commit hook -->
+<!-- BEGIN OVERVIEW HOOK -->
+## Overview
+* [terraform-ibm-event-streams](#terraform-ibm-event-streams)
+* [Examples](./examples)
+    * [ Financial Services Cloud profile example](./examples/fscloud)
+    * [Basic example](./examples/basic)
+    * [Complete example with topics and schema creation.](./examples/complete)
+* [Contributing](#contributing)
+<!-- END OVERVIEW HOOK -->
+
+## terraform-ibm-event-streams
+### Usage
 
 <!--
 Add an example of the use of the module in the following code block.
@@ -113,13 +125,6 @@ You need the following permissions to run this module.
         - `Editor` platform access
         - `Manager` service access
 
-<!-- BEGIN EXAMPLES HOOK -->
-## Examples
-
-- [ Basic example](examples/basic)
-- [ Complete example with topics and schema creation.](examples/complete)
-- [ Financial Services Cloud profile example](examples/fscloud)
-<!-- END EXAMPLES HOOK -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ### Requirements
 
