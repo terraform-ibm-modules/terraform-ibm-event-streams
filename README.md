@@ -81,36 +81,8 @@ module "event_streams" {
   ]
 }
 ```
-<!--
-Include the following 'Controls' section if the module implements NIST controls
-Remove the 'section if the module does not implement controls
--->
 
-<!-- GoldenEye core team only
-## Compliance and security
-
-This module implements the following NIST controls. For more information about how this module implements the controls in the following list, see [NIST controls](docs/controls.md).
-
-| Profile | Category | ID       | Description |
-|---------|----------|----------|-------------|
-| NIST    | SC-7     | SC-7(3)  | Limit the number of external network connections to the information system. |
-
-The 'Profile' and 'ID' columns are used by the IBM Cloud catalog to import
-the controls into the catalog page.
-
-In the example here, remove the SC-7 row and include a row for each control
-that the module implements.
-
-Include the control enhancement in the ID column ('SC-7(3)' in this example).
-
-Identify how the module is complying with the controls. Summarize the
-rationale or implementation in the 'Description' column.
-
-For details about the controls, see the NIST Risk Management Framework page at
-https://csrc.nist.gov/Projects/risk-management/sp800-53-controls/release-search#/controls?version=4.0.
--->
-
-## Required IAM access policies
+### Required IAM access policies
 
 You need the following permissions to run this module.
 
