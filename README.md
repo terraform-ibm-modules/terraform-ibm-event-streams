@@ -12,6 +12,8 @@ This module implements Event Streams with topics, partitions, throughput, storag
 <!-- BEGIN OVERVIEW HOOK -->
 ## Overview
 * [terraform-ibm-event-streams](#terraform-ibm-event-streams)
+* [Submodules](./modules)
+    * [fscloud](./modules/fscloud)
 * [Examples](./examples)
     * [ Financial Services Cloud profile example](./examples/fscloud)
     * [Basic example](./examples/basic)
