@@ -54,7 +54,7 @@ module "cbr_zone" {
 # #############################################################################
 
 module "event_streams" {
-  source                     = "../../profiles/fscloud"
+  source                     = "../../modules/fscloud"
   resource_group_id          = module.resource_group.resource_group_id
   es_name                    = "${var.prefix}-es-fs"
   kms_key_crn                = var.kms_key_crn

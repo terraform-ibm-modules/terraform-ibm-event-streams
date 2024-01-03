@@ -1,6 +1,6 @@
  # Financial Services Cloud profile example
 
-An end-to-end example that uses the [Profile for IBM Cloud Framework for Financial Services](../../profiles/fscloud/) to deploy an instance of Event Streams.
+An end-to-end example that uses the [Profile for IBM Cloud Framework for Financial Services](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/modules/fscloud) to deploy an instance of Event Streams.
 
 The example uses the IBM Cloud Terraform provider to create the following infrastructure:
 
