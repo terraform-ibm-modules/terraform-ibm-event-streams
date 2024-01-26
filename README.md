@@ -99,15 +99,6 @@ You need the following permissions to run this module.
         - `Editor` platform access
         - `Manager` service access
 
-#### Note for KMS encryption
-
-The Event Streams service supports payload data encryption using a root key CRN of a Key Management Services like Key Protect or Hyper Protect Crypto Services (HPCS), see https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-managing_encryption
-The root key CRN can be specified using the `kms_key_crn` variable.
-The authorization policy to allow the Event Streams service to access the key management service instance as a Reader MUST be configured in advance, see https://cloud.ibm.com/docs/account?topic=account-serviceauth
-This cannot be managed in the same Terraform state as the Event Streams service instance, because on destroy the instance is soft deleted to allow for recovery.
-The authorization policy must still be inplace when the instance is fully destroyed or restored, otherwise the de-registration of the instance from the root key will fail on the backend, and you will not be able to delete the root key without creating a support case,
-for more details see https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-managing_encryption#using_encryption
-
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ### Requirements
 
