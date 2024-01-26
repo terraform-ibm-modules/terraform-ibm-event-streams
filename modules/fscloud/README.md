@@ -3,6 +3,14 @@
 This is a profile for Event Streams that meets Financial Services Cloud requirements.
 It has been scanned by [IBM Code Risk Analyzer (CRA)](https://cloud.ibm.com/docs/code-risk-analyzer-cli-plugin?topic=code-risk-analyzer-cli-plugin-cra-cli-plugin#terraform-command) and meets all applicable goals.
 
+### Before you begin
+The Event Streams service supports payload data encryption using a root key CRN of a Key Management Services like Hyper Protect Crypto Services (HPCS), see https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-managing_encryption
+The root key CRN must be specified using the `kms_key_crn` variable.
+The authorization policy to allow the Event Streams service to access the key management service instance as a Reader MUST be configured in advance, see https://cloud.ibm.com/docs/account?topic=account-serviceauth
+This cannot be managed in the same Terraform state as the Event Streams service instance, because on destroy the instance is soft deleted to allow for recovery.
+The authorization policy must still be inplace when the instance is fully destroyed or restored, otherwise the de-registration of the instance from the root key will fail on the backend, and you will not be able to delete the root key without creating a support case,
+for more details see https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-managing_encryption#using_encryption
+
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ### Requirements
 

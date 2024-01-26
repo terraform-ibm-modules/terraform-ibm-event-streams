@@ -99,7 +99,7 @@ You need the following permissions to run this module.
         - `Editor` platform access
         - `Manager` service access
 
-## Note for KMS encryption
+#### Note for KMS encryption
 
 The Event Streams service supports payload data encryption using a root key CRN of a Key Management Services like Key Protect or Hyper Protect Crypto Services (HPCS), see https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-managing_encryption
 The root key CRN can be specified using the `kms_key_crn` variable.
