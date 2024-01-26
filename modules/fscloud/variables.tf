@@ -47,17 +47,6 @@ variable "kms_key_crn" {
   description = "The root key CRN of the Hyper Protect Crypto Service (HPCS) to use for disk encryption."
 }
 
-variable "existing_kms_instance_guid" {
-  description = "The GUID of the Hyper Protect Crypto Services instance."
-  type        = string
-}
-
-variable "skip_iam_authorization_policy" {
-  type        = bool
-  description = "Set to true to skip the creation of an IAM authorization policy that permits all event streams instances in the provided resource group reader access to the instance specified in the existing_kms_instance_guid variable."
-  default     = false
-}
-
 ##############################################################
 # Context-based restriction (CBR)
 ##############################################################
