@@ -105,7 +105,8 @@ The Event Streams service supports payload data encryption using a root key CRN 
 The root key CRN can be specified using the `kms_key_crn` variable.
 The authorization policy to allow the Event Streams service to access the key management service instance as a Reader MUST be configured in advance, see https://cloud.ibm.com/docs/account?topic=account-serviceauth
 This cannot be managed in the same Terraform state as the Event Streams service instance, because on destroy the instance is soft deleted to allow for recovery.
-The authorization policy must still be inplace when the instance is fully destroyed or restored for more details see https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-managing_encryption#using_encryption
+The authorization policy must still be inplace when the instance is fully destroyed or restored, otherwise the de-registration of the instance from the root key will fail on the backend, and you will not be able to delete the root key without creating a support case,
+for more details see https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-managing_encryption#using_encryption
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ### Requirements
@@ -137,7 +138,7 @@ The authorization policy must still be inplace when the instance is fully destro
 | <a name="input_create_timeout"></a> [create\_timeout](#input\_create\_timeout) | Creation timeout value of the Event Streams module. Use 3h when creating enterprise instance, add more 1h for each level of non-default throughput, add more 30m for each level of non-default storage\_size | `string` | `"3h"` | no |
 | <a name="input_delete_timeout"></a> [delete\_timeout](#input\_delete\_timeout) | Deleting timeout value of the Event Streams module | `string` | `"15m"` | no |
 | <a name="input_es_name"></a> [es\_name](#input\_es\_name) | The name to give the IBM Event Streams instance created by this module. | `string` | n/a | yes |
-| <a name="input_kms_key_crn"></a> [kms\_key\_crn](#input\_kms\_key\_crn) | The root key CRN of a Key Management Services like Key Protect or Hyper Protect Crypto Services (HPCS) that you want to use payload data encryption. Only used if var.kms\_encryption\_enabled is set to true. Note an authorization policy to allow the Event Streams service to access the key management service instance as a Reader MUST be configured in advance, see https://cloud.ibm.com/docs/account?topic=account-serviceauth | `string` | `null` | no |
+| <a name="input_kms_key_crn"></a> [kms\_key\_crn](#input\_kms\_key\_crn) | The root key CRN of a Key Management Services like Key Protect or Hyper Protect Crypto Services (HPCS) that you want to use payload data encryption. Only used if var.kms\_encryption\_enabled is set to true. Note an authorization policy to allow the Event Streams service to access the key management service instance as a Reader MUST be configured in advance and should not be managed as part of the same terraform state as the event streams instance, see https://cloud.ibm.com/docs/account?topic=account-serviceauth | `string` | `null` | no |
 | <a name="input_plan"></a> [plan](#input\_plan) | Plan for the event streams instance : lite, standard or enterprise-3nodes-2tb | `string` | `"standard"` | no |
 | <a name="input_region"></a> [region](#input\_region) | IBM Cloud region where event streams will be created | `string` | `"us-south"` | no |
 | <a name="input_resource_group_id"></a> [resource\_group\_id](#input\_resource\_group\_id) | The resource group ID where the Event Streams instance will be created. | `string` | n/a | yes |
