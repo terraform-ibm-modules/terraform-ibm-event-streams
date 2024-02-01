@@ -1,0 +1,8 @@
+{
+  "ibmcloud_api_key": $VALIDATION_APIKEY,
+  "region": "us-south",
+  "tags": $TAGS,
+  "es_name": $PREFIX,
+  "environment_crn": $CLOUDANT_DEDICATED_CRN,
+  "resource_group_name": $PREFIX
+}

@@ -4,7 +4,7 @@ This architecture creates Event Streams that meets Financial Services Cloud requ
 - A resource group, if one is not passed in.
 - IBM Event Streams supporting Financial Services Cloud requirements
 
-![dedicated-cloudant](../../reference-architecture/dedicated_cloudant.svg)
+![da-fscloud](../../reference-architecture/da-fscloud.svg)
 
 ## Before you begin
 
