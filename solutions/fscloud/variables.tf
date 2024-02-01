@@ -4,6 +4,17 @@ variable "ibmcloud_api_key" {
   sensitive   = true
 }
 
+variable "resource_group" {
+  type        = string
+  description = "An existing resource group name to use for this example, if unset a new resource group will be created"
+  default     = null
+}
+
+variable "es_name" {
+  description = "The name of the IBM Event Streams."
+  type        = string
+}
+
 variable "region" {
   type        = string
   description = "Region to provision all resources created by this example"
@@ -50,19 +61,6 @@ variable "existing_kms_instance_guid" {
 variable "kms_key_crn" {
   type        = string
   description = "The root key CRN of a Hyper Protect Crypto Service (HPCS) that you want to use for disk encryption. See https://cloud.ibm.com/docs/cloud-databases?topic=cloud-databases-hpcs&interface=ui for more information on integrating HPCS with Event Streams instance."
-}
-
-
-
-variable "resource_group" {
-  type        = string
-  description = "An existing resource group name to use for this example, if unset a new resource group will be created"
-  default     = null
-}
-
-variable "es_name" {
-  description = "The name of the IBM Event Streams."
-  type        = string
 }
 
 variable "skip_iam_authorization_policy" {
