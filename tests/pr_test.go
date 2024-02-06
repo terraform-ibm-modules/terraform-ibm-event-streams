@@ -127,6 +127,8 @@ func TestRunUpgradefsCloudSolution(t *testing.T) {
 	}
 
 	output, err := options.RunTestUpgrade()
-	assert.Nil(t, err, "This should not have errored")
-	assert.NotNil(t, output, "Expected some output")
+	if !options.UpgradeTestSkipped {
+		assert.Nil(t, err, "This should not have errored")
+		assert.NotNil(t, output, "Expected some output")
+	}
 }
