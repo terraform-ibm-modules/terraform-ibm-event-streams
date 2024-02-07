@@ -1,4 +1,4 @@
-# Event Streams Module
+# Event Streams module
 
 [![Graduated (Supported)](https://img.shields.io/badge/Status-Graduated%20(Supported)-brightgreen)](https://terraform-ibm-modules.github.io/documentation/#/badge-status)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
@@ -6,16 +6,15 @@
 [![latest release](https://img.shields.io/github/v/release/terraform-ibm-modules/terraform-ibm-event-streams?logo=GitHub&sort=semver)](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/releases/latest)
 [![Renovate enabled](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovatebot.com/)
 
-This module implements Event Streams with topics, partitions, throughput, storage size, cleanup policy, retention time, retention size, segment size and schema.
+This module implements Event Streams with topics, partitions, throughput, storage size, cleanup policy, retention time, retention size, segment size, and schema.
 
-## Note for KMS encryption
+## About KMS encryption
 
-The Event Streams service supports payload data encryption using a root key CRN of a Key Management Services like Key Protect or Hyper Protect Crypto Services (HPCS), see https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-managing_encryption
-The root key CRN can be specified using the `kms_key_crn` variable.
-The authorization policy to allow the Event Streams service to access the key management service instance as a Reader MUST be configured in advance, see https://cloud.ibm.com/docs/account?topic=account-serviceauth
-This cannot be managed in the same Terraform state as the Event Streams service instance, because on destroy the instance is soft deleted to allow for recovery.
-The authorization policy must still be inplace when the instance is hard deleted or restored, otherwise the de-registration of the instance from the root key will fail on the backend, and you will not be able to delete the root key without creating a support case,
-for more details see https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-managing_encryption#using_encryption
+The Event Streams service supports payload data encryption that uses a root key CRN of a key management service, such as Key Protect or Hyper Protect Crypto Services (HPCS). You specify the root key CRN with the `kms_key_crn` input. For more information, see [Managing encryption in Event Streams](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-managing_encryption).
+
+Before you run the module, configure an authorization policy to allow the Event Streams service to access the key management service instance with the reader role. For more information, see [Using authorizations to grant access between services](https://cloud.ibm.com/docs/account?topic=account-serviceauth).
+
+You can't manage the policy in the same Terraform state file as the Event Streams service instance because the instance is soft deleted to support recovery (reclamation) of the Event Streams instance when you issue a `destroy` command. An authorization policy must exist when the instance is hard deleted or restored or else the unregistration of the instance from the root key fails on the backend. If the policy doesn't exist, the only way to unregister the instance, which is a requirement for deletion, is by opening a support case. For more information, see [Using a customer-managed key](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-managing_encryption#using_encryption).
 
 <!-- Below content is automatically populated via pre-commit hook -->
 <!-- BEGIN OVERVIEW HOOK -->
