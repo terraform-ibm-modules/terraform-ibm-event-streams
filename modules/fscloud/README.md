@@ -1,15 +1,12 @@
-# Financial Services Cloud Profile
+# Profile for IBM Cloud Framework for Financial Services
 
-This is a profile for Event Streams that meets Financial Services Cloud requirements.
-It has been scanned by [IBM Code Risk Analyzer (CRA)](https://cloud.ibm.com/docs/code-risk-analyzer-cli-plugin?topic=code-risk-analyzer-cli-plugin-cra-cli-plugin#terraform-command) and meets all applicable goals.
+This code is a version of the [parent root module](../../) that includes a default configuration that complies with the relevant controls from the [IBM Cloud Framework for Financial Services](https://cloud.ibm.com/docs/framework-financial-services?topic=framework-financial-services-about). See the [Example for IBM Cloud Framework for Financial Services](/examples/fscloud/) for logic that uses this module. The profile assumes you are deploying into an account that complies with the framework.
 
-### Before you begin
-The Event Streams service supports payload data encryption using a root key CRN of a Key Management Services like Hyper Protect Crypto Services (HPCS), see https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-managing_encryption
-The root key CRN must be specified using the `kms_key_crn` variable.
-The authorization policy to allow the Event Streams service to access the key management service instance as a Reader MUST be configured in advance, see https://cloud.ibm.com/docs/account?topic=account-serviceauth
-This cannot be managed in the same Terraform state as the Event Streams service instance, because on destroy the instance is soft deleted to allow for recovery.
-The authorization policy must still be inplace when the instance is fully destroyed or restored, otherwise the de-registration of the instance from the root key will fail on the backend, and you will not be able to delete the root key without creating a support case,
-for more details see https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-managing_encryption#using_encryption
+The default values in this profile were scanned by [IBM Code Risk Analyzer (CRA)](https://cloud.ibm.com/docs/code-risk-analyzer-cli-plugin?topic=code-risk-analyzer-cli-plugin-cra-cli-plugin#terraform-command) for compliance with the IBM Cloud Framework for Financial Services profile that is specified by the IBM Security and Compliance Center. The scan passed for all applicable rules.
+
+## Before you begin
+
+Before you run the module, configure an authorization policy to allow the Event Streams service to access the key management service instance with the reader role. For more information, see [About KMS encryption](../../README.md#about-kms-encryption) in the main readme file.
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ### Requirements
