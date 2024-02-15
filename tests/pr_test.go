@@ -63,17 +63,17 @@ func TestRunfsCloudSolution(t *testing.T) {
 	t.Parallel()
 
 	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
-		Testing:      t,
-		TerraformDir: fsCloudSolutionTerraformDir,
-		Prefix:       "es-fscloud",
-		// ResourceGroup: resourceGroup,
+		Testing:       t,
+		TerraformDir:  fsCloudSolutionTerraformDir,
+		Prefix:        "es-fscloud",
+		ResourceGroup: resourceGroup,
 	})
 
 	options.TerraformVars = map[string]interface{}{
-		"ibmcloud_api_key": options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"],
-		"kms_key_crn":      permanentResources["hpcs_south_root_key_crn"],
-		// "resource_group_name":        options.ResourceGroup,
-		"es_name": options.Prefix,
+		"ibmcloud_api_key":    options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"],
+		"kms_key_crn":         permanentResources["hpcs_south_root_key_crn"],
+		"resource_group_name": options.ResourceGroup,
+		"es_name":             options.Prefix,
 	}
 
 	output, err := options.RunTestConsistency()
