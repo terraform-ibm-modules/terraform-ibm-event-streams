@@ -50,22 +50,7 @@ func setupOptions(t *testing.T, prefix string, dir string) *testhelper.TestOptio
 func TestRunUpgradeExample(t *testing.T) {
 	t.Parallel()
 
-	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
-		Testing:      t,
-		TerraformDir: completeExampleTerraformDir,
-		Prefix:       "event-streams-upg",
-		/*
-		 Comment out the 'ResourceGroup' input to force this tests to create a unique resource group to ensure tests do
-		 not clash. This is due to the fact that an auth policy may already exist in this resource group since we are
-		 re-using a permanent HPCS instance. By using a new resource group, the auth policy will not already exist
-		 since this module scopes auth policies by resource group.
-		*/
-		//ResourceGroup:      resourceGroup,
-		BestRegionYAMLPath: regionSelectionPath,
-		TerraformVars: map[string]interface{}{
-			"kms_key_crn": permanentResources["hpcs_south_root_key_crn"],
-		},
-	})
+	options := setupOptions(t, "event-streams-upg", completeExampleTerraformDir)
 
 	output, err := options.RunTestUpgrade()
 	if !options.UpgradeTestSkipped {
