@@ -12,7 +12,6 @@ import (
 )
 
 const completeExampleTerraformDir = "examples/complete"
-const fsCloudTerraformDir = "examples/fscloud"
 const fsCloudSolutionTerraformDir = "solutions/fscloud"
 
 // Use existing group for tests
