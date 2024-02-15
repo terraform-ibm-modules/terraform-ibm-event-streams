@@ -23,7 +23,6 @@ You can't manage the policy in the same Terraform state file as the Event Stream
 * [Submodules](./modules)
     * [fscloud](./modules/fscloud)
 * [Examples](./examples)
-    * [ Financial Services Cloud profile example](./examples/fscloud)
     * [Basic example](./examples/basic)
     * [Complete example with topics and schema creation.](./examples/complete)
 * [Contributing](#contributing)
@@ -100,9 +99,6 @@ You need the following permissions to run this module.
     - **Resource Group** service
         - `Viewer` platform access
 - IAM Services
-    - **IBM Authorization Policy**
-        - `Editor` platform access
-        - `Manager` service access
     - **Event Streams** service
         - `Editor` platform access
         - `Manager` service access

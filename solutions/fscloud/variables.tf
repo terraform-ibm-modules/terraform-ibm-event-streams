@@ -4,10 +4,15 @@ variable "ibmcloud_api_key" {
   sensitive   = true
 }
 
-variable "resource_group" {
+variable "existing_resource_group" {
+  type        = bool
+  description = "Whether to use an existing resource group."
+  default     = false
+}
+
+variable "resource_group_name" {
   type        = string
-  description = "An existing resource group name to use for this example, if unset a new resource group will be created"
-  default     = null
+  description = "The name of a new or an existing resource group in which to provision the IBM Event Streams instance in."
 }
 
 variable "es_name" {
@@ -17,13 +22,13 @@ variable "es_name" {
 
 variable "region" {
   type        = string
-  description = "Region to provision all resources created by this example"
+  description = "Region to provision all resources created by this solution."
   default     = "us-south"
 }
 
 variable "resource_tags" {
   type        = list(string)
-  description = "List of tags associated with the Event Steams instance"
+  description = "List of tags associated with the Event Steams instance."
   default     = []
 }
 
@@ -53,20 +58,9 @@ variable "topics" {
   default     = []
 }
 
-variable "existing_kms_instance_guid" {
-  description = "The GUID of the Hyper Protect Crypto service in which the key specified in var.kms_key_crn is coming from"
-  type        = string
-}
-
 variable "kms_key_crn" {
   type        = string
-  description = "The root key CRN of a Hyper Protect Crypto Service (HPCS) that you want to use for disk encryption. See https://cloud.ibm.com/docs/cloud-databases?topic=cloud-databases-hpcs&interface=ui for more information on integrating HPCS with Event Streams instance."
-}
-
-variable "skip_iam_authorization_policy" {
-  type        = bool
-  description = "Set to true to skip the creation of an IAM authorization policy that permits all event streams instances in the provided resource group reader access to the instance specified in the existing_kms_instance_guid variable."
-  default     = false
+  description = "The root key CRN of the Hyper Protect Crypto Service (HPCS) to use for disk encryption. See https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-managing_encryption for more information on integrating HPCS with Event Streams instance."
 }
 
 ##############################################################

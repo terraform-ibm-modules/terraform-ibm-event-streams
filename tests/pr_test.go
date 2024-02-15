@@ -51,22 +51,10 @@ func setupOptions(t *testing.T, prefix string, dir string) *testhelper.TestOptio
 func TestRunUpgradeExample(t *testing.T) {
 	t.Parallel()
 
-	options := setupOptions(t, "event-streams-upg", completeExampleTerraformDir)
-
-	output, err := options.RunTestUpgrade()
-	if !options.UpgradeTestSkipped {
-		assert.Nil(t, err, "This should not have errored")
-		assert.NotNil(t, output, "Expected some output")
-	}
-}
-
-func TestRunFSCloudExample(t *testing.T) {
-	t.Parallel()
-
 	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
 		Testing:      t,
-		TerraformDir: fsCloudTerraformDir,
-		Prefix:       "es-fscloud",
+		TerraformDir: completeExampleTerraformDir,
+		Prefix:       "event-streams-upg",
 		/*
 		 Comment out the 'ResourceGroup' input to force this tests to create a unique resource group to ensure tests do
 		 not clash. This is due to the fact that an auth policy may already exist in this resource group since we are
@@ -80,9 +68,11 @@ func TestRunFSCloudExample(t *testing.T) {
 		},
 	})
 
-	output, err := options.RunTestConsistency()
-	assert.Nil(t, err, "This should not have errored")
-	assert.NotNil(t, output, "Expected some output")
+	output, err := options.RunTestUpgrade()
+	if !options.UpgradeTestSkipped {
+		assert.Nil(t, err, "This should not have errored")
+		assert.NotNil(t, output, "Expected some output")
+	}
 }
 
 func TestRunfsCloudSolution(t *testing.T) {
@@ -96,9 +86,8 @@ func TestRunfsCloudSolution(t *testing.T) {
 	})
 
 	options.TerraformVars = map[string]interface{}{
-		"ibmcloud_api_key":           options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"],
-		"existing_kms_instance_guid": permanentResources["hpcs_south"],
-		"kms_key_crn":                permanentResources["hpcs_south_root_key_crn"],
+		"ibmcloud_api_key": options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"],
+		"kms_key_crn":      permanentResources["hpcs_south_root_key_crn"],
 		// "resource_group_name":        options.ResourceGroup,
 		"es_name": options.Prefix,
 	}
@@ -106,29 +95,4 @@ func TestRunfsCloudSolution(t *testing.T) {
 	output, err := options.RunTestConsistency()
 	assert.Nil(t, err, "This should not have errored")
 	assert.NotNil(t, output, "Expected some output")
-}
-
-func TestRunUpgradefsCloudSolution(t *testing.T) {
-	t.Parallel()
-
-	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
-		Testing:      t,
-		TerraformDir: fsCloudSolutionTerraformDir,
-		Prefix:       "es-fscloud-upg",
-		// ResourceGroup: resourceGroup,
-	})
-
-	options.TerraformVars = map[string]interface{}{
-		"ibmcloud_api_key":           options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"],
-		"existing_kms_instance_guid": permanentResources["hpcs_south"],
-		"kms_key_crn":                permanentResources["hpcs_south_root_key_crn"],
-		// "resource_group_name":        options.ResourceGroup,
-		"es_name": options.Prefix,
-	}
-
-	output, err := options.RunTestUpgrade()
-	if !options.UpgradeTestSkipped {
-		assert.Nil(t, err, "This should not have errored")
-		assert.NotNil(t, output, "Expected some output")
-	}
 }
