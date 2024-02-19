@@ -12,7 +12,7 @@ import (
 )
 
 const completeExampleTerraformDir = "examples/complete"
-const fsCloudTerraformDir = "examples/fscloud"
+const fsCloudSolutionTerraformDir = "solutions/fscloud"
 
 // Use existing group for tests
 const resourceGroup = "geretain-test-event-streams"
@@ -59,25 +59,23 @@ func TestRunUpgradeExample(t *testing.T) {
 	}
 }
 
-func TestRunFSCloudExample(t *testing.T) {
+func TestRunfsCloudSolution(t *testing.T) {
 	t.Parallel()
 
 	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
-		Testing:      t,
-		TerraformDir: fsCloudTerraformDir,
-		Prefix:       "es-fscloud",
-		/*
-		 Comment out the 'ResourceGroup' input to force this tests to create a unique resource group to ensure tests do
-		 not clash. This is due to the fact that an auth policy may already exist in this resource group since we are
-		 re-using a permanent HPCS instance. By using a new resource group, the auth policy will not already exist
-		 since this module scopes auth policies by resource group.
-		*/
-		//ResourceGroup:      resourceGroup,
-		BestRegionYAMLPath: regionSelectionPath,
-		TerraformVars: map[string]interface{}{
-			"kms_key_crn": permanentResources["hpcs_south_root_key_crn"],
-		},
+		Testing:       t,
+		TerraformDir:  fsCloudSolutionTerraformDir,
+		Prefix:        "es-fscloud",
+		ResourceGroup: resourceGroup,
 	})
+
+	options.TerraformVars = map[string]interface{}{
+		"ibmcloud_api_key":        options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"],
+		"kms_key_crn":             permanentResources["hpcs_south_root_key_crn"],
+		"resource_group_name":     options.ResourceGroup,
+		"existing_resource_group": true,
+		"es_name":                 options.Prefix,
+	}
 
 	output, err := options.RunTestConsistency()
 	assert.Nil(t, err, "This should not have errored")
