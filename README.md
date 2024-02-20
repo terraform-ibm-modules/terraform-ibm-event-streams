@@ -23,7 +23,6 @@ You can't manage the policy in the same Terraform state file as the Event Stream
 * [Submodules](./modules)
     * [fscloud](./modules/fscloud)
 * [Examples](./examples)
-    * [ Financial Services Cloud profile example](./examples/fscloud)
     * [Basic example](./examples/basic)
     * [Complete example with topics and schema creation.](./examples/complete)
 * [Contributing](#contributing)
@@ -100,9 +99,6 @@ You need the following permissions to run this module.
     - **Resource Group** service
         - `Viewer` platform access
 - IAM Services
-    - **IBM Authorization Policy**
-        - `Editor` platform access
-        - `Manager` service access
     - **Event Streams** service
         - `Editor` platform access
         - `Manager` service access
@@ -119,7 +115,7 @@ You need the following permissions to run this module.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_cbr_rule"></a> [cbr\_rule](#module\_cbr\_rule) | terraform-ibm-modules/cbr/ibm//modules/cbr-rule-module | 1.18.0 |
+| <a name="module_cbr_rule"></a> [cbr\_rule](#module\_cbr\_rule) | terraform-ibm-modules/cbr/ibm//modules/cbr-rule-module | 1.18.1 |
 
 ### Resources
 
