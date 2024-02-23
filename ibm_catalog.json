@@ -27,15 +27,15 @@
       "provider_name": "IBM",
       "features": [
         {
-          "title": "Create IBM Event Streams.",
+          "title": "Create IBM Event Streams",
           "description": "Create IBM Event Streams to build responsive, durable, and highly available architecture deployment."
         },
         {
-          "title": "Configure IBM Event Streams.",
+          "title": "Configure IBM Event Streams",
           "description": "Creates topics, partitions, throughput, storage size, cleanup policy, retention time, retention size, segment size, and schemas."
         },
         {
-          "title": "Create context-based restrictions.",
+          "title": "Create context-based restrictions",
           "description": "Enhance cloud security by defining and enforcing access restrictions for IBM Event Streams based on the context of the access request."
         }
       ],
@@ -72,19 +72,19 @@
             "descriptions": "This architecture creates an Event Streams for IBM Cloud Enterprise plan instance which is IBM Cloud® Financial Services certified.",
             "features": [
               {
-                "title": "IBM Event Streams instance.",
+                "title": "IBM Event Streams instance",
                 "description": "Yes"
               },
               {
-                "title": "KMS encryption to encrypt data.",
+                "title": "KMS encryption to encrypt data",
                 "description": "Yes"
               },
               {
-                "title": "Context Based Restriction rules for the IBM Event Streams instance.",
+                "title": "Context Based Restriction rules for the IBM Event Streams instance",
                 "description": "Yes"
               },
               {
-                "title": "IBM Event Streams topics and schemas.",
+                "title": "IBM Event Streams topics and schemas",
                 "description": "Yes"
               }
             ],
