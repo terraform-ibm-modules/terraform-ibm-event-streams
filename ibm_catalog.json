@@ -5,12 +5,12 @@
       "label": "Event Streams",
       "product_kind": "solution",
       "tags": [
-        "event_streams",
         "ibm_created",
         "target_terraform",
         "terraform",
-        "reference_architecture",
-        "solution"
+        "solution",
+        "support_ibm",
+        "integration"
       ],
       "keywords": [
         "event streams",
@@ -27,16 +27,16 @@
       "provider_name": "IBM",
       "features": [
         {
-          "title": "Creates IBM Event Streams.",
-          "description": "Creates IBM Event Streams."
+          "title": "Create IBM Event Streams.",
+          "description": "Create IBM Event Streams to build responsive, durable, and highly available architecture deployment."
         },
         {
-          "title": "Fully configurable IBM Event Streams.",
-          "description": "Supports to create topics, partitions, throughput, storage size, cleanup policy, retention time, retention size, segment size, and schemas."
+          "title": "Configure IBM Event Streams.",
+          "description": "Creates topics, partitions, throughput, storage size, cleanup policy, retention time, retention size, segment size, and schemas."
         },
         {
-          "title": "Creates Context Based Restriction rules.",
-          "description": "Creates Context Based Restriction rules"
+          "title": "Create context-based restrictions.",
+          "description": "Enhance cloud security by defining and enforcing access restrictions for IBM Event Streams based on the context of the access request."
         }
       ],
       "flavors": [
