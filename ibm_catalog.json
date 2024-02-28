@@ -92,7 +92,7 @@
               {
                 "diagram": {
                   "caption": "IBM Event Streams for IBM Cloud Enterprise plan instance which is IBM Cloud® Financial Services certified.",
-                  "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-cloudant/main/reference-architecture/da-fscloud.svg",
+                  "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-streams/main/reference-architecture/da-fscloud.svg",
                   "type": "image/svg+xml"
                 },
                 "description": "This architecture creates an Event Streams for IBM Cloud Enterprise plan instance which is IBM Cloud® Financial Services certified."
