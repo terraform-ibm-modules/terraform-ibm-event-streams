@@ -63,12 +63,6 @@
             },
             {
               "role_crns": [
-                "crn:v1:bluemix:public:iam::::role:Viewer"
-              ],
-              "service_name": "messagehub"
-            },
-            {
-              "role_crns": [
                 "crn:v1:bluemix:public:iam::::role:Editor"
               ],
               "service_name": "messagehub"
