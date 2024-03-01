@@ -59,13 +59,19 @@
               "role_crns": [
                 "crn:v1:bluemix:public:iam::::serviceRole:Manager"
               ],
-              "service_name": "iam-identity"
+              "service_name": "messagehub"
             },
             {
               "role_crns": [
-                "crn:v1:bluemix:public:iam::::serviceRole:Editor"
+                "crn:v1:bluemix:public:iam::::role:Viewer"
               ],
-              "service_name": "iam-identity"
+              "service_name": "messagehub"
+            },
+            {
+              "role_crns": [
+                "crn:v1:bluemix:public:iam::::role:Editor"
+              ],
+              "service_name": "messagehub"
             }
           ],
           "architecture": {
