@@ -24,4 +24,4 @@ repository:
   # and update the description to the current repo description.
   description: "Module that supports provisioning and configuring IBM Cloud Event Streams"
 
-  topics: core-team, terraform, ibm-cloud, terraform-module, event-streams, kafka, supported, graduated
+  topics: core-team, terraform, ibm-cloud, terraform-module, event-streams, kafka, supported, graduated, deployable-architecture
