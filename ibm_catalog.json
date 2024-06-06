@@ -41,10 +41,10 @@
       ],
       "flavors": [
         {
-          "label": "fscloud",
-          "name": "fscloud",
+          "label": "standard",
+          "name": "standard",
           "install_type": "fullstack",
-          "working_directory": "solutions/fscloud",
+          "working_directory": "solutions/standard",
           "compliance": {
             "authority": "scc-v3",
             "profiles": [

@@ -12,7 +12,7 @@ import (
 )
 
 const completeExampleTerraformDir = "examples/complete"
-const fsCloudSolutionTerraformDir = "solutions/fscloud"
+const fsCloudSolutionTerraformDir = "solutions/standard"
 
 // Use existing group for tests
 const resourceGroup = "geretain-test-event-streams"
