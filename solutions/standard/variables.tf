@@ -22,7 +22,7 @@ variable "es_name" {
 
 variable "region" {
   type        = string
-  description = "Region to provision all resources created by this solution."
+  description = "The region where the IBM Event Stream will be created and all resources provisioned by this solution will be located.."
   default     = "us-south"
 }
 
