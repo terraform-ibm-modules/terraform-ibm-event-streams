@@ -16,6 +16,12 @@ variable "es_name" {
   type        = string
 }
 
+variable "region" {
+  type        = string
+  description = "IBM Cloud region where event streams will be created"
+  default     = "us-south"
+}
+
 variable "schemas" {
   type = list(object(
     {

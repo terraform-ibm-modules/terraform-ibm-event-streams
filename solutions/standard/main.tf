@@ -9,6 +9,7 @@ module "event_streams" {
   source            = "../../modules/fscloud"
   resource_group_id = module.resource_group.resource_group_id
   es_name           = var.es_name
+  region            = var.region
   kms_key_crn       = var.kms_key_crn
   schemas           = var.schemas
   topics            = var.topics
