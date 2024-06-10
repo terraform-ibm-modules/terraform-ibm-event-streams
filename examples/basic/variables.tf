@@ -1,29 +1,29 @@
 variable "ibmcloud_api_key" {
   type        = string
-  description = "The IBM Cloud API Key"
+  description = "The IBM Cloud API key."
   sensitive   = true
 }
 
 variable "region" {
   type        = string
-  description = "Region to provision all resources created by this example"
+  description = "The region where the Event Streams are created."
   default     = "us-south"
 }
 
 variable "prefix" {
   type        = string
-  description = "Prefix to append to all resources created by this example"
+  description = "The prefix to apply to all resources created by this example."
   default     = "event-streams"
 }
 
 variable "resource_group" {
   type        = string
-  description = "An existing resource group name to use for this example, if unset a new resource group will be created"
+  description = "An existing resource group name to use for this example. If not specified, a new resource group is created."
   default     = null
 }
 
 variable "resource_tags" {
   type        = list(string)
-  description = "List of tags associated with the Event Steams instance"
+  description = "The list of tags associated with the Event Steams instance."
   default     = []
 }

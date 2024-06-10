@@ -27,16 +27,16 @@
       "provider_name": "IBM",
       "features": [
         {
-          "title": "Create IBM Event Streams",
-          "description": "Create IBM Event Streams to build responsive, durable, and highly available architecture deployment."
+          "title": "Create IBM Event Streams for IBM Cloud",
+          "description": "Create IBM Event Streams to build responsive, durable, and highly available architecture deployments."
         },
         {
-          "title": "Configure IBM Event Streams",
+          "title": "Configure Event Streams",
           "description": "Creates topics, partitions, throughput, storage size, cleanup policy, retention time, retention size, segment size, and schemas."
         },
         {
           "title": "Create context-based restrictions",
-          "description": "Enhance cloud security by defining and enforcing access restrictions for IBM Event Streams based on the context of the access request."
+          "description": "Enhance cloud security by defining and enforcing access restrictions for Event Streams based on the context of the access request."
         }
       ],
       "flavors": [
@@ -69,10 +69,10 @@
             }
           ],
           "architecture": {
-            "descriptions": "This architecture creates an Event Streams for IBM Cloud Enterprise plan instance which is IBM Cloud® Financial Services certified.",
+            "descriptions": "This architecture creates an Enterprise plan instance of IBM Event Streams for IBM Cloud that is IBM Cloud® Financial Services certified.",
             "features": [
               {
-                "title": "IBM Event Streams instance",
+                "title": "Event Streams instance",
                 "description": "Yes"
               },
               {
@@ -80,22 +80,22 @@
                 "description": "Yes"
               },
               {
-                "title": "Context Based Restriction rules for the IBM Event Streams instance",
+                "title": "Context-based restriction rules for the Event Streams instance",
                 "description": "Yes"
               },
               {
-                "title": "IBM Event Streams topics and schemas",
+                "title": "Event Streams topics and schemas",
                 "description": "Yes"
               }
             ],
             "diagrams": [
               {
                 "diagram": {
-                  "caption": "IBM Event Streams for IBM Cloud Enterprise plan instance which is IBM Cloud® Financial Services certified.",
+                  "caption": "IBM Event Streams for IBM Cloud Enterprise plan instance that is IBM Cloud® Financial Services certified.",
                   "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-streams/main/reference-architecture/da-fscloud.svg",
                   "type": "image/svg+xml"
                 },
-                "description": "This architecture creates an Event Streams for IBM Cloud Enterprise plan instance which is IBM Cloud® Financial Services certified."
+                "description": "This architecture creates an Enterprise plan instance of IBM Event Streams for IBM Cloud that is IBM Cloud® Financial Services certified."
               }
             ]
           }

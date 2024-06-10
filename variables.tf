@@ -3,18 +3,18 @@
 ##############################################################################
 
 variable "resource_group_id" {
-  description = "The resource group ID where the Event Streams instance will be created."
+  description = "The resource group ID where the Event Streams instance is created."
   type        = string
 }
 
 variable "es_name" {
   type        = string
-  description = "The name to give the IBM Event Streams instance created by this module."
+  description = "The name to give the Event Streams instance created by this module."
 }
 
 variable "plan" {
   type        = string
-  description = "Plan for the event streams instance : lite, standard or enterprise-3nodes-2tb"
+  description = "The plan for the Event Streams instance. Possible values: `lite`, `standard`, `enterprise-3nodes-2tb`."
   default     = "standard"
   validation {
     condition     = contains(["lite", "standard", "enterprise-3nodes-2tb"], var.plan)
@@ -24,19 +24,19 @@ variable "plan" {
 
 variable "tags" {
   type        = list(string)
-  description = "List of tags associated with the Event Steams instance"
+  description = "The list of tags associated with the Event Steams instance."
   default     = []
 }
 
 variable "region" {
   type        = string
-  description = "IBM Cloud region where event streams will be created"
+  description = "The region where the Event Streams are created."
   default     = "us-south"
 }
 
 variable "throughput" {
   type        = number
-  description = "Throughput capacity in MB per second. For enterprise instance only. Options are: 150, 300, 450."
+  description = "Throughput capacity in MB per second. Applies only to Enterprise plan instances. Possible values: `150`, `300`, `450`."
   default     = "150"
   validation {
     condition = anytrue([
@@ -50,7 +50,7 @@ variable "throughput" {
 
 variable "storage_size" {
   type        = number
-  description = "Storage size of the event streams in GB. For enterprise instance only. Options are: 2048, 4096, 6144, 8192, 10240, 12288,. Note: When throughput is 300, storage_size starts from 4096, when throughput is 450, storage_size starts from 6144. Storage capacity cannot be scaled down once instance is created."
+  description = "Storage size of the Event Streams in GB. Applies only to Enterprise plan instances. Possible values: `2048`, `4096`, `6144`, `8192`, `10240`, `12288`. Storage capacity cannot be reduced after the instance is created. When the `throughput` input variable is set to `300`, storage size starts at 4096. When `throughput` is `450`, storage size starts starts at `6144`."
   default     = "2048"
   validation {
     condition = anytrue([
@@ -67,11 +67,11 @@ variable "storage_size" {
 
 variable "service_endpoints" {
   type        = string
-  description = "Specify whether you want to enable the public, private, or both service endpoints. Supported values are 'public', 'private', or 'public-and-private'."
+  description = "The type of service endpoints. Possible values: 'public', 'private', 'public-and-private'."
   default     = "public"
   validation {
     condition     = contains(["public", "public-and-private", "private"], var.service_endpoints)
-    error_message = "The specified service endpoint is not a valid selection! Supported options are: public, public-and-private or private."
+    error_message = "The specified service endpoint is not valid. Supported options are public, public-and-private, or private."
   }
 }
 
@@ -85,7 +85,7 @@ variable "schemas" {
       })
     }
   ))
-  description = "The list of schema object which contains schema id and format of the schema"
+  description = "The list of schema objects. Include the `schema_id` and the `type` and `name` of the schema in the `schema` object."
   default     = []
 }
 
@@ -97,13 +97,13 @@ variable "topics" {
       config     = object({})
     }
   ))
-  description = "List of topics. For lite plan only one topic is allowed."
+  description = "The list of topics to apply to resources. Only one topic is allowed for Lite plan instances."
   default     = []
 }
 
 variable "kms_key_crn" {
   type        = string
-  description = "The root key CRN of a Key Management Services like Key Protect or Hyper Protect Crypto Services (HPCS) that you want to use payload data encryption. Only used if var.kms_encryption_enabled is set to true. Note an authorization policy to allow the Event Streams service to access the key management service instance as a Reader MUST be configured in advance and should not be managed as part of the same terraform state as the event streams instance, see https://cloud.ibm.com/docs/account?topic=account-serviceauth"
+  description = "The root key CRN of the key management service (Key Protect or Hyper Protect Crypto Services) to use to encrypt the payload data. Applies only if `kms_encryption_enabled` is set to `true`. [Learn more](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-managing_encryption) about integrating Hyper Protect Crypto Services with Event Streams. Configure an authorization policy to allow the Event Streams service to access the key management service instance with the reader role ([Learn more](https://cloud.ibm.com/docs/account?topic=account-serviceauth)). You can't manage the policy in the same Terraform state file as the Event Streams service instance ([Learn more](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-managing_encryption#using_encryption))."
   default     = null
   validation {
     condition = anytrue([
@@ -111,25 +111,25 @@ variable "kms_key_crn" {
       can(regex(".*kms.*", var.kms_key_crn)),
       can(regex(".*hs-crypto.*", var.kms_key_crn)),
     ])
-    error_message = "Value must be the root key CRN from either the Key Protect or Hyper Protect Crypto Service (HPCS)"
+    error_message = "Must be the root key CRN from either the Key Protect or Hyper Protect Crypto Service."
   }
 }
 
 variable "create_timeout" {
   type        = string
-  description = "Creation timeout value of the Event Streams module. Use 3h when creating enterprise instance, add more 1h for each level of non-default throughput, add more 30m for each level of non-default storage_size"
+  description = "The timeout value for creating an Event Streams instance. Specify `3h` for an Enterprise plan instance. Add 1 h for each level of non-default throughput. Add 30 min for each level of non-default storage size."
   default     = "3h"
 }
 
 variable "update_timeout" {
   type        = string
-  description = "Updating timeout value of the Event Streams module. Use 1h when updating enterprise instance, add more 1h for each level of non-default throughput, add more 30m for each level of non-default storage_size."
+  description = "The timeout value for updating an Event Streams instance. Specify `1h` for an Enterprise plan instance. Add 1 h for each level of non-default throughput. A 30 min for each level of non-default storage size."
   default     = "1h"
 }
 
 variable "delete_timeout" {
   type        = string
-  description = "Deleting timeout value of the Event Streams module"
+  description = "The timeout value for deleting an Event Streams instance."
   default     = "15m"
 }
 
@@ -148,7 +148,7 @@ variable "cbr_rules" {
     }))) }))
     enforcement_mode = string
   }))
-  description = "(Optional, list) List of CBR rules to create"
+  description = "The list of context-based restriction rules to create."
   default     = []
   # Validation happens in the rule module
 }
