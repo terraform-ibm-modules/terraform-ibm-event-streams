@@ -1,8 +1,10 @@
 # Complete example with topics and schema creation.
 
-An end-to-end example that creates an event streams instance.
-This example uses the IBM Cloud terraform provider to:
- - Create a new resource group if one is not passed in.
- - A sample virtual private cloud (VPC).
- - A context-based restriction (CBR) rule to only allow Event Streams to be accessible from within the VPC.
- - Create a new event streams instance in the resource group and region provided along with configured topics and schemas.
+An end-to-end example that creates an IBM Event Streams for IBM Cloud instance.
+
+This example uses the IBM Cloud Terraform provider to create the following infrastructure.
+
+- A new resource group, if one is not passed in.
+- A sample virtual private cloud (VPC).
+- A instance of Event Streams in the provided resource group and region. You can identify topics and schemas to apply to the instance.
+- A context-based restriction rule to allow Event Streams to be accessible only from within the VPC.

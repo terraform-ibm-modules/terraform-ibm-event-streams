@@ -1,18 +1,18 @@
 
 
 variable "resource_group_id" {
-  description = "ID of resource group to use when creating the event stream instance"
+  description = "The resource group ID where the Event Streams instance is created."
   type        = string
 }
 
 variable "tags" {
   type        = list(string)
-  description = "List of tags associated with the Event Steams instance"
+  description = "The list of tags associated with the Event Steams instance."
   default     = []
 }
 
 variable "es_name" {
-  description = "Name of the event streams instance"
+  description = "The name of the Event Streams instance."
   type        = string
 }
 
@@ -32,7 +32,7 @@ variable "schemas" {
       })
     }
   ))
-  description = "The list of schema object which contains schema id and format of the schema"
+  description = "The list of schema objects. Include the `schema_id` and the `type` and `name` of the schema in the `schema` object."
   default     = []
 }
 
@@ -44,13 +44,13 @@ variable "topics" {
       config     = object({})
     }
   ))
-  description = "List of topics. For lite plan only one topic is allowed."
+  description = "The list of topics to apply to resources. Only one topic is allowed for Lite plan instances."
   default     = []
 }
 
 variable "kms_key_crn" {
   type        = string
-  description = "The root key CRN of the Hyper Protect Crypto Service (HPCS) to use for disk encryption."
+  description = "The root key CRN of the key management service (Key Protect or Hyper Protect Crypto Services) to use to encrypt the payload data."
 }
 
 ##############################################################
@@ -68,7 +68,7 @@ variable "cbr_rules" {
     }))) }))
     enforcement_mode = string
   }))
-  description = "(Optional, list) List of CBR rules to create"
+  description = "The list of context-based restriction rules to create."
   default     = []
   # Validation happens in the rule module
 }
