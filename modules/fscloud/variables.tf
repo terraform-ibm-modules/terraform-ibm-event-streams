@@ -18,7 +18,7 @@ variable "es_name" {
 
 variable "region" {
   type        = string
-  description = "IBM Cloud region where event streams will be created"
+  description = "The region where the Event Streams are created."
   default     = "us-south"
 }
 
