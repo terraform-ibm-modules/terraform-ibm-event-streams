@@ -16,6 +16,12 @@ variable "es_name" {
   type        = string
 }
 
+variable "region" {
+  type        = string
+  description = "The region where the Event Streams are created."
+  default     = "us-south"
+}
+
 variable "schemas" {
   type = list(object(
     {

@@ -3,6 +3,7 @@ module "event_streams" {
   resource_group_id = var.resource_group_id
   es_name           = var.es_name
   plan              = "enterprise-3nodes-2tb"
+  region            = var.region
   kms_key_crn       = var.kms_key_crn
   schemas           = var.schemas
   tags              = var.tags
