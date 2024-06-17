@@ -2,6 +2,6 @@
   "ibmcloud_api_key": $VALIDATION_APIKEY,
   "resource_tags": $TAGS,
   "es_name": $PREFIX,
-  "kms_key_crn": $HPCS_US_SOUTH_ROOT_KEY_CRN,
+  "existing_kms_instance_crn": $HPCS_US_SOUTH_CRN,
   "resource_group_name": $PREFIX
 }
