@@ -70,11 +70,11 @@ func TestRunfsCloudSolution(t *testing.T) {
 	})
 
 	options.TerraformVars = map[string]interface{}{
-		"ibmcloud_api_key":        options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"],
-		"kms_key_crn":             permanentResources["hpcs_south_root_key_crn"],
-		"resource_group_name":     options.ResourceGroup,
-		"existing_resource_group": true,
-		"es_name":                 options.Prefix,
+		"ibmcloud_api_key":            options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"],
+		"existing_kms_key_crn":        permanentResources["hpcs_south_root_key_crn"],
+		"resource_group_name":         options.ResourceGroup,
+		"use_existing_resource_group": true,
+		"es_name":                     options.Prefix,
 	}
 
 	output, err := options.RunTestConsistency()
