@@ -97,8 +97,8 @@ variable "cbr_rules" {
 
 variable "existing_kms_instance_crn" {
   type        = string
-  default     = "crn:v1:bluemix:public:kms:us-south:a/abac0df06b644a9cabc6e44f55b3880e:d4559998-17ab-4ab8-ba9e-a0c9d2c4ef23::"
-  description = "The CRN of the key management service (KMS). If you are not using an existing KMS instance, you must specify this CRN. To support cross account functionality you must also provide a value for `ibmcloud_kms_api_key`."
+  default     = null
+  description = "The CRN of the key management service (KMS). To support cross account functionality you must also provide a value for `ibmcloud_kms_api_key`."
 }
 
 variable "existing_kms_key_crn" {
@@ -120,11 +120,11 @@ variable "kms_endpoint_type" {
 variable "es_key_ring_name" {
   type        = string
   default     = "es-key-ring"
-  description = "The name of the key ring to create for the Event Streams instance. If an existing key is used, this variable is not required. If the prefix input variable is passed, the name of the key ring is prefixed to the value in the `prefix-value` format."
+  description = "The name of the key ring to create for the Event Streams instance. If an existing key is used, this variable is not required. If the prefix input variable is passed, the name of the key ring is prefixed to the value in the `<prefix>-value` format."
 }
 
 variable "es_key_name" {
   type        = string
   default     = "es-cos-key"
-  description = "The name of the key to create for the Event Streams instance. If an existing key is used, this variable is not required. If the prefix input variable is passed, the name of the key is prefixed to the value in the `prefix-value` format."
+  description = "The name of the key to create for the Event Streams instance. If an existing key is used, this variable is not required. If the prefix input variable is passed, the name of the key is prefixed to the value in the `<prefix>-value` format."
 }
