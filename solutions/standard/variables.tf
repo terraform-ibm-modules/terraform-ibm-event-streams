@@ -55,7 +55,18 @@ variable "topics" {
     }
   ))
   description = "The list of topics to apply to resources. Only one topic is allowed for Lite plan instances."
-  default     = []
+  default     = [
+    {
+      name       = "topic-1"
+      partitions = 1
+      config = {
+        "cleanup.policy"  = "delete"
+        "retention.ms"    = "86400000"
+        "retention.bytes" = "10485760"
+        "segment.bytes"   = "10485760"
+      }
+    }
+  ]
 }
 
 variable "kms_key_crn" {
