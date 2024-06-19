@@ -1,5 +1,5 @@
 #######################################################################################
-# This file creates an event streams resource instance, topics, partitions and schema.
+# This file creates an event stregams resource instance, topics, partitions and schema.
 #######################################################################################
 
 locals {
