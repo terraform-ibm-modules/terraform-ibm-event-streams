@@ -55,7 +55,7 @@ variable "topics" {
     }
   ))
   description = "The list of topics to apply to resources. Only one topic is allowed for Lite plan instances."
-  default     = [
+  default = [
     {
       name       = "topic-1"
       partitions = 1
