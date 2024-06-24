@@ -35,6 +35,35 @@ locals {
   es_key_ring_name = var.prefix != null ? "${var.prefix}-${var.es_key_ring_name}" : var.es_key_ring_name
   es_key_name      = var.prefix != null ? "${var.prefix}-${var.es_key_name}" : var.es_key_name
   kms_key_crn      = var.existing_kms_key_crn != null ? var.existing_kms_key_crn : module.kms[0].keys[format("%s.%s", local.es_key_ring_name, local.es_key_name)].crn
+
+  create_cross_account_auth_policy = (!var.skip_es_kms_auth_policy && var.ibmcloud_kms_api_key != null) ? 1 : 0
+  kms_service = var.existing_kms_instance_crn != null ? (
+    can(regex(".*kms.*", var.existing_kms_instance_crn)) ? "kms" : (
+      can(regex(".*hs-crypto.*", var.existing_kms_instance_crn)) ? "hs-crypto" : null
+    )
+  ) : null
+}
+
+# Data source for retrieving cross account details
+data "ibm_iam_account_settings" "iam_account_settings" {
+  count = local.create_cross_account_auth_policy
+}
+
+resource "ibm_iam_authorization_policy" "kms_policy" {
+  count                       = local.create_cross_account_auth_policy
+  provider                    = ibm.kms
+  source_service_account      = data.ibm_iam_account_settings.iam_account_settings[0].account_id
+  source_service_name         = "messagehub"
+  source_resource_group_id    = module.resource_group.resource_group_id
+  target_service_name         = local.kms_service
+  target_resource_instance_id = local.existing_kms_guid
+  roles                       = ["Reader"]
+  description                 = "Allow all Event Streams instances in the resource group ${module.resource_group.resource_group_id} to read from the ${local.kms_service} instance GUID ${local.existing_kms_guid}"
+}
+
+resource "time_sleep" "wait_for_authorization_policy" {
+  depends_on      = [ibm_iam_authorization_policy.kms_policy]
+  create_duration = "30s"
 }
 
 # KMS root key for event streams
@@ -43,6 +72,7 @@ module "kms" {
     ibm = ibm.kms
   }
   count                       = (var.existing_kms_key_crn != null) ? 0 : 1 # no need to create any KMS resources if an existing key is passed
+  depends_on                  = [ibm_iam_authorization_policy.kms_policy]
   source                      = "terraform-ibm-modules/kms-all-inclusive/ibm"
   version                     = "4.13.2"
   create_key_protect_instance = false

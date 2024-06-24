@@ -128,3 +128,9 @@ variable "es_key_name" {
   default     = "es-cos-key"
   description = "The name of the key to create for the Event Streams instance. If an existing key is used, this variable is not required. If the prefix input variable is passed, the name of the key is prefixed to the value in the `<prefix>-value` format."
 }
+
+variable "skip_es_kms_auth_policy" {
+  type        = bool
+  description = "To skip creating an IAM authorization policy that permits Event Streams instance in the resource group to read the encryption key from the KMS instance. Set to `true` to use an existing policy."
+  default     = false
+}
