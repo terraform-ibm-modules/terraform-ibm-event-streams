@@ -1,20 +1,19 @@
-# Configuring schemas, topics and CBR rules in Event Streams in IBM Cloud projects
+# Configuring schemas, topics and context-based restriction rules in Event Streams
 
-When you add a event streams DA from the IBM Cloud catalog to an IBM Cloud Projects service, you can configure schemas, topics and CBR rules. In the edit mode for the projects configuration, select the Configure panel and then click the optional tab.
+When you add a Event Streams deployable architecture from the IBM Cloud catalog to IBM Cloud Projects, you can configure schemas, topics, and context-based restriction rules. When you edit your project configuration, select the **Configure** panel, and then click the **Optional** tab.
 
-To enter a custom value, use the edit action to open the "Edit Array" panel. Add the schemas, topics and CBR rules configurations to the array here.
+To enter a custom value, use the edit action to open the "Edit Array" panel. Add the schemas, topics, and context-based restriction rules configurations to the array.
+
+## Options with schemas
 
 
-## Options
-### Schemas options
-
-- `schema_id` (optional): The unique ID to be assigned to schema. If this value is not specified, a generated `UUID` is assigned.
+- `schema_id` (optional): The unique ID to assign to the schema. If this value is not specified, a generated `UUID` is assigned.
 - `schema`
-    - `type` (required): Schema type.
-    - `name` (required): Schema name.
-    - `fields` (optional, only required when schema `type` is `complex`): A list of `name`, `type` field pairs.  For more information, see [Schemas](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-ES_schema_registry).
+    - `type` (required): schema type.
+    - `name` (required): schema name.
+    - `fields` (optional, only required when schema `type` is `complex`): A list of `name`, `type` field pairs. For more information, see [Using Event Streams Schema Registry](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-ES_schema_registry).
 
-The following example includes all the configuration options for Schemas.
+The following example includes all the configuration options for schemas.
 
 ```hcl
 [
@@ -39,12 +38,13 @@ The following example includes all the configuration options for Schemas.
 ]
 ```
 
-### Topics options
+## Options with topics
+
 - `name` (required): The name of the topic.
-- `partitions` (optional): The number of partitions of the topic. Default value is 1.
+- `partitions` (optional): The number of partitions of the topic. The default value is `1`.
 - `config` (optional): The configuration parameters of the topic. Supported configurations are: `cleanup.policy`, `retention.ms`, `retention.bytes`, `segment.bytes`, `segment.ms`, `segment.index.bytes`.
 
-The following example includes all the configuration options for Topics.
+The following example includes all the configuration options for topics.
 
 ```hcl
 [
@@ -71,17 +71,17 @@ The following example includes all the configuration options for Topics.
 ]
 ```
 
-### CBR rules options
+## Options with Context-based restriction rules
 
 - `description` (required): The description of the rule.
-- `account_id` (required): Your IBM Cloud account id.
-- `enforcement_mode`(required): The rule enforcement mode. Allowable values are: `enabled`, `disabled`, `report`. For more information, see [CBR rules](https://cloud.ibm.com/docs/account?topic=account-context-restrictions-whatis#rule-enforcement).
+- `account_id` (required): Your IBM Cloud account ID.
+- `enforcement_mode`(required): The rule enforcement mode. Allowable values are: `enabled`, `disabled`, `report`. For more information, see [What are context-based restrictions](https://cloud.ibm.com/docs/account?topic=account-context-restrictions-whatis#rule-enforcement).
 - `rule_contexts` (optional): The contexts this rule applies to. For more information, see [Rule contexts](https://cloud.ibm.com/docs/account?topic=account-context-restrictions-whatis#restriction-context).
     - `attributes` (required): List of attributes.
         - `name` (required): The attribute name.
         - `value` (required): The attribute value.
 
-The following example includes all the configuration options for CBR rule.
+The following example includes all the configuration options for a context-based restriction rule.
 
 ```hcl
 {
