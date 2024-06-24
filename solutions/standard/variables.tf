@@ -46,7 +46,7 @@ variable "schemas" {
       })
     }
   ))
-  description = "The list of schema objects. Include the `schema_id` and the `type` and `name` of the schema in the `schema` object. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-kms-all-inclusive/tree/main/solutions/standard/DA-schemas-topics-cbr.md)."
+  description = "The list of schema objects. Include the `schema_id` and the `type` and `name` of the schema in the `schema` object. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/standard/DA-schemas-topics-cbr.md)."
   default     = []
 }
 
@@ -58,7 +58,7 @@ variable "topics" {
       config     = object({})
     }
   ))
-  description = "The list of topics to apply to resources. Only one topic is allowed for Lite plan instances. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-kms-all-inclusive/tree/main/solutions/standard/DA-schemas-topics-cbr.md)."
+  description = "The list of topics to apply to resources. Only one topic is allowed for Lite plan instances. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/standard/DA-schemas-topics-cbr.md)."
   default     = []
 }
 
@@ -82,7 +82,7 @@ variable "cbr_rules" {
     }))) }))
     enforcement_mode = string
   }))
-  description = "The list of context-based restriction rules to create. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-kms-all-inclusive/tree/main/solutions/standard/DA-schemas-topics-cbr.md)."
+  description = "The list of context-based restriction rules to create. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/standard/DA-schemas-topics-cbr.md)."
   default     = []
   # Validation happens in the rule module
 }
