@@ -82,6 +82,10 @@ variable "schemas" {
       schema = object({
         type = string
         name = string
+        fields = optional(list(object({
+          name = string
+          type = string
+        })))
       })
     }
   ))
