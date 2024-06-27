@@ -59,34 +59,5 @@ variable "topics" {
     }
   ))
   description = "The list of topics to apply to resources. Only one topic is allowed for Lite plan instances. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/standard/DA-schemas-topics-cbr.md)."
-  default = [{
-    name       = "topic-1"
-    partitions = 1
-    config = {
-      "cleanup.policy"  = "delete"
-      "retention.ms"    = "86400000"
-      "retention.bytes" = "10485760"
-      "segment.bytes"   = "10485760"
-    }
-  }]
-}
-
-##############################################################
-# Context-based restriction (CBR)
-##############################################################
-
-variable "cbr_rules" {
-  type = list(object({
-    description = string
-    account_id  = string
-    rule_contexts = list(object({
-      attributes = optional(list(object({
-        name  = string
-        value = string
-    }))) }))
-    enforcement_mode = string
-  }))
-  description = "The list of context-based restriction rules to create. It can be defined for Standard plan. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/standard/DA-schemas-topics-cbr.md)."
   default     = []
-  # Validation happens in the rule module
 }
