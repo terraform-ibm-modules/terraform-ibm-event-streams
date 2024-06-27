@@ -21,39 +21,113 @@
         "fscloud"
       ],
       "short_description": "Supports provisioning and configuring IBM Event Streams for IBM Cloud.",
-      "long_description": "This architecture supports creating Event Streams with topics, partitions, throughput, storage size, cleanup policy, retention time, retention size, segment size, and schema.",
+      "long_description": "This architecture supports creation and configuration of IBM Cloud Event Streams.",
       "offering_docs_url": "https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/blob/main/README.md",
       "offering_icon_url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-streams/main/images/event_streams.svg",
       "provider_name": "IBM",
       "features": [
         {
           "title": "Create IBM Event Streams for IBM Cloud",
-          "description": "Create IBM Event Streams to build responsive, durable, and highly available architecture deployments."
+          "description": "Create and configure IBM Event Streams to build responsive, durable, and highly available architecture deployments."
         },
         {
-          "title": "Configure Event Streams",
-          "description": "Creates topics, partitions, throughput, storage size, cleanup policy, retention time, retention size, segment size, and schemas."
-        },
-        {
-          "title": "Create context-based restrictions",
-          "description": "Enhance cloud security by defining and enforcing access restrictions for Event Streams based on the context of the access request."
+          "title": "Creates topics in the Event Streams instance",
+          "description": "Creates topics in IBM Cloud Event Streams instance."
         }
       ],
       "flavors": [
         {
-          "label": "standard",
-          "name": "standard",
+          "label": "quickstart",
+          "name": "quickstart",
           "install_type": "fullstack",
-          "working_directory": "solutions/standard",
-          "compliance": {
-            "authority": "scc-v3",
-            "profiles": [
-              {
-                "profile_name": "IBM Cloud Framework for Financial Services",
-                "profile_version": "1.6.0"
-              }
-            ]
-          },
+          "working_directory": "solutions/quickstart",
+          "configuration": [
+            {
+              "key": "ibmcloud_api_key"
+            },
+            {
+              "key": "prefix"
+            },
+            {
+              "key": "use_existing_resource_group"
+            },
+            {
+              "key": "resource_group_name"
+            },
+            {
+              "key": "es_name"
+            },
+            {
+              "key": "region",
+              "required": true,
+              "default_value": "",
+              "options": [
+                {
+                  "displayname": "Dallas (us-south)",
+                  "value": "us-south"
+                },
+                {
+                  "displayname": "Frankfurt (eu-de)",
+                  "value": "eu-de"
+                },
+                {
+                  "displayname": "London (eu-gb)",
+                  "value": "eu-gb"
+                },
+                {
+                  "displayname": "Madrid (eu-es)",
+                  "value": "eu-es"
+                },
+                {
+                  "displayname": "Osaka (jp-osa)",
+                  "value": "jp-osa"
+                },
+                {
+                  "displayname": "Sydney (au-syd)",
+                  "value": "au-syd"
+                },
+                {
+                  "displayname": "Tokyo (jp-tok)",
+                  "value": "jp-tok"
+                },
+                {
+                  "displayname": "Osaka (jp-osa)",
+                  "value": "jp-osa"
+                },
+                {
+                  "displayname": "Sao Paulo (br-sao)",
+                  "value": "br-sao"
+                },
+                {
+                  "displayname": "Toronto (ca-tor)",
+                  "value": "ca-tor"
+                },
+                {
+                  "displayname": "Washington (us-east)",
+                  "value": "us-east"
+                }
+              ]
+            },
+            {
+              "key": "resource_tags"
+            },
+            {
+              "key": "plan",
+              "options": [
+                {
+                  "displayname": "lite",
+                  "value": "lite"
+                },
+                {
+                  "displayname": "standard",
+                  "value": "standard"
+                }
+              ]
+            },
+            {
+              "key": "topics"
+            }
+          ],
           "iam_permissions": [
             {
               "role_crns": [
@@ -69,33 +143,25 @@
             }
           ],
           "architecture": {
-            "descriptions": "This architecture creates an Enterprise plan instance of IBM Event Streams for IBM Cloud that is IBM Cloud® Financial Services certified.",
+            "descriptions": "This architecture creates an instance of IBM Event Streams for IBM Cloud in lite and standard plan. It also supports the creation of topics in the Event Streams instance.",
             "features": [
               {
-                "title": "Event Streams instance",
-                "description": "Yes"
+                "title": "Creates an Event Streams instance",
+                "description": "Creates and configures the IBM Cloud Event Streams instance."
               },
               {
-                "title": "KMS encryption to encrypt data",
-                "description": "Yes"
-              },
-              {
-                "title": "Context-based restriction rules for the Event Streams instance",
-                "description": "Yes"
-              },
-              {
-                "title": "Event Streams topics and schemas",
-                "description": "Yes"
+                "title": "Creates topics in the Event Streams instance",
+                "description": "Creates topics in IBM Cloud Event Streams instance."
               }
             ],
             "diagrams": [
               {
                 "diagram": {
-                  "caption": "IBM Event Streams for IBM Cloud Enterprise plan instance that is IBM Cloud® Financial Services certified.",
-                  "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-streams/main/reference-architecture/da-fscloud.svg",
+                  "caption": "IBM Event Streams for IBM Cloud.",
+                  "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-streams/main/reference-architecture/da-quickstart.svg",
                   "type": "image/svg+xml"
                 },
-                "description": "This architecture creates an Enterprise plan instance of IBM Event Streams for IBM Cloud that is IBM Cloud® Financial Services certified."
+                "description": "This architecture creates an instance of IBM Event Streams for IBM Cloud."
               }
             ]
           }

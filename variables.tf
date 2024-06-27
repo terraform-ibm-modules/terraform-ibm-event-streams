@@ -107,7 +107,7 @@ variable "topics" {
 
 variable "kms_key_crn" {
   type        = string
-  description = "The root key CRN of the key management service (Key Protect or Hyper Protect Crypto Services) to use to encrypt the payload data. Applies only if `kms_encryption_enabled` is set to `true`. [Learn more](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-managing_encryption) about integrating Hyper Protect Crypto Services with Event Streams. Configure an authorization policy to allow the Event Streams service to access the key management service instance with the reader role ([Learn more](https://cloud.ibm.com/docs/account?topic=account-serviceauth)). You can't manage the policy in the same Terraform state file as the Event Streams service instance ([Learn more](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-managing_encryption#using_encryption))."
+  description = "The root key CRN of the key management service (Key Protect or Hyper Protect Crypto Services) to use to encrypt the payload data. [Learn more](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-managing_encryption) about integrating Hyper Protect Crypto Services with Event Streams. Configure an authorization policy to allow the Event Streams service to access the key management service instance with the reader role ([Learn more](https://cloud.ibm.com/docs/account?topic=account-serviceauth)). You can't manage the policy in the same Terraform state file as the Event Streams service instance ([Learn more](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-managing_encryption#using_encryption))."
   default     = null
   validation {
     condition = anytrue([
