@@ -58,6 +58,6 @@ variable "topics" {
       config     = object({})
     }
   ))
-  description = "The list of topics to apply to resources. Only one topic is allowed for Lite plan instances. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/standard/DA-schemas-topics-cbr.md)."
+  description = "The list of topics to apply to resources. Only one topic is allowed for Lite plan instances. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/quickstart/DA-schemas-topics-cbr.md)."
   default     = []
 }
