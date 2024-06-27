@@ -12,7 +12,7 @@ import (
 )
 
 const completeExampleTerraformDir = "examples/complete"
-const fsCloudSolutionTerraformDir = "solutions/standard"
+const quickstartSolutionTerraformDir = "solutions/quickstart"
 
 // Use existing group for tests
 const resourceGroup = "geretain-test-event-streams"
@@ -59,22 +59,21 @@ func TestRunUpgradeExample(t *testing.T) {
 	}
 }
 
-func TestRunfsCloudSolution(t *testing.T) {
+func TestRunQuickstartSolution(t *testing.T) {
 	t.Parallel()
 
 	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
 		Testing:       t,
-		TerraformDir:  fsCloudSolutionTerraformDir,
-		Prefix:        "es-fscloud",
+		TerraformDir:  quickstartSolutionTerraformDir,
+		Prefix:        "es-qs",
 		ResourceGroup: resourceGroup,
 	})
 
 	options.TerraformVars = map[string]interface{}{
 		"ibmcloud_api_key":            options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"],
-		"existing_kms_key_crn":        permanentResources["hpcs_south_root_key_crn"],
 		"resource_group_name":         options.ResourceGroup,
 		"use_existing_resource_group": true,
-		"es_name":                     options.Prefix,
+		"prefix":                      options.Prefix,
 	}
 
 	output, err := options.RunTestConsistency()
