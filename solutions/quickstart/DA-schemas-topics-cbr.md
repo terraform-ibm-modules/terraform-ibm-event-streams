@@ -2,7 +2,7 @@
 
 When you add a Event Streams deployable architecture from the IBM Cloud catalog to IBM Cloud Projects, you can configure schemas, topics, and context-based restriction rules. When you edit your project configuration, select the **Configure** panel, and then click the **Optional** tab.
 
-To enter a custom value, use the edit action to open the "Edit Array" panel. Add the schemas, topics, and context-based restriction rules configurations to the array.
+To enter a custom value, use the edit action to open the "Edit Array" panel. Add the schemas, topics, and context-based restriction rules configurations to the array. The schemas are supported only for `Enterprise` plan and context-based restrictions can be applied for `Standard` and `Enterprise` plan.
 
 ## Options with schemas
 
