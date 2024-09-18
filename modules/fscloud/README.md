@@ -46,6 +46,7 @@ No resources.
 | <a name="output_crn"></a> [crn](#output\_crn) | Event Streams instance crn |
 | <a name="output_guid"></a> [guid](#output\_guid) | Event Streams instance guid |
 | <a name="output_id"></a> [id](#output\_id) | Event Streams instance crn |
+| <a name="output_kafka_broker_version"></a> [kafka\_broker\_version](#output\_kafka\_broker\_version) | The Kafka version |
 | <a name="output_kafka_brokers_sasl"></a> [kafka\_brokers\_sasl](#output\_kafka\_brokers\_sasl) | (Array of Strings) Kafka brokers use for interacting with Kafka native API |
 | <a name="output_kafka_http_url"></a> [kafka\_http\_url](#output\_kafka\_http\_url) | The API endpoint to interact with Event Streams REST API |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

@@ -31,3 +31,7 @@ output "kafka_http_url" {
   description = "The API endpoint to interact with Event Streams REST API"
   value       = module.event_streams.kafka_http_url
 }
+output "kafka_broker_version" {
+  description = "The Kafka version"
+  value       = module.event_streams.kafka_broker_version
+}
