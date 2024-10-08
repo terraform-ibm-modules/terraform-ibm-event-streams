@@ -90,3 +90,24 @@ module "cbr_rule" {
     ]
   }]
 }
+
+resource "ibm_resource_key" "service_credentials" {
+  for_each             = var.service_credential_names
+  name                 = each.key
+  role                 = each.value
+  resource_instance_id = ibm_resource_instance.es_instance.id
+}
+
+locals {
+  service_credentials_json = length(var.service_credential_names) > 0 ? {
+    for service_credential in ibm_resource_key.service_credentials :
+    service_credential["name"] => service_credential["credentials_json"]
+  } : null
+
+  service_credentials_object = length(var.service_credential_names) > 0 ? {
+    credentials = {
+      for service_credential in ibm_resource_key.service_credentials :
+      service_credential["name"] => service_credential["credentials"]
+    }
+  } : null
+}

@@ -156,3 +156,14 @@ variable "cbr_rules" {
   default     = []
   # Validation happens in the rule module
 }
+
+variable "service_credential_names" {
+  description = "The mapping of names and roles for service credentials that you want to create for the Event Notifications streams."
+  type        = map(string)
+  default     = {}
+
+  validation {
+    condition     = alltrue([for name, role in var.service_credential_names : contains(["Writer", "Reader", "Manager", "None"], role)])
+    error_message = "The specified service credential role is not valid. The following values are valid for service credential roles: 'Writer', 'Reader', 'Manager', 'None'"
+  }
+}
