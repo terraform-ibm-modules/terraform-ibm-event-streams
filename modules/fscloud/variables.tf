@@ -52,9 +52,19 @@ variable "topics" {
   default     = []
 }
 
+variable "existing_kms_instance_guid" {
+  description = "The GUID of the Hyper Protect Crypto service in which the key specified in var.kms_key_crn is coming from"
+  type        = string
+}
+
 variable "kms_key_crn" {
   type        = string
   description = "The root key CRN of the key management service (Key Protect or Hyper Protect Crypto Services) to use to encrypt the payload data."
+}
+
+variable "existing_kms_instance_guid" {
+  description = "The GUID of the Hyper Protect Crypto service in which the key specified in var.kms_key_crn is coming from"
+  type        = string
 }
 
 ##############################################################
