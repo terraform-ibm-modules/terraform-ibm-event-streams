@@ -34,6 +34,7 @@ resource "time_sleep" "wait_for_authorization_policy" {
 }
 
 resource "ibm_resource_instance" "es_instance" {
+  depends_on        = [time_sleep.wait_for_authorization_policy]
   name              = var.es_name
   service           = "messagehub"
   plan              = var.plan
