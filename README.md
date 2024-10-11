@@ -21,6 +21,7 @@ The Event Streams service supports payload data encryption that uses a root key 
 * [Examples](./examples)
     * [Basic example](./examples/basic)
     * [Complete example with topics and schema creation.](./examples/complete)
+    * [Financial Services Cloud profile example](./examples/fscloud)
 * [Contributing](#contributing)
 <!-- END OVERVIEW HOOK -->
 
