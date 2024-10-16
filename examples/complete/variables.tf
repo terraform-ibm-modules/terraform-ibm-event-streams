@@ -106,7 +106,6 @@ variable "service_credential_names" {
   default = {
     "en_writer" : "Writer",
     "en_reader" : "Reader",
-    "en_manager" : "Manager",
-    "en_none" : "None"
+    "en_manager" : "Manager"
   }
 }
