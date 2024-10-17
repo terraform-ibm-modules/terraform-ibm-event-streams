@@ -167,6 +167,135 @@
               }
             ]
           }
+        },
+        {
+          "label": "enterprise",
+          "name": "enterprise",
+          "install_type": "fullstack",
+          "working_directory": "solutions/enterprise",
+          "configuration": [
+            {
+              "key": "ibmcloud_api_key"
+            },
+            {
+              "key": "prefix"
+            },
+            {
+              "key": "use_existing_resource_group"
+            },
+            {
+              "key": "resource_group_name"
+            },
+            {
+              "key": "es_name"
+            },
+            {
+              "key": "region",
+              "required": true,
+              "options": [
+                {
+                  "displayname": "Dallas (us-south)",
+                  "value": "us-south"
+                },
+                {
+                  "displayname": "Frankfurt (eu-de)",
+                  "value": "eu-de"
+                },
+                {
+                  "displayname": "London (eu-gb)",
+                  "value": "eu-gb"
+                },
+                {
+                  "displayname": "Madrid (eu-es)",
+                  "value": "eu-es"
+                },
+                {
+                  "displayname": "Osaka (jp-osa)",
+                  "value": "jp-osa"
+                },
+                {
+                  "displayname": "Sydney (au-syd)",
+                  "value": "au-syd"
+                },
+                {
+                  "displayname": "Tokyo (jp-tok)",
+                  "value": "jp-tok"
+                },
+                {
+                  "displayname": "Osaka (jp-osa)",
+                  "value": "jp-osa"
+                },
+                {
+                  "displayname": "Sao Paulo (br-sao)",
+                  "value": "br-sao"
+                },
+                {
+                  "displayname": "Toronto (ca-tor)",
+                  "value": "ca-tor"
+                },
+                {
+                  "displayname": "Washington (us-east)",
+                  "value": "us-east"
+                }
+              ]
+            },
+            {
+              "key": "resource_tags"
+            },
+            {
+              "key": "schemas"
+            },
+            {
+              "key": "topics"
+            },
+            {
+              "key": "existing_kms_instance_guid"
+            },
+            {
+              "key": "kms_key_crn"
+            }
+          ],
+          "iam_permissions": [
+            {
+              "role_crns": [
+                "crn:v1:bluemix:public:iam::::serviceRole:Manager"
+              ],
+              "service_name": "messagehub"
+            },
+            {
+              "role_crns": [
+                "crn:v1:bluemix:public:iam::::role:Editor"
+              ],
+              "service_name": "messagehub"
+            }
+          ],
+          "architecture": {
+            "descriptions": "This architecture creates a Financial Services compliant instance of IBM Event Streams for IBM Cloud in enterprise plan. It also supports the creation of topics and schemas in the Event Streams instance.",
+            "features": [
+              {
+                "title": "Creates an Event Streams instance",
+                "description": "Creates and configures the IBM Cloud Event Streams instance."
+              },
+              {
+                "title": "Creates topics in the Event Streams instance",
+                "description": "Creates topics in IBM Cloud Event Streams instance."
+              },
+              {
+                "title": "Creates schemas in the Event Streams instance",
+                "description": "Creates schemas in IBM Cloud Event Streams instance."
+              }
+            ],
+            "diagrams": [
+              {
+                "diagram": {
+                  "caption": "Financial Services compliant instance of IBM Event Streams for IBM Cloud.",
+                  "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-streams/main/reference-architecture/da-enterprise.svg",
+                  "type": "image/svg+xml"
+                },
+                "description": "This architecture creates a Financial Services compliant instance of IBM Event Streams for IBM Cloud."
+              }
+            ]
+          }
         }
       ]
     }
