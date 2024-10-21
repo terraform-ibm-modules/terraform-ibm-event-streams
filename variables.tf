@@ -28,6 +28,12 @@ variable "tags" {
   default     = []
 }
 
+variable "access_tags" {
+  type        = list(string)
+  description = "The list of access tags associated with the Event Streams instance."
+  default     = []
+}
+
 variable "region" {
   type        = string
   description = "The region where the Event Streams are created."

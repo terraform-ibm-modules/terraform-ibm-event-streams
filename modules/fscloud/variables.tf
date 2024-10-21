@@ -11,6 +11,12 @@ variable "tags" {
   default     = []
 }
 
+variable "access_tags" {
+  type        = list(string)
+  description = "The list of access tags associated with the Event Steams instance."
+  default     = []
+}
+
 variable "es_name" {
   description = "The name of the Event Streams instance."
   type        = string
