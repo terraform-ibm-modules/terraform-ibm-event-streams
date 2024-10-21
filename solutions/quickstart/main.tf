@@ -19,4 +19,5 @@ module "event_streams" {
   region            = var.region
   topics            = var.topics
   tags              = var.resource_tags
+  metrics           = var.metrics
 }

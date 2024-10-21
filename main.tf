@@ -52,6 +52,7 @@ resource "ibm_resource_instance" "es_instance" {
     throughput        = var.throughput
     storage_size      = var.storage_size
     kms_key_crn       = var.kms_key_crn
+    metrics           = var.metrics
   }
 }
 
