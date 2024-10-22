@@ -79,6 +79,16 @@ resource "ibm_event_streams_topic" "es_topic" {
 }
 
 ##############################################################################
+# ACCESS TAGS - attaching existing access tags to the resource instance
+##############################################################################
+resource "ibm_resource_tag" "es_access_tag" {
+  count       = length(var.access_tags) > 0 ? 1 : 0
+  resource_id = ibm_resource_instance.es_instance.id
+  tags        = var.access_tags
+  tag_type    = "access"
+}
+
+##############################################################################
 # IAM Authorization Policy
 ##############################################################################
 
