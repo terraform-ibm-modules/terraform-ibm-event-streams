@@ -59,6 +59,7 @@ module "event_streams" {
   es_name           = "${var.prefix}-es"
   schemas           = var.schemas
   tags              = var.resource_tags
+  metrics           = var.metrics
   topics            = var.topics
   cbr_rules = [
     {
