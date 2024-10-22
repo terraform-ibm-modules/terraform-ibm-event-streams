@@ -176,7 +176,7 @@ variable "cbr_rules" {
 }
 
 variable "service_credential_names" {
-  description = "The mapping of names and roles for service credentials that you want to create for the Event Notifications streams."
+  description = "The mapping of names and roles for service credentials that you want to create for the Event streams."
   type        = map(string)
   default     = {}
 
