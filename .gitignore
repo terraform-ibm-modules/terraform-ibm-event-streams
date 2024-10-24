@@ -54,3 +54,5 @@ Brewfile.lock.json
 
 # Visual Studio Code
 .vscode/
+
+tests/vendor
