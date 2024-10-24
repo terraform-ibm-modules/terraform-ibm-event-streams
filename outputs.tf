@@ -19,7 +19,7 @@ output "guid" {
 
 output "kafka_brokers_sasl" {
   description = "(Array of Strings) Kafka brokers use for interacting with Kafka native API"
-  value       = lookup(ibm_resource_instance.es_instance.extensions, "kafka_brokers_sasl", [])
+  value       = lookup(ibm_resource_instance.es_instance.extensions, "kafka_brokers_sasl", null)
 }
 
 output "kafka_http_url" {
