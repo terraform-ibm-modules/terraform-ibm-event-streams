@@ -99,13 +99,3 @@ variable "topics" {
     }
   ]
 }
-
-variable "service_credential_names" {
-  description = "Map of name, role for service credentials that you want to create for the event streams"
-  type        = map(string)
-  default = {
-    "es_writer" : "Writer",
-    "es_reader" : "Reader",
-    "es_manager" : "Manager"
-  }
-}

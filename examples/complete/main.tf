@@ -15,11 +15,15 @@ module "resource_group" {
 ##############################################################################
 
 module "event_streams" {
-  source                   = "../../"
-  resource_group_id        = module.resource_group.resource_group_id
-  es_name                  = "${var.prefix}-es"
-  schemas                  = var.schemas
-  tags                     = var.resource_tags
-  topics                   = var.topics
-  service_credential_names = var.service_credential_names
+  source            = "../../"
+  resource_group_id = module.resource_group.resource_group_id
+  es_name           = "${var.prefix}-es"
+  schemas           = var.schemas
+  tags              = var.resource_tags
+  topics            = var.topics
+  service_credential_names = {
+    "es_writer" : "Writer",
+    "es_reader" : "Reader",
+    "es_manager" : "Manager"
+  }
 }

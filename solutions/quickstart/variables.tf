@@ -61,3 +61,9 @@ variable "topics" {
   description = "The list of topics to apply to resources. Only one topic is allowed for Lite plan instances. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/quickstart/DA-schemas-topics-cbr.md)."
   default     = []
 }
+
+variable "service_credential_names" {
+  description = "The mapping of names and roles for service credentials that you want to create for the Event streams."
+  type        = map(string)
+  default     = {}
+}

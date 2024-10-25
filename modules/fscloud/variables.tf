@@ -81,3 +81,9 @@ variable "cbr_rules" {
   default     = []
   # Validation happens in the rule module
 }
+
+variable "service_credential_names" {
+  description = "The mapping of names and roles for service credentials that you want to create for the Event streams."
+  type        = map(string)
+  default     = {}
+}

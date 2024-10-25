@@ -12,11 +12,12 @@ module "resource_group" {
 # Event Streams Instance
 #######################################################################################################################
 module "event_streams" {
-  source            = "../../"
-  resource_group_id = module.resource_group.resource_group_id
-  es_name           = var.prefix != null ? "${var.prefix}-${var.es_name}" : var.es_name
-  plan              = var.plan
-  region            = var.region
-  topics            = var.topics
-  tags              = var.resource_tags
+  source                   = "../../"
+  resource_group_id        = module.resource_group.resource_group_id
+  es_name                  = var.prefix != null ? "${var.prefix}-${var.es_name}" : var.es_name
+  plan                     = var.plan
+  region                   = var.region
+  topics                   = var.topics
+  tags                     = var.resource_tags
+  service_credential_names = var.service_credential_names
 }
