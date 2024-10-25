@@ -181,7 +181,7 @@ variable "service_credential_names" {
   default     = {}
 
   validation {
-    condition     = alltrue([for name, role in var.service_credential_names : contains(["Writer", "Reader", "Manager", "None"], role)])
-    error_message = "The specified service credential role is not valid. The following values are valid for service credential roles: 'Writer', 'Reader', 'Manager', 'None'"
+    condition     = alltrue([for name, role in var.service_credential_names : contains(["Writer", "Reader", "Manager"], role)])
+    error_message = "The specified service credential role is not valid. The following values are valid for service credential roles: 'Writer', 'Reader', 'Manager'"
   }
 }
