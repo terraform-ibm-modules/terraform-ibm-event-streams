@@ -62,6 +62,11 @@ module "event_streams" {
   tags                       = var.resource_tags
   topics                     = var.topics
   existing_kms_instance_guid = var.existing_kms_instance_guid
+  service_credential_names = {
+    "es_writer" : "Writer",
+    "es_reader" : "Reader",
+    "es_manager" : "Manager"
+  }
   cbr_rules = [
     {
       description      = "${var.prefix}-event stream access only from vpc"

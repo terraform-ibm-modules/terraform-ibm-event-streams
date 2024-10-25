@@ -31,3 +31,15 @@ output "kafka_http_url" {
   description = "The API endpoint to interact with Event Streams REST API"
   value       = module.event_streams.kafka_http_url
 }
+
+output "service_credentials_json" {
+  description = "Service credentials json map"
+  value       = module.event_streams.service_credentials_json
+  sensitive   = true
+}
+
+output "service_credentials_object" {
+  description = "Service credentials object"
+  value       = module.event_streams.service_credentials_object
+  sensitive   = true
+}
