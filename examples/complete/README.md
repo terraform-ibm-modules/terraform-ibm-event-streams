@@ -7,4 +7,3 @@ This example uses the IBM Cloud Terraform provider to create the following infra
 - A new resource group, if one is not passed in.
 - A sample virtual private cloud (VPC).
 - A instance of Event Streams in the provided resource group and region. You can identify topics and schemas to apply to the instance.
-- A context-based restriction rule to allow Event Streams to be accessible only from within the VPC.

@@ -31,3 +31,15 @@ output "kafka_broker_version" {
   description = "The Kafka version"
   value       = module.event_streams.kafka_broker_version
 }
+
+output "service_credentials_json" {
+  description = "Service credentials json map"
+  value       = module.event_streams.service_credentials_json
+  sensitive   = true
+}
+
+output "service_credentials_object" {
+  description = "Service credentials object"
+  value       = module.event_streams.service_credentials_object
+  sensitive   = true
+}

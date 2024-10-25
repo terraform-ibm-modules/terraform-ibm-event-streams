@@ -31,3 +31,15 @@ output "kafka_broker_version" {
   description = "The Kafka version"
   value       = ibm_resource_instance.es_instance.extensions.kafka_broker_version
 }
+
+output "service_credentials_json" {
+  description = "The service credentials JSON map."
+  value       = local.service_credentials_json
+  sensitive   = true
+}
+
+output "service_credentials_object" {
+  description = "The service credentials object."
+  value       = local.service_credentials_object
+  sensitive   = true
+}
