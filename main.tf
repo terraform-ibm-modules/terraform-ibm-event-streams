@@ -47,6 +47,7 @@ resource "ibm_resource_instance" "es_instance" {
     delete = var.delete_timeout
   }
 
+  parameters = {}
 
   parameters_json = var.plan != "enterprise-3nodes-2tb" ? null : var.kms_key_crn != null ? jsonencode(
     {
