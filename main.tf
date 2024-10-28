@@ -48,7 +48,7 @@ resource "ibm_resource_instance" "es_instance" {
   }
 
 
-  parameters_json = var.kms_key_crn != null ? jsonencode(
+  parameters_json = var.plan != "enterprise-3nodes-2tb" ? jsonencode("{}") : var.kms_key_crn != null ? jsonencode(
     {
       service-endpoints = var.service_endpoints
       throughput        = tostring(var.throughput)
