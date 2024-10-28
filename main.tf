@@ -47,12 +47,19 @@ resource "ibm_resource_instance" "es_instance" {
     delete = var.delete_timeout
   }
 
-  parameters_json = jsonencode(
+  
+  parameters_json = var.kms_key_crn != null?jsonencode(
     {
       service-endpoints = var.service_endpoints
       throughput        = var.throughput
       storage_size      = var.storage_size
       kms_key_crn       = var.kms_key_crn
+    }
+  ):jsonencode(
+    {
+      service-endpoints = var.service_endpoints
+      throughput        = var.throughput
+      storage_size      = var.storage_size
     }
   )
 }
