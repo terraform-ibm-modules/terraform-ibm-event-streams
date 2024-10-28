@@ -51,15 +51,15 @@ resource "ibm_resource_instance" "es_instance" {
   parameters_json = var.kms_key_crn != null ? jsonencode(
     {
       service-endpoints = var.service_endpoints
-      throughput        = var.throughput
-      storage_size      = var.storage_size
+      throughput        = tostring(var.throughput)
+      storage_size      = tostring(var.storage_size)
       kms_key_crn       = var.kms_key_crn
     }
     ) : jsonencode(
     {
       service-endpoints = var.service_endpoints
-      throughput        = var.throughput
-      storage_size      = var.storage_size
+      throughput        = tostring(var.throughput)
+      storage_size      = tostring(var.storage_size)
     }
   )
 }
