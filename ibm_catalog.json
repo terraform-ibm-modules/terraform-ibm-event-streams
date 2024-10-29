@@ -2,7 +2,7 @@
   "products": [
     {
       "name": "deploy-arch-ibm-event-streams",
-      "label": "Event Streams",
+      "label": "Cloud automation for Event Streams",
       "product_kind": "solution",
       "tags": [
         "ibm_created",
