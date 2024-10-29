@@ -185,3 +185,15 @@ variable "service_credential_names" {
     error_message = "The specified service credential role is not valid. The following values are valid for service credential roles: 'Writer', 'Reader', 'Manager'"
   }
 }
+
+variable "mirroring_enabled" {
+  type        = bool
+  description = "Set this to true to enable mirroring. Mirroring enables messages in one Event Streams service instance to be continuously copied to a second instance to increase resiliency. See https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-mirroring"
+  default     = false
+}
+
+variable "mirroring_topic_list" {
+  type        = list(string)
+  description = "The list of the topics to set in instance. Required only if var.mirroring_enabled is set to true"
+  default     = []
+}

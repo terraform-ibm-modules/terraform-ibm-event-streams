@@ -43,3 +43,8 @@ output "service_credentials_object" {
   value       = local.service_credentials_object
   sensitive   = true
 }
+
+output "mirroring_config_id" {
+  description = "The ID of the mirroring config in CRN format"
+  value       = var.mirroring_enabled ? ibm_event_streams_mirroring_config.es_mirroring_config[0].id : null
+}

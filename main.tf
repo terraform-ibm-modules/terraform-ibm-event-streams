@@ -5,7 +5,7 @@
 locals {
   # Validation (approach based on https://github.com/hashicorp/terraform/issues/25609#issuecomment-1057614400)
   # tflint-ignore: terraform_unused_declarations
-  validate_kms_plan = var.kms_key_crn != null && var.plan != "enterprise-3nodes-2tb" ? tobool("kms encryption is only supported for enterprise plan") : true
+  validate_kms_plan = (var.kms_key_crn != null || var.mirroring_enabled) && var.plan != "enterprise-3nodes-2tb" ? tobool("kms encryption and mirroring are only supported for enterprise plan") : true
   # tflint-ignore: terraform_unused_declarations
   validate_kms_values = !var.kms_encryption_enabled && var.kms_key_crn != null ? tobool("When passing values for var.kms_key_crn, you must set var.kms_encryption_enabled to true. Otherwise unset them to use default encryption") : true
   # tflint-ignore: terraform_unused_declarations
@@ -18,6 +18,10 @@ locals {
   validate_storage_size_lite_standard = ((var.plan == "lite" || var.plan == "standard") && var.storage_size != 2048) ? tobool("Storage size value cannot be changed in lite and standard plan. Default value is 2048.") : true
   # tflint-ignore: terraform_unused_declarations
   validate_service_end_points_lite_standard = ((var.plan == "lite" || var.plan == "standard") && var.service_endpoints != "public") ? tobool("Service endpoint cannot be changed in lite and standard plan. Default is public.") : true
+  # tflint-ignore: terraform_unused_declarations
+  validate_mirroring_values = !var.mirroring_enabled && var.mirroring_topic_list != null ? tobool("When passing values for var.mirroring_topic_list, you must set var.mirroring_enabled to true.") : true
+  # tflint-ignore: terraform_unused_declarations
+  validate_mirroring_vars = var.mirroring_enabled && var.mirroring_topic_list == null ? tobool("When setting var.mirroring_enabled to true, a list must be passed for var.mirroring_topic_list") : true
   # Determine what KMS service is being used for database encryption
   kms_service = var.kms_key_crn != null ? (
     can(regex(".*kms.*", var.kms_key_crn)) ? "kms" : (
@@ -143,4 +147,10 @@ locals {
       service_credential["name"] => service_credential["credentials"]
     }
   } : null
+}
+
+resource "ibm_event_streams_mirroring_config" "es_mirroring_config" {
+  count                    = var.mirroring_enabled ? 1 : 0
+  resource_instance_id     = ibm_resource_instance.es_instance.id
+  mirroring_topic_patterns = var.mirroring_topic_list
 }
