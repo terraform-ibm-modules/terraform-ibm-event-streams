@@ -21,7 +21,7 @@ locals {
   # tflint-ignore: terraform_unused_declarations
   validate_mirroring_values = !var.mirroring_enabled && var.mirroring_topic_list != null ? tobool("When passing values for var.mirroring_topic_list, you must set var.mirroring_enabled to true.") : true
   # tflint-ignore: terraform_unused_declarations
-  validate_mirroring_vars = var.mirroring_enabled && var.mirroring_topic_list == null ? tobool("When setting var.mirroring_enabled to true, a list must be passed for var.mirroring_topic_list") : true
+  validate_mirroring_vars = var.mirroring_enabled && var.mirroring_topic_list == null ? tobool("When setting var.mirroring_enabled to true, list of topics must be passed for var.mirroring_topic_list") : true
   # Determine what KMS service is being used for database encryption
   kms_service = var.kms_key_crn != null ? (
     can(regex(".*kms.*", var.kms_key_crn)) ? "kms" : (
