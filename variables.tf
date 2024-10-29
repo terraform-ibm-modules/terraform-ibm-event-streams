@@ -188,12 +188,12 @@ variable "service_credential_names" {
 
 variable "mirroring_enabled" {
   type        = bool
-  description = "Set this to true to enable mirroring. Mirroring enables messages in one Event Streams service instance to be continuously copied to a second instance to increase resiliency. See https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-mirroring"
+  description = "Set this to true to enable mirroring. Mirroring enables messages in one Event Streams service instance to be continuously copied to a second instance to increase resiliency. See https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-mirroring."
   default     = false
 }
 
 variable "mirroring_topic_list" {
   type        = list(string)
-  description = "The list of the topics to set in instance. Required only if var.mirroring_enabled is set to true"
+  description = "The list of the topics to set in instance. Required only if var.mirroring_enabled is set to true."
   default     = []
 }
