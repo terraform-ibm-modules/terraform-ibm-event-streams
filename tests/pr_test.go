@@ -13,6 +13,8 @@ import (
 
 const completeExampleTerraformDir = "examples/complete"
 const quickstartSolutionTerraformDir = "solutions/quickstart"
+const mirroringExampleTerraformDir = "examples/mirroring"
+
 
 // Use existing group for tests
 const resourceGroup = "geretain-test-event-streams"
@@ -75,6 +77,16 @@ func TestRunQuickstartSolution(t *testing.T) {
 		"use_existing_resource_group": true,
 		"prefix":                      options.Prefix,
 	}
+
+	output, err := options.RunTestConsistency()
+	assert.Nil(t, err, "This should not have errored")
+	assert.NotNil(t, output, "Expected some output")
+}
+
+func TestRunMirroringExample(t *testing.T) {
+	t.Parallel()
+
+	options := setupOptions(t, "es-mirror", mirroringExampleTerraformDir)
 
 	output, err := options.RunTestConsistency()
 	assert.Nil(t, err, "This should not have errored")
