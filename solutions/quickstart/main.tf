@@ -19,5 +19,6 @@ module "event_streams" {
   region                   = var.region
   topics                   = var.topics
   tags                     = var.resource_tags
+  access_tags              = var.access_tags
   service_credential_names = var.service_credential_names
 }

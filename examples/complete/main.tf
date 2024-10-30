@@ -20,6 +20,7 @@ module "event_streams" {
   es_name           = "${var.prefix}-es"
   schemas           = var.schemas
   tags              = var.resource_tags
+  access_tags       = var.access_tags
   topics            = var.topics
   service_credential_names = {
     "es_writer" : "Writer",

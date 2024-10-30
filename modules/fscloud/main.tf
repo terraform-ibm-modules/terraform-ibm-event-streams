@@ -8,6 +8,7 @@ module "event_streams" {
   existing_kms_instance_guid = var.existing_kms_instance_guid
   schemas                    = var.schemas
   tags                       = var.tags
+  access_tags                = var.access_tags
   topics                     = var.topics
   service_endpoints          = "private"
   cbr_rules                  = var.cbr_rules
