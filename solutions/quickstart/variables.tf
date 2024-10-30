@@ -73,3 +73,9 @@ variable "service_credential_names" {
   type        = map(string)
   default     = {}
 }
+
+variable "metrics" {
+  type        = list(string)
+  description = "Enhanced metrics to activate, as list of strings. Allowed values: 'topic', 'partition', 'consumers'."
+  default     = []
+}

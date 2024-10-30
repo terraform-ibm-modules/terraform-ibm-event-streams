@@ -52,6 +52,7 @@ resource "ibm_resource_instance" "es_instance" {
       service-endpoints = var.service_endpoints
       throughput        = tostring(var.throughput)
       storage_size      = tostring(var.storage_size)
+      metrics           = var.metrics
       kms_key_crn       = var.kms_key_crn
     }
     ) : jsonencode(
@@ -59,6 +60,7 @@ resource "ibm_resource_instance" "es_instance" {
       service-endpoints = var.service_endpoints
       throughput        = tostring(var.throughput)
       storage_size      = tostring(var.storage_size)
+      metrics           = var.metrics
     }
   )
 }
