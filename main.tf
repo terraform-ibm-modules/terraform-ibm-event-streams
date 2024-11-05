@@ -51,12 +51,20 @@ resource "ibm_resource_instance" "es_instance" {
     delete = var.delete_timeout
   }
 
-  parameters = {
-    service-endpoints = var.service_endpoints
-    throughput        = var.throughput
-    storage_size      = var.storage_size
-    kms_key_crn       = var.kms_key_crn
-  }
+  parameters_json = var.plan != "enterprise-3nodes-2tb" ? null : var.kms_key_crn != null ? jsonencode(
+    {
+      service-endpoints = var.service_endpoints
+      throughput        = tostring(var.throughput)
+      storage_size      = tostring(var.storage_size)
+      kms_key_crn       = var.kms_key_crn
+    }
+    ) : jsonencode(
+    {
+      service-endpoints = var.service_endpoints
+      throughput        = tostring(var.throughput)
+      storage_size      = tostring(var.storage_size)
+    }
+  )
 }
 
 ##############################################################################
@@ -80,6 +88,16 @@ resource "ibm_event_streams_topic" "es_topic" {
   name                 = var.topics[count.index].name
   partitions           = var.topics[count.index].partitions
   config               = var.topics[count.index].config
+}
+
+##############################################################################
+# ACCESS TAGS - attaching existing access tags to the resource instance
+##############################################################################
+resource "ibm_resource_tag" "es_access_tag" {
+  count       = length(var.access_tags) > 0 ? 1 : 0
+  resource_id = ibm_resource_instance.es_instance.id
+  tags        = var.access_tags
+  tag_type    = "access"
 }
 
 ##############################################################################

@@ -111,6 +111,9 @@
               "key": "resource_tags"
             },
             {
+              "key": "access_tags"
+            },
+            {
               "key": "plan",
               "options": [
                 {

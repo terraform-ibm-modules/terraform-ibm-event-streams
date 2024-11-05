@@ -40,6 +40,12 @@ variable "resource_tags" {
   default     = []
 }
 
+variable "access_tags" {
+  type        = list(string)
+  description = "The list of access tags associated with the Event Streams instance."
+  default     = []
+}
+
 variable "plan" {
   type        = string
   description = "The plan for the Event Streams instance. Possible values: `lite` and `standard`."
