@@ -62,7 +62,7 @@ module "event_streams" {
   tags                       = var.resource_tags
   topics                     = var.topics
   existing_kms_instance_guid = var.existing_kms_instance_guid
-  metrics                    = []
+  metrics                    = ["topic", "partition", "consumers"]
   service_credential_names = {
     "es_writer" : "Writer",
     "es_reader" : "Reader",
