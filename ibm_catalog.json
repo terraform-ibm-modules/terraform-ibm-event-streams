@@ -128,9 +128,6 @@
             },
             {
               "key": "topics"
-            },
-            {
-              "key": "metrics"
             }
           ],
           "iam_permissions": [
