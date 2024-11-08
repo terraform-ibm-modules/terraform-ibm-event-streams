@@ -21,5 +21,4 @@ module "event_streams" {
   tags                     = var.resource_tags
   access_tags              = var.access_tags
   service_credential_names = var.service_credential_names
-  metrics                  = var.metrics
 }
