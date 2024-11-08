@@ -24,6 +24,8 @@ locals {
       can(regex(".*hs-crypto.*", var.kms_key_crn)) ? "hs-crypto" : null
     )
   ) : null
+  # tflint-ignore: terraform_unused_declarations
+  validate_metrics = var.plan != "enterprise-3nodes-2tb" && length(var.metrics) > 0 ? tobool("metrics are only supported for enterprise plan") : true
 }
 
 # workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
