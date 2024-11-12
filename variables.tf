@@ -191,3 +191,13 @@ variable "service_credential_names" {
     error_message = "The specified service credential role is not valid. The following values are valid for service credential roles: 'Writer', 'Reader', 'Manager'"
   }
 }
+
+variable "metrics" {
+  type        = list(string)
+  description = "Enhanced metrics to activate, as list of strings. Only allowed for enterprise plans. Allowed values: 'topic', 'partition', 'consumers'."
+  validation {
+    condition     = alltrue([for name in var.metrics : contains(["topic", "partition", "consumers"], name)])
+    error_message = "The specified metrics are not valid. The following values are valid for metrics: 'topic', 'partition', 'consumers'."
+  }
+  default = []
+}

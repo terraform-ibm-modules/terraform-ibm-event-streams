@@ -24,6 +24,8 @@ locals {
       can(regex(".*hs-crypto.*", var.kms_key_crn)) ? "hs-crypto" : null
     )
   ) : null
+  # tflint-ignore: terraform_unused_declarations
+  validate_metrics = var.plan != "enterprise-3nodes-2tb" && length(var.metrics) > 0 ? tobool("metrics are only supported for enterprise plan") : true
 }
 
 # workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
@@ -52,6 +54,7 @@ resource "ibm_resource_instance" "es_instance" {
       service-endpoints = var.service_endpoints
       throughput        = tostring(var.throughput)
       storage_size      = tostring(var.storage_size)
+      metrics           = var.metrics
       kms_key_crn       = var.kms_key_crn
     }
     ) : jsonencode(
@@ -59,6 +62,7 @@ resource "ibm_resource_instance" "es_instance" {
       service-endpoints = var.service_endpoints
       throughput        = tostring(var.throughput)
       storage_size      = tostring(var.storage_size)
+      metrics           = var.metrics
     }
   )
 }
