@@ -192,6 +192,16 @@ variable "service_credential_names" {
   }
 }
 
+variable "metrics" {
+  type        = list(string)
+  description = "Enhanced metrics to activate, as list of strings. Only allowed for enterprise plans. Allowed values: 'topic', 'partition', 'consumers'."
+  validation {
+    condition     = alltrue([for name in var.metrics : contains(["topic", "partition", "consumers"], name)])
+    error_message = "The specified metrics are not valid. The following values are valid for metrics: 'topic', 'partition', 'consumers'."
+  }
+  default = []
+}
+
 variable "mirroring_enabled" {
   type        = bool
   description = "Set this to true to enable mirroring. Mirroring enables messages in one Event Streams service instance to be continuously copied to a second instance to increase resiliency. See https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-mirroring."

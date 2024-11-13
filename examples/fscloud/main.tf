@@ -38,7 +38,7 @@ resource "ibm_is_subnet" "testacc_subnet" {
 ##############################################################################
 module "cbr_zone" {
   source           = "terraform-ibm-modules/cbr/ibm//modules/cbr-zone-module"
-  version          = "1.27.0"
+  version          = "1.28.1"
   name             = "${var.prefix}-VPC-network-zone"
   zone_description = "CBR Network zone representing VPC"
   account_id       = data.ibm_iam_account_settings.iam_account_settings.account_id
@@ -62,6 +62,7 @@ module "event_streams" {
   tags                       = var.resource_tags
   topics                     = var.topics
   existing_kms_instance_guid = var.existing_kms_instance_guid
+  metrics                    = ["topic", "partition", "consumers"]
   service_credential_names = {
     "es_writer" : "Writer",
     "es_reader" : "Reader",

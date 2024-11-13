@@ -28,6 +28,8 @@ locals {
       can(regex(".*hs-crypto.*", var.kms_key_crn)) ? "hs-crypto" : null
     )
   ) : null
+  # tflint-ignore: terraform_unused_declarations
+  validate_metrics = var.plan != "enterprise-3nodes-2tb" && length(var.metrics) > 0 ? tobool("metrics are only supported for enterprise plan") : true
 }
 
 # workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
@@ -56,6 +58,7 @@ resource "ibm_resource_instance" "es_instance" {
       service-endpoints = var.service_endpoints
       throughput        = tostring(var.throughput)
       storage_size      = tostring(var.storage_size)
+      metrics           = var.metrics
       kms_key_crn       = var.kms_key_crn
     }
     ) : jsonencode(
@@ -63,6 +66,7 @@ resource "ibm_resource_instance" "es_instance" {
       service-endpoints = var.service_endpoints
       throughput        = tostring(var.throughput)
       storage_size      = tostring(var.storage_size)
+      metrics           = var.metrics
     }
   )
 }
@@ -121,7 +125,7 @@ resource "ibm_iam_authorization_policy" "kms_policy" {
 module "cbr_rule" {
   count            = length(var.cbr_rules) > 0 ? length(var.cbr_rules) : 0
   source           = "terraform-ibm-modules/cbr/ibm//modules/cbr-rule-module"
-  version          = "1.27.0"
+  version          = "1.28.1"
   rule_description = var.cbr_rules[count.index].description
   enforcement_mode = var.cbr_rules[count.index].enforcement_mode
   rule_contexts    = var.cbr_rules[count.index].rule_contexts
