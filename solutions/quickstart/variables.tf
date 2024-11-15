@@ -8,6 +8,10 @@ variable "prefix" {
   type        = string
   description = "Optional. The prefix to append to all resources that this solution creates."
   default     = null
+  validation {
+    error_message = "Prefix must begin with a lowercase letter and contain only lowercase letters, numbers, and - characters. Prefixes must end with a lowercase letter or number and be 16 or fewer characters."
+    condition     = can(regex("^([a-z]|[a-z][-a-z0-9]*[a-z0-9])$", coalesce(var.prefix, "es"))) && length(coalesce(var.prefix, "es")) <= 16
+  }
 }
 
 variable "use_existing_resource_group" {
