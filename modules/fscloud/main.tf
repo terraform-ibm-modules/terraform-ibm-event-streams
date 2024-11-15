@@ -14,6 +14,6 @@ module "event_streams" {
   cbr_rules                  = var.cbr_rules
   service_credential_names   = var.service_credential_names
   metrics                    = var.metrics
+  quotas                     = var.quotas
   kms_encryption_enabled     = true
-
 }

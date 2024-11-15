@@ -63,6 +63,13 @@ module "event_streams" {
   topics                     = var.topics
   existing_kms_instance_guid = var.existing_kms_instance_guid
   metrics                    = ["topic", "partition", "consumers"]
+  quotas = [
+    {
+      "entity"             = "iam-ServiceId-00000000-0000-0000-0000-000000000000",
+      "producer_byte_rate" = 100000,
+      "consumer_byte_rate" = 200000
+    }
+  ]
   service_credential_names = {
     "es_writer" : "Writer",
     "es_reader" : "Reader",

@@ -26,6 +26,8 @@ locals {
   ) : null
   # tflint-ignore: terraform_unused_declarations
   validate_metrics = var.plan != "enterprise-3nodes-2tb" && length(var.metrics) > 0 ? tobool("metrics are only supported for enterprise plan") : true
+  # tflint-ignore: terraform_unused_declarations
+  validate_quotas = var.plan != "enterprise-3nodes-2tb" && length(var.quotas) > 0 ? tobool("quotas are only supported for enterprise plan") : true
 }
 
 # workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
@@ -98,6 +100,18 @@ resource "ibm_resource_tag" "es_access_tag" {
   resource_id = ibm_resource_instance.es_instance.id
   tags        = var.access_tags
   tag_type    = "access"
+}
+
+##############################################################################
+# QUOTAS - defining quotas for the resource instance
+##############################################################################
+
+resource "ibm_event_streams_quota" "eventstreams_quotas" {
+  count                = length(var.quotas)
+  resource_instance_id = ibm_resource_instance.es_instance.id
+  entity               = var.quotas[count.index].entity
+  producer_byte_rate   = var.quotas[count.index].producer_byte_rate
+  consumer_byte_rate   = var.quotas[count.index].consumer_byte_rate
 }
 
 ##############################################################################
