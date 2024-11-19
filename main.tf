@@ -31,7 +31,7 @@ locals {
 }
 
 resource "ibm_resource_instance" "es_instance" {
-  depends_on        = [time_sleep.wait_for_kms_authorization_policy, time_sleep.wait_for_en_service_policy]
+  depends_on        = [time_sleep.wait_for_kms_authorization_policy, time_sleep.wait_for_es_service_policy]
   name              = var.es_name
   service           = "messagehub"
   plan              = var.plan
@@ -119,7 +119,7 @@ resource "time_sleep" "wait_for_kms_authorization_policy" {
 }
 
 # Create s2s at service level for provisioning mirroring instance
-resource "ibm_iam_authorization_policy" "en_service_policy" {
+resource "ibm_iam_authorization_policy" "es_service_policy" {
   count               = var.mirroring_enabled ? 1 : 0
   source_service_name = "messagehub"
   target_service_name = "messagehub"
@@ -128,8 +128,8 @@ resource "ibm_iam_authorization_policy" "en_service_policy" {
 }
 
 # workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
-resource "time_sleep" "wait_for_en_service_policy" {
-  depends_on = [ibm_iam_authorization_policy.en_service_policy]
+resource "time_sleep" "wait_for_es_service_policy" {
+  depends_on = [ibm_iam_authorization_policy.es_service_policy]
 
   create_duration = "30s"
 }
