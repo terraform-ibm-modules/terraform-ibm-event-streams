@@ -151,7 +151,7 @@ resource "ibm_iam_authorization_policy" "mirroring_policy" {
   target_service_name         = "messagehub"
   target_resource_instance_id = module.es_guid_crn_parser[0].service_instance
   roles                       = ["Reader"]
-  description                 = "Allow an Event Streams mirroring instance to read from the source Event Streams instance."
+  description                 = "Allow an Event Streams mirroring instance ${ibm_resource_instance.es_instance.guid} to read from the source Event Streams instance ${module.es_guid_crn_parser[0].service_instance}."
 }
 
 # workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
