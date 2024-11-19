@@ -28,6 +28,8 @@ locals {
   validate_metrics = var.plan != "enterprise-3nodes-2tb" && length(var.metrics) > 0 ? tobool("metrics are only supported for enterprise plan") : true
   # tflint-ignore: terraform_unused_declarations
   validate_quotas = var.plan != "enterprise-3nodes-2tb" && length(var.quotas) > 0 ? tobool("quotas are only supported for enterprise plan") : true
+  # tflint-ignore: terraform_unused_declarations
+  validate_schema_global_rule = var.plan != "enterprise-3nodes-2tb" && var.schema_global_rule != "" ? tobool("schema global rule is only supported for enterprise plan") : true
 }
 
 # workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
@@ -70,7 +72,7 @@ resource "ibm_resource_instance" "es_instance" {
 }
 
 ##############################################################################
-# SCHEMA
+# SCHEMA AND COMPATIBILITY RULE
 ##############################################################################
 
 resource "ibm_event_streams_schema" "es_schema" {
@@ -78,6 +80,12 @@ resource "ibm_event_streams_schema" "es_schema" {
   resource_instance_id = ibm_resource_instance.es_instance.id
   schema_id            = var.schemas[count.index].schema_id
   schema               = jsonencode(var.schemas[count.index].schema)
+}
+
+resource "ibm_event_streams_schema_global_rule" "es_globalrule" {
+  count                = var.schema_global_rule != "" ? 1 : 0
+  resource_instance_id = ibm_resource_instance.es_instance.id
+  config               = var.schema_global_rule
 }
 
 ##############################################################################

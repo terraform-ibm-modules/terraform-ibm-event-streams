@@ -70,6 +70,7 @@ module "event_streams" {
       "consumer_byte_rate" = 200000
     }
   ]
+  schema_global_rule         = "FORWARD"
   service_credential_names = {
     "es_writer" : "Writer",
     "es_reader" : "Reader",
