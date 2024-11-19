@@ -23,6 +23,7 @@ module "event_streams" {
   access_tags       = var.access_tags
   topics            = var.topics
   metrics           = []
+  quotas            = []
   service_credential_names = {
     "es_writer" : "Writer",
     "es_reader" : "Reader",

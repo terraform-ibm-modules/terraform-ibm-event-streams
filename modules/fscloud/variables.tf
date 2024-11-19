@@ -99,3 +99,17 @@ variable "metrics" {
   description = "Enhanced metrics to activate, as list of strings. Allowed values: 'topic', 'partition', 'consumers'."
   default     = []
 }
+
+variable "quotas" {
+  type = list(object({
+    entity             = string
+    producer_byte_rate = optional(number, -1)
+    consumer_byte_rate = optional(number, -1)
+  }))
+  description = "Quotas to be applied to the Event Streams instance. Entity may be 'default' to apply to all users, or an IAM ServiceID for a specific user. Rates are bytes/second, with -1 meaning no quota."
+  default     = []
+  validation {
+    condition     = alltrue([for v in var.quotas : v.entity != "" && (v.producer_byte_rate >= 0 || v.consumer_byte_rate >= 0)])
+    error_message = "The quota entity must be defined, and at least one of producer_byte_rate or consumer_byte_rate must be set to a non-negative value"
+  }
+}
