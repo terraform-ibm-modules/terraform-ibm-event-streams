@@ -13,13 +13,13 @@ variable "region" {
 variable "prefix" {
   type        = string
   description = "The prefix to apply to all resources created by this example."
-  default     = "event-streams-com"
+  default     = "geretain-sky"
 }
 
 variable "resource_group" {
   type        = string
   description = "An existing resource group name to use for this example. If not specified, a new resource group is created."
-  default     = null
+  default     = "geretain-aakash-rg"
 }
 
 variable "resource_tags" {

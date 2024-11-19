@@ -99,3 +99,29 @@ variable "metrics" {
   description = "Enhanced metrics to activate, as list of strings. Allowed values: 'topic', 'partition', 'consumers'."
   default     = []
 }
+
+##############################################################
+# Mirroring
+##############################################################
+
+variable "mirroring_enabled" {
+  type        = bool
+  description = "Set this to true to enable mirroring. Mirroring enables messages in one Event Streams service instance to be continuously copied to a second instance to increase resiliency. See https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-mirroring."
+  default     = false
+}
+
+variable "mirroring_topic_patterns" {
+  type        = list(string)
+  description = "The list of the topics to set in instance. Required only if var.mirroring_enabled is set to true."
+  default     = null
+}
+
+variable "mirroring" {
+  description = "Mirroring configuration"
+  type = object({
+    source_crn   = string
+    source_alias = string
+    target_alias = string
+  })
+  default = null
+}

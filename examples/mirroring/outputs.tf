@@ -13,7 +13,7 @@ output "resource_group_id" {
 }
 
 output "crn" {
-  description = "Event Streams instance crn"
+  description = "Event Streams mirror instance crn"
   value       = module.event_streams_mirror.crn
 }
 
@@ -39,5 +39,10 @@ output "kafka_broker_version" {
 
 output "mirroring_config_id" {
   description = "The ID of the mirroring config in CRN format"
-  value = module.event_streams_mirror.mirroring_config_id
+  value       = module.event_streams_mirror.mirroring_config_id
+}
+
+output "mirroring_topic_patterns" {
+  description = "Mirroring topic patterns"
+  value       = module.event_streams_mirror.mirroring_topic_patterns
 }

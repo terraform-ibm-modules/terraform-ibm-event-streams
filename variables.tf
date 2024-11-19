@@ -208,8 +208,18 @@ variable "mirroring_enabled" {
   default     = false
 }
 
-variable "mirroring_topic_list" {
+variable "mirroring_topic_patterns" {
   type        = list(string)
   description = "The list of the topics to set in instance. Required only if var.mirroring_enabled is set to true."
-  default     = []
+  default     = null
+}
+
+variable "mirroring" {
+  description = "Mirroring configuration"
+  type = object({
+    source_crn   = string
+    source_alias = string
+    target_alias = string
+  })
+  default = null
 }

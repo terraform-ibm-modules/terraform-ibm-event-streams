@@ -15,5 +15,7 @@ module "event_streams" {
   service_credential_names   = var.service_credential_names
   metrics                    = var.metrics
   kms_encryption_enabled     = true
-
+  mirroring_enabled          = var.mirroring_enabled
+  mirroring_topic_patterns   = var.mirroring_topic_patterns
+  mirroring                  = var.mirroring
 }

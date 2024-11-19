@@ -15,7 +15,6 @@ const completeExampleTerraformDir = "examples/complete"
 const quickstartSolutionTerraformDir = "solutions/quickstart"
 const mirroringExampleTerraformDir = "examples/mirroring"
 
-
 // Use existing group for tests
 const resourceGroup = "geretain-test-event-streams"
 

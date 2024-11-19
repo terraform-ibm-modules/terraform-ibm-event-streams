@@ -5,7 +5,7 @@
 locals {
   # Validation (approach based on https://github.com/hashicorp/terraform/issues/25609#issuecomment-1057614400)
   # tflint-ignore: terraform_unused_declarations
-  validate_kms_plan = (var.kms_key_crn != null || var.mirroring_enabled) && var.plan != "enterprise-3nodes-2tb" ? tobool("kms encryption and mirroring are only supported for enterprise plan") : true
+  validate_kms_plan = (var.kms_key_crn != null || var.mirroring_enabled || length(var.metrics) > 0) && var.plan != "enterprise-3nodes-2tb" ? tobool("kms encryption, mirroring and metrics are only supported for enterprise plan") : true
   # tflint-ignore: terraform_unused_declarations
   validate_kms_values = !var.kms_encryption_enabled && var.kms_key_crn != null ? tobool("When passing values for var.kms_key_crn, you must set var.kms_encryption_enabled to true. Otherwise unset them to use default encryption") : true
   # tflint-ignore: terraform_unused_declarations
@@ -19,28 +19,19 @@ locals {
   # tflint-ignore: terraform_unused_declarations
   validate_service_end_points_lite_standard = ((var.plan == "lite" || var.plan == "standard") && var.service_endpoints != "public") ? tobool("Service endpoint cannot be changed in lite and standard plan. Default is public.") : true
   # tflint-ignore: terraform_unused_declarations
-  validate_mirroring_values = !var.mirroring_enabled && var.mirroring_topic_list != null ? tobool("When passing values for var.mirroring_topic_list, you must set var.mirroring_enabled to true.") : true
+  validate_mirroring_values = !var.mirroring_enabled && (var.mirroring != null || var.mirroring_topic_patterns != null) ? tobool("When passing values for var.mirroring_topic_patterns/mirroring, you must set var.mirroring_enabled to true.") : true
   # tflint-ignore: terraform_unused_declarations
-  validate_mirroring_vars = var.mirroring_enabled && var.mirroring_topic_list == null ? tobool("When setting var.mirroring_enabled to true, list of topics must be passed for var.mirroring_topic_list") : true
+  validate_mirroring_vars = var.mirroring_enabled && (var.mirroring == null || var.mirroring_topic_patterns == null) ? tobool("When setting var.mirroring_enabled to true, values must be passed for var.mirroring_topic_patterns and var.mirroring") : true
   # Determine what KMS service is being used for database encryption
   kms_service = var.kms_key_crn != null ? (
     can(regex(".*kms.*", var.kms_key_crn)) ? "kms" : (
       can(regex(".*hs-crypto.*", var.kms_key_crn)) ? "hs-crypto" : null
     )
   ) : null
-  # tflint-ignore: terraform_unused_declarations
-  validate_metrics = var.plan != "enterprise-3nodes-2tb" && length(var.metrics) > 0 ? tobool("metrics are only supported for enterprise plan") : true
-}
-
-# workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
-resource "time_sleep" "wait_for_authorization_policy" {
-  depends_on = [ibm_iam_authorization_policy.kms_policy]
-
-  create_duration = "30s"
 }
 
 resource "ibm_resource_instance" "es_instance" {
-  depends_on        = [time_sleep.wait_for_authorization_policy]
+  depends_on        = [time_sleep.wait_for_kms_authorization_policy]
   name              = var.es_name
   service           = "messagehub"
   plan              = var.plan
@@ -53,13 +44,11 @@ resource "ibm_resource_instance" "es_instance" {
     delete = var.delete_timeout
   }
 
-  parameters_json = var.plan != "enterprise-3nodes-2tb" ? null : var.kms_key_crn != null ? jsonencode(
+  parameters_json = var.plan != "enterprise-3nodes-2tb" ? jsonencode(
     {
       service-endpoints = var.service_endpoints
       throughput        = tostring(var.throughput)
       storage_size      = tostring(var.storage_size)
-      metrics           = var.metrics
-      kms_key_crn       = var.kms_key_crn
     }
     ) : jsonencode(
     {
@@ -67,6 +56,8 @@ resource "ibm_resource_instance" "es_instance" {
       throughput        = tostring(var.throughput)
       storage_size      = tostring(var.storage_size)
       metrics           = var.metrics
+      kms_key_crn       = var.kms_key_crn
+      mirroring         = var.mirroring
     }
   )
 }
@@ -105,7 +96,7 @@ resource "ibm_resource_tag" "es_access_tag" {
 }
 
 ##############################################################################
-# IAM Authorization Policy
+# IAM Authorization Polices
 ##############################################################################
 
 # Create IAM Authorization Policies to allow messagehub to access kms for the encryption key
@@ -117,6 +108,57 @@ resource "ibm_iam_authorization_policy" "kms_policy" {
   target_resource_instance_id = var.existing_kms_instance_guid
   roles                       = ["Reader"]
   description                 = "Allow all Event Streams instances in the resource group ${var.resource_group_id} to read from the ${local.kms_service} instance GUID ${var.existing_kms_instance_guid}"
+}
+
+# workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
+resource "time_sleep" "wait_for_kms_authorization_policy" {
+  count      = var.kms_encryption_enabled == false || var.skip_iam_authorization_policy ? 0 : 1
+  depends_on = [ibm_iam_authorization_policy.kms_policy]
+
+  create_duration = "30s"
+}
+
+# Create s2s at service level for provisioning mirroring instance
+resource "ibm_iam_authorization_policy" "en_service_policy" {
+  count               = var.mirroring_enabled ? 1 : 0
+  source_service_name = "messagehub"
+  target_service_name = "messagehub"
+  roles               = ["Reader"]
+  description         = "Required for provisioning mirroring instance."
+}
+
+# # workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
+resource "time_sleep" "wait_for_en_service_policy" {
+  depends_on = [ibm_iam_authorization_policy.en_service_policy]
+
+  create_duration = "30s"
+}
+
+# Parse GUID from source ES instance
+module "es_guid_crn_parser" {
+  count   = var.mirroring_enabled ? 1 : 0
+  source  = "terraform-ibm-modules/common-utilities/ibm//modules/crn-parser"
+  version = "1.1.0"
+  crn     = var.mirroring.source_crn
+}
+
+# Create IAM Authorization Policies to allow mirroring EN instance to access source EN instance
+resource "ibm_iam_authorization_policy" "mirroring_policy" {
+  depends_on                  = [ibm_resource_instance.es_instance]
+  count                       = var.mirroring_enabled ? 1 : 0
+  source_service_name         = "messagehub"
+  source_resource_instance_id = ibm_resource_instance.es_instance.guid
+  target_service_name         = "messagehub"
+  target_resource_instance_id = module.es_guid_crn_parser[0].service_instance
+  roles                       = ["Reader"]
+  description                 = "Allow an Event Streams mirroring instance to read from the source Event Streams instance."
+}
+
+# workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
+resource "time_sleep" "wait_for_mirroring_authorization_policy" {
+  depends_on = [ibm_iam_authorization_policy.mirroring_policy]
+
+  create_duration = "30s"
 }
 
 ##############################################################################
@@ -172,7 +214,8 @@ locals {
 }
 
 resource "ibm_event_streams_mirroring_config" "es_mirroring_config" {
+  depends_on               = [ibm_resource_instance.es_instance, time_sleep.wait_for_mirroring_authorization_policy]
   count                    = var.mirroring_enabled ? 1 : 0
   resource_instance_id     = ibm_resource_instance.es_instance.id
-  mirroring_topic_patterns = var.mirroring_topic_list
+  mirroring_topic_patterns = var.mirroring_topic_patterns
 }
