@@ -31,7 +31,7 @@ locals {
 }
 
 resource "ibm_resource_instance" "es_instance" {
-  depends_on        = [time_sleep.wait_for_kms_authorization_policy]
+  depends_on        = [time_sleep.wait_for_kms_authorization_policy, time_sleep.wait_for_en_service_policy]
   name              = var.es_name
   service           = "messagehub"
   plan              = var.plan
