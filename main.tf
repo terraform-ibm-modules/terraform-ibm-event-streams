@@ -127,7 +127,7 @@ resource "ibm_iam_authorization_policy" "en_service_policy" {
   description         = "Required for provisioning mirroring instance."
 }
 
-# # workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
+# workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
 resource "time_sleep" "wait_for_en_service_policy" {
   depends_on = [ibm_iam_authorization_policy.en_service_policy]
 
