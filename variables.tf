@@ -111,12 +111,22 @@ variable "schemas" {
   default     = []
 }
 
+variable "schema_global_rule" {
+  type        = string
+  description = "Schema global compatibility rule. Allowed values are 'NONE', 'FULL', 'FULL_TRANSITIVE', 'FORWARD', 'FORWARD_TRANSITIVE', 'BACKWARD', 'BACKWARD_TRANSITIVE'."
+  default     = null
+  validation {
+    condition     = var.schema_global_rule == null || contains(["NONE", "FULL", "FULL_TRANSITIVE", "FORWARD", "FORWARD_TRANSITIVE", "BACKWARD", "BACKWARD_TRANSITIVE"], coalesce(var.schema_global_rule, "NONE"))
+    error_message = "The schema_global_rule must be null or one of 'NONE', 'FULL', 'FULL_TRANSITIVE', 'FORWARD', 'FORWARD_TRANSITIVE', 'BACKWARD', 'BACKWARD_TRANSITIVE'."
+  }
+}
+
 variable "topics" {
   type = list(object(
     {
       name       = string
       partitions = number
-      config     = object({})
+      config     = map(string)
     }
   ))
   description = "The list of topics to apply to resources. Only one topic is allowed for Lite plan instances."
@@ -206,6 +216,20 @@ variable "metrics" {
     error_message = "The specified metrics are not valid. The following values are valid for metrics: 'topic', 'partition', 'consumers'."
   }
   default = []
+}
+
+variable "quotas" {
+  type = list(object({
+    entity             = string
+    producer_byte_rate = optional(number, -1)
+    consumer_byte_rate = optional(number, -1)
+  }))
+  description = "Quotas to be applied to the Event Streams instance. Entity may be 'default' to apply to all users, or an IAM ServiceID for a specific user. Rates are bytes/second, with -1 meaning no quota."
+  default     = []
+  validation {
+    condition     = alltrue([for v in var.quotas : v.entity != "" && (v.producer_byte_rate >= 0 || v.consumer_byte_rate >= 0)])
+    error_message = "The quota entity must be defined, and at least one of producer_byte_rate or consumer_byte_rate must be set to a non-negative value"
+  }
 }
 
 variable "mirroring_enabled" {

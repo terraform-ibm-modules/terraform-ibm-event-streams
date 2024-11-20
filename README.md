@@ -121,7 +121,9 @@ You need the following permissions to run this module.
 | Name | Type |
 |------|------|
 | [ibm_event_streams_mirroring_config.es_mirroring_config](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/event_streams_mirroring_config) | resource |
+| [ibm_event_streams_quota.eventstreams_quotas](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/event_streams_quota) | resource |
 | [ibm_event_streams_schema.es_schema](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/event_streams_schema) | resource |
+| [ibm_event_streams_schema_global_rule.es_globalrule](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/event_streams_schema_global_rule) | resource |
 | [ibm_event_streams_topic.es_topic](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/event_streams_topic) | resource |
 | [ibm_iam_authorization_policy.es_service_policy](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/iam_authorization_policy) | resource |
 | [ibm_iam_authorization_policy.kms_policy](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/iam_authorization_policy) | resource |
@@ -129,6 +131,7 @@ You need the following permissions to run this module.
 | [ibm_resource_instance.es_instance](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/resource_instance) | resource |
 | [ibm_resource_key.service_credentials](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/resource_key) | resource |
 | [ibm_resource_tag.es_access_tag](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/resource_tag) | resource |
+| [time_sleep.wait_for_authorization_policy](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
 | [time_sleep.wait_for_es_service_policy](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
 | [time_sleep.wait_for_kms_authorization_policy](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
 | [time_sleep.wait_for_mirroring_authorization_policy](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
@@ -150,8 +153,10 @@ You need the following permissions to run this module.
 | <a name="input_mirroring_enabled"></a> [mirroring\_enabled](#input\_mirroring\_enabled) | Set this to true to enable mirroring. Mirroring enables messages in one Event Streams service instance to be continuously copied to a second instance to increase resiliency. See https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-mirroring. | `bool` | `false` | no |
 | <a name="input_mirroring_topic_patterns"></a> [mirroring\_topic\_patterns](#input\_mirroring\_topic\_patterns) | The list of the topics to set in instance. Required only if var.mirroring\_enabled is set to true. | `list(string)` | `null` | no |
 | <a name="input_plan"></a> [plan](#input\_plan) | The plan for the Event Streams instance. Possible values: `lite`, `standard`, `enterprise-3nodes-2tb`. | `string` | `"standard"` | no |
+| <a name="input_quotas"></a> [quotas](#input\_quotas) | Quotas to be applied to the Event Streams instance. Entity may be 'default' to apply to all users, or an IAM ServiceID for a specific user. Rates are bytes/second, with -1 meaning no quota. | <pre>list(object({<br/>    entity             = string<br/>    producer_byte_rate = optional(number, -1)<br/>    consumer_byte_rate = optional(number, -1)<br/>  }))</pre> | `[]` | no |
 | <a name="input_region"></a> [region](#input\_region) | The region where the Event Streams are created. | `string` | `"us-south"` | no |
 | <a name="input_resource_group_id"></a> [resource\_group\_id](#input\_resource\_group\_id) | The resource group ID where the Event Streams instance is created. | `string` | n/a | yes |
+| <a name="input_schema_global_rule"></a> [schema\_global\_rule](#input\_schema\_global\_rule) | Schema global compatibility rule. Allowed values are 'NONE', 'FULL', 'FULL\_TRANSITIVE', 'FORWARD', 'FORWARD\_TRANSITIVE', 'BACKWARD', 'BACKWARD\_TRANSITIVE'. | `string` | `null` | no |
 | <a name="input_schemas"></a> [schemas](#input\_schemas) | The list of schema objects. Include the `schema_id` and the `type` and `name` of the schema in the `schema` object. | <pre>list(object(<br/>    {<br/>      schema_id = string<br/>      schema = object({<br/>        type = string<br/>        name = string<br/>        fields = optional(list(object({<br/>          name = string<br/>          type = string<br/>        })))<br/>      })<br/>    }<br/>  ))</pre> | `[]` | no |
 | <a name="input_service_credential_names"></a> [service\_credential\_names](#input\_service\_credential\_names) | The mapping of names and roles for service credentials that you want to create for the Event streams. | `map(string)` | `{}` | no |
 | <a name="input_service_endpoints"></a> [service\_endpoints](#input\_service\_endpoints) | The type of service endpoints. Possible values: 'public', 'private', 'public-and-private'. | `string` | `"public"` | no |
@@ -160,7 +165,7 @@ You need the following permissions to run this module.
 | <a name="input_storage_size"></a> [storage\_size](#input\_storage\_size) | Storage size of the Event Streams in GB. Applies only to Enterprise plan instances. Possible values: `2048`, `4096`, `6144`, `8192`, `10240`, `12288`. Storage capacity cannot be reduced after the instance is created. When the `throughput` input variable is set to `300`, storage size starts at 4096. When `throughput` is `450`, storage size starts starts at `6144`. | `number` | `"2048"` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | The list of tags associated with the Event Steams instance. | `list(string)` | `[]` | no |
 | <a name="input_throughput"></a> [throughput](#input\_throughput) | Throughput capacity in MB per second. Applies only to Enterprise plan instances. Possible values: `150`, `300`, `450`. | `number` | `"150"` | no |
-| <a name="input_topics"></a> [topics](#input\_topics) | The list of topics to apply to resources. Only one topic is allowed for Lite plan instances. | <pre>list(object(<br/>    {<br/>      name       = string<br/>      partitions = number<br/>      config     = object({})<br/>    }<br/>  ))</pre> | `[]` | no |
+| <a name="input_topics"></a> [topics](#input\_topics) | The list of topics to apply to resources. Only one topic is allowed for Lite plan instances. | <pre>list(object(<br/>    {<br/>      name       = string<br/>      partitions = number<br/>      config     = map(string)<br/>    }<br/>  ))</pre> | `[]` | no |
 | <a name="input_update_timeout"></a> [update\_timeout](#input\_update\_timeout) | The timeout value for updating an Event Streams instance. Specify `1h` for an Enterprise plan instance. Add 1 h for each level of non-default throughput. A 30 min for each level of non-default storage size. | `string` | `"1h"` | no |
 
 ### Outputs

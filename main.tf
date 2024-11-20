@@ -6,9 +6,13 @@ locals {
   # Validation (approach based on https://github.com/hashicorp/terraform/issues/25609#issuecomment-1057614400)
 
   # tflint-ignore: terraform_unused_declarations
-  validate_kms_plan = var.kms_key_crn != null && var.plan != "enterprise-3nodes-2tb" ? tobool("KMS encryption is only supported for enterprise plan.") : true
+  validate_kms_plan = var.plan != "enterprise-3nodes-2tb" && var.kms_key_crn != null ? tobool("KMS encryption is only supported for enterprise plan.") : true
   # tflint-ignore: terraform_unused_declarations
   validate_metrics = var.plan != "enterprise-3nodes-2tb" && length(var.metrics) > 0 ? tobool("Metrics are only supported for enterprise plan.") : true
+  # tflint-ignore: terraform_unused_declarations
+  validate_quotas = var.plan != "enterprise-3nodes-2tb" && length(var.quotas) > 0 ? tobool("Quotas are only supported for enterprise plan.") : true
+  # tflint-ignore: terraform_unused_declarations
+  validate_schema_global_rule = var.plan != "enterprise-3nodes-2tb" && var.schema_global_rule != null ? tobool("Schema global rule is only supported for enterprise plan.") : true
 
   # tflint-ignore: terraform_unused_declarations
   validate_kms_values = !var.kms_encryption_enabled && var.kms_key_crn != null ? tobool("When passing values for var.kms_key_crn, you must set var.kms_encryption_enabled to true. Otherwise unset them to use default encryption.") : true
@@ -33,6 +37,13 @@ locals {
       can(regex(".*hs-crypto.*", var.kms_key_crn)) ? "hs-crypto" : null
     )
   ) : null
+}
+
+# workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
+resource "time_sleep" "wait_for_authorization_policy" {
+  depends_on = [ibm_iam_authorization_policy.kms_policy]
+
+  create_duration = "30s"
 }
 
 resource "ibm_resource_instance" "es_instance" {
@@ -68,7 +79,7 @@ resource "ibm_resource_instance" "es_instance" {
 }
 
 ##############################################################################
-# SCHEMA
+# SCHEMA AND COMPATIBILITY RULE
 ##############################################################################
 
 resource "ibm_event_streams_schema" "es_schema" {
@@ -76,6 +87,12 @@ resource "ibm_event_streams_schema" "es_schema" {
   resource_instance_id = ibm_resource_instance.es_instance.id
   schema_id            = var.schemas[count.index].schema_id
   schema               = jsonencode(var.schemas[count.index].schema)
+}
+
+resource "ibm_event_streams_schema_global_rule" "es_globalrule" {
+  count                = var.schema_global_rule != null ? 1 : 0
+  resource_instance_id = ibm_resource_instance.es_instance.id
+  config               = var.schema_global_rule
 }
 
 ##############################################################################
@@ -101,7 +118,19 @@ resource "ibm_resource_tag" "es_access_tag" {
 }
 
 ##############################################################################
-# IAM Authorization Polices
+# QUOTAS - defining quotas for the resource instance
+##############################################################################
+
+resource "ibm_event_streams_quota" "eventstreams_quotas" {
+  count                = length(var.quotas)
+  resource_instance_id = ibm_resource_instance.es_instance.id
+  entity               = var.quotas[count.index].entity
+  producer_byte_rate   = var.quotas[count.index].producer_byte_rate
+  consumer_byte_rate   = var.quotas[count.index].consumer_byte_rate
+}
+
+##############################################################################
+# IAM Authorization Policies
 ##############################################################################
 
 # Create IAM Authorization Policies to allow messagehub to access kms for the encryption key

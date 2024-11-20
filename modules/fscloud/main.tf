@@ -7,6 +7,7 @@ module "event_streams" {
   kms_key_crn                = var.kms_key_crn
   existing_kms_instance_guid = var.existing_kms_instance_guid
   schemas                    = var.schemas
+  schema_global_rule         = var.schema_global_rule
   tags                       = var.tags
   access_tags                = var.access_tags
   topics                     = var.topics
@@ -14,6 +15,7 @@ module "event_streams" {
   cbr_rules                  = var.cbr_rules
   service_credential_names   = var.service_credential_names
   metrics                    = var.metrics
+  quotas                     = var.quotas
   kms_encryption_enabled     = true
   mirroring_enabled          = var.mirroring_enabled
   mirroring_topic_patterns   = var.mirroring_topic_patterns
