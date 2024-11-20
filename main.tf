@@ -4,12 +4,16 @@
 
 locals {
   # Validation (approach based on https://github.com/hashicorp/terraform/issues/25609#issuecomment-1057614400)
+
   # tflint-ignore: terraform_unused_declarations
-  validate_kms_plan = (var.kms_key_crn != null || var.mirroring_enabled || length(var.metrics) > 0) && var.plan != "enterprise-3nodes-2tb" ? tobool("kms encryption, mirroring and metrics are only supported for enterprise plan") : true
+  validate_kms_plan = var.kms_key_crn != null && var.plan != "enterprise-3nodes-2tb" ? tobool("KMS encryption is only supported for enterprise plan.") : true
   # tflint-ignore: terraform_unused_declarations
-  validate_kms_values = !var.kms_encryption_enabled && var.kms_key_crn != null ? tobool("When passing values for var.kms_key_crn, you must set var.kms_encryption_enabled to true. Otherwise unset them to use default encryption") : true
+  validate_metrics = var.plan != "enterprise-3nodes-2tb" && length(var.metrics) > 0 ? tobool("Metrics are only supported for enterprise plan.") : true
+
   # tflint-ignore: terraform_unused_declarations
-  validate_kms_vars = var.kms_encryption_enabled && var.kms_key_crn == null ? tobool("When setting var.kms_encryption_enabled to true, a value must be passed for var.kms_key_crn and/or var.backup_encryption_key_crn") : true
+  validate_kms_values = !var.kms_encryption_enabled && var.kms_key_crn != null ? tobool("When passing values for var.kms_key_crn, you must set var.kms_encryption_enabled to true. Otherwise unset them to use default encryption.") : true
+  # tflint-ignore: terraform_unused_declarations
+  validate_kms_vars = var.kms_encryption_enabled && var.kms_key_crn == null ? tobool("When setting var.kms_encryption_enabled to true, a value must be passed for var.kms_key_crn and/or var.backup_encryption_key_crn.") : true
   # tflint-ignore: terraform_unused_declarations
   validate_auth_policy = var.kms_encryption_enabled && var.skip_iam_authorization_policy == false && var.existing_kms_instance_guid == null ? tobool("When var.skip_iam_authorization_policy is set to false, and var.kms_encryption_enabled to true, a value must be passed for var.existing_kms_instance_guid in order to create the auth policy.") : true
   # tflint-ignore: terraform_unused_declarations
@@ -21,7 +25,8 @@ locals {
   # tflint-ignore: terraform_unused_declarations
   validate_mirroring_values = !var.mirroring_enabled && (var.mirroring != null || var.mirroring_topic_patterns != null) ? tobool("When passing values for var.mirroring_topic_patterns/mirroring, you must set var.mirroring_enabled to true.") : true
   # tflint-ignore: terraform_unused_declarations
-  validate_mirroring_vars = var.mirroring_enabled && (var.mirroring == null || var.mirroring_topic_patterns == null) ? tobool("When setting var.mirroring_enabled to true, values must be passed for var.mirroring_topic_patterns and var.mirroring") : true
+  validate_mirroring_vars = var.mirroring_enabled && (var.mirroring == null || var.mirroring_topic_patterns == null) ? tobool("When setting var.mirroring_enabled to true, values must be passed for var.mirroring_topic_patterns and var.mirroring.") : true
+
   # Determine what KMS service is being used for database encryption
   kms_service = var.kms_key_crn != null ? (
     can(regex(".*kms.*", var.kms_key_crn)) ? "kms" : (
@@ -120,7 +125,7 @@ resource "time_sleep" "wait_for_kms_authorization_policy" {
 
 # Create s2s at service level for provisioning mirroring instance
 resource "ibm_iam_authorization_policy" "es_service_policy" {
-  count               = var.mirroring_enabled ? 1 : 0
+  count               = var.mirroring_enabled == false || var.skip_s2s_iam_authorization_policy ? 0 : 1
   source_service_name = "messagehub"
   target_service_name = "messagehub"
   roles               = ["Reader"]

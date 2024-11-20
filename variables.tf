@@ -87,6 +87,12 @@ variable "skip_iam_authorization_policy" {
   default     = false
 }
 
+variable "skip_s2s_iam_authorization_policy" {
+  type        = bool
+  description = "Set to true to skip the creation of an Event Streams s2s IAM authorization policy to provision Event Streams mirroring instance which is required to read from source cluster. This policy is required when mirroring_enabled is set to true."
+  default     = false
+}
+
 variable "schemas" {
   type = list(object(
     {
