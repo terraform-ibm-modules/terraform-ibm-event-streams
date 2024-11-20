@@ -47,7 +47,7 @@ variable "topics" {
     {
       name       = string
       partitions = number
-      config     = object({})
+      config     = map(string)
     }
   ))
   description = "List of topics. For lite plan only one topic is allowed."
