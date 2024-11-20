@@ -105,6 +105,16 @@ variable "schemas" {
   default     = []
 }
 
+variable "schema_global_rule" {
+  type        = string
+  description = "Schema global compatibility rule. Allowed values are 'NONE', 'FULL', 'FULL_TRANSITIVE', 'FORWARD', 'FORWARD_TRANSITIVE', 'BACKWARD', 'BACKWARD_TRANSITIVE'."
+  default     = null
+  validation {
+    condition     = var.schema_global_rule == null || contains(["NONE", "FULL", "FULL_TRANSITIVE", "FORWARD", "FORWARD_TRANSITIVE", "BACKWARD", "BACKWARD_TRANSITIVE"], coalesce(var.schema_global_rule, "NONE"))
+    error_message = "The schema_global_rule must be null or one of 'NONE', 'FULL', 'FULL_TRANSITIVE', 'FORWARD', 'FORWARD_TRANSITIVE', 'BACKWARD', 'BACKWARD_TRANSITIVE'."
+  }
+}
+
 variable "topics" {
   type = list(object(
     {

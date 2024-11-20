@@ -46,6 +46,12 @@ variable "schemas" {
   default     = []
 }
 
+variable "schema_global_rule" {
+  type        = string
+  description = "Schema global compatibility rule. Allowed values are 'NONE', 'FULL', 'FULL_TRANSITIVE', 'FORWARD', 'FORWARD_TRANSITIVE', 'BACKWARD', 'BACKWARD_TRANSITIVE'."
+  default     = null
+}
+
 variable "topics" {
   type = list(object(
     {

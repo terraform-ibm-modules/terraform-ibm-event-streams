@@ -7,6 +7,7 @@ module "event_streams" {
   kms_key_crn                = var.kms_key_crn
   existing_kms_instance_guid = var.existing_kms_instance_guid
   schemas                    = var.schemas
+  schema_global_rule         = var.schema_global_rule
   tags                       = var.tags
   access_tags                = var.access_tags
   topics                     = var.topics
