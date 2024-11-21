@@ -245,11 +245,32 @@ variable "mirroring_topic_patterns" {
 }
 
 variable "mirroring" {
-  description = "Mirroring configuration"
+  description = "Mirror configuration."
   type = object({
     source_crn   = string
     source_alias = string
     target_alias = string
+    options = optional(object({
+      topic_name_transform = object({
+        type = string
+        rename = optional(object({
+          add_prefix    = optional(string)
+          add_suffix    = optional(string)
+          remove_prefix = optional(string)
+          remove_suffix = optional(string)
+        }))
+      })
+      group_id_transform = object({
+        type = string
+        rename = optional(object({
+          add_prefix    = optional(string)
+          add_suffix    = optional(string)
+          remove_prefix = optional(string)
+          remove_suffix = optional(string)
+        }))
+      })
+    }))
   })
+
   default = null
 }
