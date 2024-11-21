@@ -19,7 +19,7 @@ locals {
   # tflint-ignore: terraform_unused_declarations
   validate_kms_vars = var.kms_encryption_enabled && var.kms_key_crn == null ? tobool("When setting var.kms_encryption_enabled to true, a value must be passed for var.kms_key_crn and/or var.backup_encryption_key_crn.") : true
   # tflint-ignore: terraform_unused_declarations
-  validate_auth_policy = var.kms_encryption_enabled && var.skip_iam_authorization_policy == false && var.existing_kms_instance_guid == null ? tobool("When var.skip_iam_authorization_policy is set to false, and var.kms_encryption_enabled to true, a value must be passed for var.existing_kms_instance_guid in order to create the auth policy.") : true
+  validate_auth_policy = var.kms_encryption_enabled && var.skip_kms_iam_authorization_policy == false && var.existing_kms_instance_guid == null ? tobool("When var.skip_kms_iam_authorization_policy is set to false, and var.kms_encryption_enabled to true, a value must be passed for var.existing_kms_instance_guid in order to create the auth policy.") : true
   # tflint-ignore: terraform_unused_declarations
   validate_throughput_lite_standard = ((var.plan == "lite" || var.plan == "standard") && var.throughput != 150) ? tobool("Throughput value cannot be changed in lite and standard plan. Default value is 150.") : true
   # tflint-ignore: terraform_unused_declarations
@@ -47,7 +47,7 @@ resource "time_sleep" "wait_for_authorization_policy" {
 }
 
 resource "ibm_resource_instance" "es_instance" {
-  depends_on        = [time_sleep.wait_for_kms_authorization_policy, time_sleep.wait_for_es_service_policy]
+  depends_on        = [time_sleep.wait_for_kms_authorization_policy, time_sleep.wait_for_es_s2s_policy]
   name              = var.es_name
   service           = "messagehub"
   plan              = var.plan
@@ -135,7 +135,7 @@ resource "ibm_event_streams_quota" "eventstreams_quotas" {
 
 # Create IAM Authorization Policies to allow messagehub to access kms for the encryption key
 resource "ibm_iam_authorization_policy" "kms_policy" {
-  count                       = var.kms_encryption_enabled == false || var.skip_iam_authorization_policy ? 0 : 1
+  count                       = var.kms_encryption_enabled == false || var.skip_kms_iam_authorization_policy ? 0 : 1
   source_service_name         = "messagehub"
   source_resource_group_id    = var.resource_group_id
   target_service_name         = local.kms_service
@@ -146,15 +146,15 @@ resource "ibm_iam_authorization_policy" "kms_policy" {
 
 # workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
 resource "time_sleep" "wait_for_kms_authorization_policy" {
-  count      = var.kms_encryption_enabled == false || var.skip_iam_authorization_policy ? 0 : 1
+  count      = var.kms_encryption_enabled == false || var.skip_kms_iam_authorization_policy ? 0 : 1
   depends_on = [ibm_iam_authorization_policy.kms_policy]
 
   create_duration = "30s"
 }
 
 # Create s2s at service level for provisioning mirroring instance
-resource "ibm_iam_authorization_policy" "es_service_policy" {
-  count               = var.mirroring_enabled == false || var.skip_s2s_iam_authorization_policy ? 0 : 1
+resource "ibm_iam_authorization_policy" "es_s2s_policy" {
+  count               = var.mirroring_enabled == false || var.skip_es_s2s_iam_authorization_policy ? 0 : 1
   source_service_name = "messagehub"
   target_service_name = "messagehub"
   roles               = ["Reader"]
@@ -162,8 +162,8 @@ resource "ibm_iam_authorization_policy" "es_service_policy" {
 }
 
 # workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
-resource "time_sleep" "wait_for_es_service_policy" {
-  depends_on = [ibm_iam_authorization_policy.es_service_policy]
+resource "time_sleep" "wait_for_es_s2s_policy" {
+  depends_on = [ibm_iam_authorization_policy.es_s2s_policy]
 
   create_duration = "30s"
 }
