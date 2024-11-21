@@ -63,6 +63,9 @@ module "event_streams" {
   topics                     = var.topics
   existing_kms_instance_guid = var.existing_kms_instance_guid
   metrics                    = ["topic", "partition", "consumers"]
+  mirroring_enabled          = var.mirroring_enabled
+  mirroring_topic_patterns   = var.mirroring_topic_patterns
+  mirroring                  = var.mirroring
   quotas = [
     {
       "entity"             = "iam-ServiceId-00000000-0000-0000-0000-000000000000",

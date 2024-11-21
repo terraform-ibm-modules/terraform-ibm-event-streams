@@ -64,6 +64,18 @@ variable "topics" {
   default     = []
 }
 
+variable "skip_iam_authorization_policy" {
+  type        = bool
+  description = "Set to true to skip the creation of an IAM authorization policy that permits all Event Streams database instances in the resource group to read the encryption key from the KMS instance. If set to false, pass in a value for the KMS instance in the existing_kms_instance_guid variable. In addition, no policy is created if var.kms_encryption_enabled is set to false."
+  default     = false
+}
+
+variable "skip_s2s_iam_authorization_policy" {
+  type        = bool
+  description = "Set to true to skip the creation of an Event Streams s2s IAM authorization policy to provision Event Streams mirroring instance which is required to read from source cluster. This policy is required when mirroring_enabled is set to true."
+  default     = false
+}
+
 variable "existing_kms_instance_guid" {
   description = "The GUID of the Hyper Protect Crypto service in which the key specified in var.kms_key_crn is coming from"
   type        = string
