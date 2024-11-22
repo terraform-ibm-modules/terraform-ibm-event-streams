@@ -174,6 +174,7 @@ resource "ibm_iam_authorization_policy" "es_s2s_policy" {
 
 # workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
 resource "time_sleep" "wait_for_es_s2s_policy" {
+  count      = var.mirroring_enabled == false || var.skip_es_s2s_iam_authorization_policy ? 0 : 1
   depends_on = [ibm_iam_authorization_policy.es_s2s_policy]
 
   create_duration = "30s"
