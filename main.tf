@@ -190,6 +190,7 @@ resource "ibm_iam_authorization_policy" "mirroring_policy" {
 
 # workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
 resource "time_sleep" "wait_for_mirroring_authorization_policy" {
+  count      = var.mirroring_enabled ? 1 : 0
   depends_on = [ibm_iam_authorization_policy.mirroring_policy]
 
   create_duration = "30s"
