@@ -77,11 +77,31 @@ variable "mirroring_topic_patterns" {
 }
 
 variable "mirroring" {
-  description = "Mirroring configuration"
+  description = "Configuration for the mirroring setup. (Optional) Valid values for 'type' are 'rename', 'none', or 'use_alias'. If 'type' is set to 'rename', then 'rename' object must include the following fields: 'add_prefix', 'add_suffix', 'remove_prefix', and 'remove_suffix'."
   type = object({
     source_crn   = string
     source_alias = string
     target_alias = string
+    options = optional(object({
+      topic_name_transform = object({
+        type = string
+        rename = optional(object({
+          add_prefix    = optional(string)
+          add_suffix    = optional(string)
+          remove_prefix = optional(string)
+          remove_suffix = optional(string)
+        }))
+      })
+      group_id_transform = object({
+        type = string
+        rename = optional(object({
+          add_prefix    = optional(string)
+          add_suffix    = optional(string)
+          remove_prefix = optional(string)
+          remove_suffix = optional(string)
+        }))
+      })
+    }))
   })
   default = null
 }
