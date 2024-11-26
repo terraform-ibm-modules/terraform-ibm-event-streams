@@ -36,7 +36,7 @@ resource "ibm_is_subnet" "testacc_subnet" {
 ##############################################################################
 # Create CBR Zone
 ##############################################################################
-module "cbr_zone" {
+module "cbr_vpc_zone" {
   source           = "terraform-ibm-modules/cbr/ibm//modules/cbr-zone-module"
   version          = "1.29.0"
   name             = "${var.prefix}-VPC-network-zone"
@@ -45,6 +45,21 @@ module "cbr_zone" {
   addresses = [{
     type  = "vpc", # to bind a specific vpc to the zone
     value = ibm_is_vpc.example_vpc.crn,
+  }]
+}
+
+module "cbr_zone_schematics" {
+  source           = "terraform-ibm-modules/cbr/ibm//modules/cbr-zone-module"
+  version          = "1.29.0"
+  name             = "${var.prefix}-schematics-zone"
+  zone_description = "CBR Network zone containing Schematics"
+  account_id       = data.ibm_iam_account_settings.iam_account_settings.account_id
+  addresses = [{
+    type = "serviceRef",
+    ref = {
+      account_id   = data.ibm_iam_account_settings.iam_account_settings.account_id
+      service_name = "schematics"
+    }
   }]
 }
 
@@ -81,7 +96,7 @@ module "event_streams" {
   }
   cbr_rules = [
     {
-      description      = "${var.prefix}-event stream access only from vpc"
+      description      = "${var.prefix}-event streams access from vpc and schematics"
       enforcement_mode = "enabled"
       account_id       = data.ibm_iam_account_settings.iam_account_settings.account_id
       rule_contexts = [{
@@ -92,7 +107,17 @@ module "event_streams" {
           },
           {
             name  = "networkZoneId"
-            value = module.cbr_zone.zone_id
+            value = module.cbr_vpc_zone.zone_id
+        }]
+        }, {
+        attributes = [
+          {
+            "name" : "endpointType",
+            "value" : "private"
+          },
+          {
+            name  = "networkZoneId"
+            value = module.cbr_zone_schematics.zone_id
         }]
       }]
     }

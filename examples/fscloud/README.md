@@ -8,7 +8,7 @@ The example uses the IBM Cloud Terraform provider to create the following infras
 - An IAM authorization between all Event Stream instances in the given resource group and the Hyper Protect Crypto Services instance that is passed in.
 - An Event Streams instance that is encrypted with the Hyper Protect Crypto Services root key that is passed in.
 - A sample virtual private cloud (VPC).
-- A context-based restriction (CBR) rule to only allow Event Streams to be accessible from within the VPC.
+- A context-based restriction (CBR) rule to only allow Event Streams to be accessible from within the VPC and Schematics.
 
 :exclamation: **Important:** In this example, only the Event Streams instance complies with the IBM Cloud Framework for Financial Services. Other parts of the infrastructure do not necessarily comply.
 
