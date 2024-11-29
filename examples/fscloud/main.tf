@@ -80,9 +80,9 @@ module "event_streams" {
   metrics                    = ["topic", "partition", "consumers"]
   mirroring_topic_patterns   = ["topic-1", "topic-2"]
   mirroring = {
-    source_crn   = var.es_source_crn # Required for mirroring
-    source_alias = "source-alias"    # Required for mirroring
-    target_alias = "target-alias"    # Required for mirroring
+    source_crn   = var.event_streams_source_crn # Required for mirroring
+    source_alias = "source-alias"               # Required for mirroring
+    target_alias = "target-alias"               # Required for mirroring
 
     # 'options' are optional. Valid values for 'type' are 'rename', 'none', or 'use_alias'.
     # If 'type' is set to 'rename', then 'rename' object must include the following fields: 'add_prefix', 'add_suffix', 'remove_prefix', and 'remove_suffix'.

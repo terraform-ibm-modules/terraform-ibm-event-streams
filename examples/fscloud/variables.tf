@@ -64,7 +64,7 @@ variable "kms_key_crn" {
   description = "The root key CRN of a Hyper Protect Crypto Service (HPCS) that you want to use for disk encryption. See https://cloud.ibm.com/docs/cloud-databases?topic=cloud-databases-hpcs&interface=ui for more information on integrating HPCS with Event Streams instance."
 }
 
-variable "es_source_crn" {
+variable "event_streams_source_crn" {
   type        = string
   description = "Source cluster CRN as a string to create mirroring instance."
 }
