@@ -19,7 +19,6 @@ module "event_streams" {
   metrics                              = var.metrics
   quotas                               = var.quotas
   kms_encryption_enabled               = true
-  mirroring_enabled                    = var.mirroring_enabled
   mirroring_topic_patterns             = var.mirroring_topic_patterns
   mirroring                            = var.mirroring
 }

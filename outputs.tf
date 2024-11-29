@@ -4,7 +4,7 @@
 
 output "id" {
   description = "Event Streams instance id"
-  value       = ibm_resource_instance.es_instance
+  value       = ibm_resource_instance.es_instance.id
 }
 
 output "crn" {
@@ -49,10 +49,10 @@ output "service_credentials_object" {
 
 output "mirroring_config_id" {
   description = "The ID of the mirroring config in CRN format"
-  value       = var.mirroring_enabled ? ibm_event_streams_mirroring_config.es_mirroring_config[0].id : null
+  value       = var.mirroring != null ? ibm_event_streams_mirroring_config.es_mirroring_config[0].id : null
 }
 
 output "mirroring_topic_patterns" {
   description = "Mirroring topic patterns"
-  value       = var.mirroring_enabled ? ibm_event_streams_mirroring_config.es_mirroring_config[0].mirroring_topic_patterns : null
+  value       = var.mirroring != null ? ibm_event_streams_mirroring_config.es_mirroring_config[0].mirroring_topic_patterns : null
 }

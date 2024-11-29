@@ -89,7 +89,7 @@ variable "skip_kms_iam_authorization_policy" {
 
 variable "skip_es_s2s_iam_authorization_policy" {
   type        = bool
-  description = "Set to true to skip the creation of an Event Streams s2s IAM authorization policy to provision an Event Streams mirroring instance. This is required to read from the source cluster. This policy is required when `mirroring_enabled` is set to true."
+  description = "Set to true to skip the creation of an Event Streams s2s IAM authorization policy to provision an Event Streams mirroring instance. This is required to read from the source cluster. This policy is required when creating mirroring instance."
   default     = false
 }
 
@@ -232,20 +232,14 @@ variable "quotas" {
   }
 }
 
-variable "mirroring_enabled" {
-  type        = bool
-  description = "Set this to true to enable mirroring. Mirroring enables messages in one Event Streams service instance to be continuously copied to a second instance to increase resiliency. See https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-mirroring."
-  default     = false
-}
-
 variable "mirroring_topic_patterns" {
   type        = list(string)
-  description = "The list of the topics to set in instance. Required only if var.mirroring_enabled is set to true."
+  description = "The list of the topics to set in instance. Required only if creating mirroring instance."
   default     = null
 }
 
 variable "mirroring" {
-  description = "Configuration for the mirroring setup. (Optional) Valid values for 'type' are 'rename', 'none', or 'use_alias'. If 'type' is set to 'rename', then 'rename' object must include the following fields: 'add_prefix', 'add_suffix', 'remove_prefix', and 'remove_suffix'."
+  description = "Event Streams mirroring configuration. Required only if creating mirroring instance. For more information on mirroring, see https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-mirroring."
   type = object({
     source_crn   = string
     source_alias = string

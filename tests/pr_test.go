@@ -113,9 +113,7 @@ func TestFSCloudInSchematics(t *testing.T) {
 		{Name: "prefix", Value: options.Prefix, DataType: "string"},
 		{Name: "existing_kms_instance_guid", Value: permanentResources["hpcs_south"].(string), DataType: "string"},
 		{Name: "kms_key_crn", Value: permanentResources["hpcs_south_root_key_crn"].(string), DataType: "string"},
-		{Name: "mirroring_enabled", Value: true, DataType: "bool"},
-		{Name: "mirroring_topic_patterns", Value: []string{"topic-1", "topic-2"}, DataType: "list(string)"},
-		{Name: "mirroring", Value: "{\"source_crn\":\"" + permanentResources["event_streams_us_south_crn"].(string) + "\",\"source_alias\":\"source-alias\",\"target_alias\":\"target-alias\"}", DataType: "object"},
+		{Name: "es_source_crn", Value: permanentResources["event_streams_us_south_crn"].(string), DataType: "string"},
 	}
 
 	err := options.RunSchematicTest()

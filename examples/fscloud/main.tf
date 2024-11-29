@@ -78,9 +78,35 @@ module "event_streams" {
   topics                     = var.topics
   existing_kms_instance_guid = var.existing_kms_instance_guid
   metrics                    = ["topic", "partition", "consumers"]
-  mirroring_enabled          = var.mirroring_enabled
-  mirroring_topic_patterns   = var.mirroring_topic_patterns
-  mirroring                  = var.mirroring
+  mirroring_topic_patterns   = ["topic-1", "topic-2"]
+  mirroring = {
+    source_crn   = var.es_source_crn # Required for mirroring
+    source_alias = "source-alias"    # Required for mirroring
+    target_alias = "target-alias"    # Required for mirroring
+
+    # 'options' are optional. Valid values for 'type' are 'rename', 'none', or 'use_alias'.
+    # If 'type' is set to 'rename', then 'rename' object must include the following fields: 'add_prefix', 'add_suffix', 'remove_prefix', and 'remove_suffix'.
+    options = {
+      topic_name_transform = {
+        type = "rename"
+        rename = {
+          add_prefix    = "add_prefix"
+          add_suffix    = "add_suffix"
+          remove_prefix = "remove_prefix"
+          remove_suffix = "remove_suffix"
+        }
+      }
+      group_id_transform = {
+        type = "rename"
+        rename = {
+          add_prefix    = "add_prefix"
+          add_suffix    = "add_suffix"
+          remove_prefix = "remove_prefix"
+          remove_suffix = "remove_suffix"
+        }
+      }
+    }
+  }
   quotas = [
     {
       "entity"             = "iam-ServiceId-00000000-0000-0000-0000-000000000000",
