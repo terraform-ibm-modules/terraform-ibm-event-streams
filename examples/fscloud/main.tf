@@ -36,7 +36,7 @@ resource "ibm_is_subnet" "testacc_subnet" {
 ##############################################################################
 # Create CBR Zone
 ##############################################################################
-module "cbr_zone" {
+module "cbr_vpc_zone" {
   source           = "terraform-ibm-modules/cbr/ibm//modules/cbr-zone-module"
   version          = "1.29.0"
   name             = "${var.prefix}-VPC-network-zone"
@@ -45,6 +45,21 @@ module "cbr_zone" {
   addresses = [{
     type  = "vpc", # to bind a specific vpc to the zone
     value = ibm_is_vpc.example_vpc.crn,
+  }]
+}
+
+module "cbr_zone_schematics" {
+  source           = "terraform-ibm-modules/cbr/ibm//modules/cbr-zone-module"
+  version          = "1.29.0"
+  name             = "${var.prefix}-schematics-zone"
+  zone_description = "CBR Network zone containing Schematics"
+  account_id       = data.ibm_iam_account_settings.iam_account_settings.account_id
+  addresses = [{
+    type = "serviceRef",
+    ref = {
+      account_id   = data.ibm_iam_account_settings.iam_account_settings.account_id
+      service_name = "schematics"
+    }
   }]
 }
 
@@ -63,6 +78,35 @@ module "event_streams" {
   topics                     = var.topics
   existing_kms_instance_guid = var.existing_kms_instance_guid
   metrics                    = ["topic", "partition", "consumers"]
+  mirroring_topic_patterns   = ["topic-1", "topic-2"]
+  mirroring = {
+    source_crn   = var.event_streams_source_crn # Required for mirroring
+    source_alias = "source-alias"               # Required for mirroring
+    target_alias = "target-alias"               # Required for mirroring
+
+    # 'options' are optional. Valid values for 'type' are 'rename', 'none', or 'use_alias'.
+    # If 'type' is set to 'rename', then 'rename' object must include the following fields: 'add_prefix', 'add_suffix', 'remove_prefix', and 'remove_suffix'.
+    options = {
+      topic_name_transform = {
+        type = "rename"
+        rename = {
+          add_prefix    = "add_prefix"
+          add_suffix    = "add_suffix"
+          remove_prefix = "remove_prefix"
+          remove_suffix = "remove_suffix"
+        }
+      }
+      group_id_transform = {
+        type = "rename"
+        rename = {
+          add_prefix    = "add_prefix"
+          add_suffix    = "add_suffix"
+          remove_prefix = "remove_prefix"
+          remove_suffix = "remove_suffix"
+        }
+      }
+    }
+  }
   quotas = [
     {
       "entity"             = "iam-ServiceId-00000000-0000-0000-0000-000000000000",
@@ -78,7 +122,7 @@ module "event_streams" {
   }
   cbr_rules = [
     {
-      description      = "${var.prefix}-event stream access only from vpc"
+      description      = "${var.prefix}-event streams access from vpc and schematics"
       enforcement_mode = "enabled"
       account_id       = data.ibm_iam_account_settings.iam_account_settings.account_id
       rule_contexts = [{
@@ -89,7 +133,17 @@ module "event_streams" {
           },
           {
             name  = "networkZoneId"
-            value = module.cbr_zone.zone_id
+            value = module.cbr_vpc_zone.zone_id
+        }]
+        }, {
+        attributes = [
+          {
+            "name" : "endpointType",
+            "value" : "private"
+          },
+          {
+            name  = "networkZoneId"
+            value = module.cbr_zone_schematics.zone_id
         }]
       }]
     }

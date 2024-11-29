@@ -81,9 +81,15 @@ variable "service_endpoints" {
   }
 }
 
-variable "skip_iam_authorization_policy" {
+variable "skip_kms_iam_authorization_policy" {
   type        = bool
-  description = "Set to true to skip the creation of an IAM authorization policy that permits all Event Streams database instances in the resource group to read the encryption key from the KMS instance. If set to false, pass in a value for the KMS instance in the existing_kms_instance_guid variable. In addition, no policy is created if var.kms_encryption_enabled is set to false."
+  description = "Set to true to skip the creation of an IAM authorization policy that permits all Event Streams database instances in the resource group to read the encryption key from the KMS instance. If set to false, pass in a value for the KMS instance in the `existing_kms_instance_guid` variable. In addition, no policy is created if var.kms_encryption_enabled is set to false."
+  default     = false
+}
+
+variable "skip_es_s2s_iam_authorization_policy" {
+  type        = bool
+  description = "Set to true to skip the creation of an IAM authorization policy that will allow all Event Streams instances in the given resource group access to read from the mirror source instance. This policy is required when creating a mirroring instance, and will only be created if a value is passed in the mirroring input."
   default     = false
 }
 
@@ -148,7 +154,7 @@ variable "kms_key_crn" {
 }
 
 variable "existing_kms_instance_guid" {
-  description = "The GUID of the Hyper Protect Crypto Services or Key Protect instance in which the key specified in var.kms_key_crn is coming from. Required only if var.kms_encryption_enabled is set to true, var.skip_iam_authorization_policy is set to false, and you pass a value for var.kms_key_crn."
+  description = "The GUID of the Hyper Protect Crypto Services or Key Protect instance in which the key specified in var.kms_key_crn is coming from. Required only if var.kms_encryption_enabled is set to true, var.skip_kms_iam_authorization_policy is set to false, and you pass a value for var.kms_key_crn."
   type        = string
   default     = null
 }
@@ -224,4 +230,40 @@ variable "quotas" {
     condition     = alltrue([for v in var.quotas : v.entity != "" && (v.producer_byte_rate >= 0 || v.consumer_byte_rate >= 0)])
     error_message = "The quota entity must be defined, and at least one of producer_byte_rate or consumer_byte_rate must be set to a non-negative value"
   }
+}
+
+variable "mirroring_topic_patterns" {
+  type        = list(string)
+  description = "The list of the topics to set in instance. Required only if creating mirroring instance."
+  default     = null
+}
+
+variable "mirroring" {
+  description = "Event Streams mirroring configuration. Required only if creating mirroring instance. For more information on mirroring, see https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-mirroring."
+  type = object({
+    source_crn   = string
+    source_alias = string
+    target_alias = string
+    options = optional(object({
+      topic_name_transform = object({
+        type = string
+        rename = optional(object({
+          add_prefix    = optional(string)
+          add_suffix    = optional(string)
+          remove_prefix = optional(string)
+          remove_suffix = optional(string)
+        }))
+      })
+      group_id_transform = object({
+        type = string
+        rename = optional(object({
+          add_prefix    = optional(string)
+          add_suffix    = optional(string)
+          remove_prefix = optional(string)
+          remove_suffix = optional(string)
+        }))
+      })
+    }))
+  })
+  default = null
 }
