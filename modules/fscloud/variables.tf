@@ -139,7 +139,7 @@ variable "mirroring_topic_patterns" {
 }
 
 variable "mirroring" {
-  description = "Configuration for the mirroring setup. (Optional) Valid values for 'type' are 'rename', 'none', or 'use_alias'. If 'type' is set to 'rename', then 'rename' object must include the following fields: 'add_prefix', 'add_suffix', 'remove_prefix', and 'remove_suffix'."
+  description = "Event Streams mirroring configuration. Required only if creating mirroring instance. For more information on mirroring, see https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-mirroring."
   type = object({
     source_crn   = string
     source_alias = string
