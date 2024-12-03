@@ -100,11 +100,11 @@ resource "ibm_event_streams_schema_global_rule" "es_globalrule" {
 ##############################################################################
 
 resource "ibm_event_streams_topic" "es_topic" {
-  count                = length(var.topics)
-  resource_instance_id = ibm_resource_instance.es_instance.id
-  name                 = var.topics[count.index].name
-  partitions           = var.topics[count.index].partitions
-  config               = var.topics[count.index].config
+  for_each             = { for topic in var.topics : topic.name => topic }
+  resource_instance_id = module.event_streams.id
+  name                 = each.value.name
+  partitions           = each.value.partitions
+  config               = each.value.config
 }
 
 ##############################################################################
