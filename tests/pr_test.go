@@ -77,6 +77,7 @@ func TestRunQuickstartSolution(t *testing.T) {
 		"resource_group_name":         options.ResourceGroup,
 		"use_existing_resource_group": true,
 		"prefix":                      options.Prefix,
+		"visibility":                  "public",
 	}
 
 	output, err := options.RunTestConsistency()
@@ -104,6 +105,7 @@ func TestRunEnterpriseSolution(t *testing.T) {
 		"existing_kms_instance_guid":  permanentResources["hpcs_south"],
 		"resource_tags":               options.Tags,
 		"access_tags":                 options.Tags,
+		"visibility":                  "public",
 	}
 
 	output, err := options.RunTestConsistency()
@@ -142,6 +144,7 @@ func TestFSCloudInSchematics(t *testing.T) {
 		{Name: "existing_kms_instance_guid", Value: permanentResources["hpcs_south"].(string), DataType: "string"},
 		{Name: "kms_key_crn", Value: permanentResources["hpcs_south_root_key_crn"].(string), DataType: "string"},
 		{Name: "event_streams_source_crn", Value: permanentResources["event_streams_us_south_crn"].(string), DataType: "string"},
+		{Name: "visibility", Value: "public", DataType: "string"},
 	}
 
 	err := options.RunSchematicTest()
