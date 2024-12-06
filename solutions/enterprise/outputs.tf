@@ -17,6 +17,11 @@ output "crn" {
   value       = module.event_streams.crn
 }
 
+output "id" {
+  description = "Event Streams instance id"
+  value       = module.event_streams.id
+}
+
 output "guid" {
   description = "Event Streams instance guid"
   value       = module.event_streams.guid
@@ -34,4 +39,26 @@ output "kafka_http_url" {
 output "kafka_broker_version" {
   description = "The Kafka version"
   value       = module.event_streams.kafka_broker_version
+}
+
+output "service_credentials_json" {
+  description = "Service credentials json map"
+  value       = module.event_streams.service_credentials_json
+  sensitive   = true
+}
+
+output "service_credentials_object" {
+  description = "Service credentials object"
+  value       = module.event_streams.service_credentials_object
+  sensitive   = true
+}
+
+output "mirroring_config_id" {
+  description = "The ID of the mirroring config in CRN format"
+  value       = module.event_streams.mirroring_config_id
+}
+
+output "mirroring_topic_patterns" {
+  description = "Mirroring topic patterns"
+  value       = module.event_streams.mirroring_topic_patterns
 }

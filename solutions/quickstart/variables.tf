@@ -19,7 +19,6 @@ variable "use_existing_resource_group" {
 variable "resource_group_name" {
   type        = string
   description = "The name of a new or the existing resource group to provision the Event Streams instance. If a prefix input variable is passed, it is prefixed to the value in the `<prefix>-value` format."
-  default     = null
 }
 
 variable "es_name" {
@@ -64,7 +63,7 @@ variable "topics" {
       config     = map(string)
     }
   ))
-  description = "The list of topics to apply to resources. Only one topic is allowed for Lite plan instances. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/enterprise/DA-schemas-topics-cbr.md)."
+  description = "The list of topics to apply to resources. Only one topic is allowed for Lite plan instances. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/quickstart/DA-schemas-topics-cbr.md)."
   default     = []
 }
 

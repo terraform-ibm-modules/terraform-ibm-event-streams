@@ -8,7 +8,7 @@ output "crn" {
 }
 
 output "id" {
-  description = "Event Streams instance crn"
+  description = "Event Streams instance id"
   value       = module.event_streams.id
 }
 
