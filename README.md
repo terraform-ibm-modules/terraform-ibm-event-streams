@@ -39,8 +39,8 @@ unless real values don't help users know what to change.
 module "event_streams" {
   source  = "terraform-ibm-modules/event-streams/ibm"
   version = "latest" # Replace "latest" with a release version to lock into a specific release
-  resource_group    = "event-streams-rg"
-  plan                 = "standard"
+  resource_group   = "event-streams-rg"
+  plan             = "standard"
   topics           = [
     {
       name       = "topic-1"
@@ -63,7 +63,7 @@ module "event_streams" {
       }
     }
   ]
-  schema_id            = [{
+  schemas            = [{
     schema_id = "my-es-schema_1"
     schema = {
       type = "string"
