@@ -100,11 +100,11 @@ resource "ibm_event_streams_schema_global_rule" "es_globalrule" {
 ##############################################################################
 
 resource "ibm_event_streams_topic" "es_topic" {
-  count                = length(var.topics)
+  for_each             = { for topic in var.topics : topic.name => topic }
   resource_instance_id = ibm_resource_instance.es_instance.id
-  name                 = var.topics[count.index].name
-  partitions           = var.topics[count.index].partitions
-  config               = var.topics[count.index].config
+  name                 = each.value.name
+  partitions           = each.value.partitions
+  config               = each.value.config
 }
 
 ##############################################################################
@@ -122,11 +122,11 @@ resource "ibm_resource_tag" "es_access_tag" {
 ##############################################################################
 
 resource "ibm_event_streams_quota" "eventstreams_quotas" {
-  count                = length(var.quotas)
+  for_each             = { for quota in var.quotas : quota.entity => quota }
   resource_instance_id = ibm_resource_instance.es_instance.id
-  entity               = var.quotas[count.index].entity
-  producer_byte_rate   = var.quotas[count.index].producer_byte_rate
-  consumer_byte_rate   = var.quotas[count.index].consumer_byte_rate
+  entity               = each.value.entity
+  producer_byte_rate   = each.value.producer_byte_rate
+  consumer_byte_rate   = each.value.consumer_byte_rate
 }
 
 ##############################################################################
