@@ -89,10 +89,10 @@ func TestRunEnterpriseSolution(t *testing.T) {
 	t.Parallel()
 
 	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
-		Testing:       t,
-		TerraformDir:  enterpriseSolutionTerraformDir,
-		Prefix:        "es-ent",
-		ResourceGroup: resourceGroup,
+		Testing:      t,
+		TerraformDir: enterpriseSolutionTerraformDir,
+		Prefix:       "es-ent",
+		// ResourceGroup: resourceGroup,
 	})
 
 	options.TerraformVars = map[string]interface{}{
