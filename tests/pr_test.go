@@ -96,16 +96,16 @@ func TestRunEnterpriseSolution(t *testing.T) {
 	})
 
 	options.TerraformVars = map[string]interface{}{
-		"ibmcloud_api_key":            options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"],
-		"resource_group_name":         options.ResourceGroup,
-		"use_existing_resource_group": true,
-		"prefix":                      options.Prefix,
-		"service_credential_names":    "{\"es_writer\": \"Writer\", \"es_reader\": \"Reader\"}",
-		"existing_kms_key_crn":        permanentResources["hpcs_south_root_key_crn"],
-		"existing_kms_instance_guid":  permanentResources["hpcs_south"],
-		"resource_tags":               options.Tags,
-		"access_tags":                 options.Tags,
-		"provider_visibility":         "public",
+		"ibmcloud_api_key": options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"],
+		// "resource_group_name":         options.ResourceGroup,
+		// "use_existing_resource_group": true,
+		"prefix":                     options.Prefix,
+		"service_credential_names":   "{\"es_writer\": \"Writer\", \"es_reader\": \"Reader\"}",
+		"existing_kms_key_crn":       permanentResources["hpcs_south_root_key_crn"],
+		"existing_kms_instance_guid": permanentResources["hpcs_south"],
+		"resource_tags":              options.Tags,
+		"access_tags":                options.Tags,
+		"provider_visibility":        "public",
 	}
 
 	output, err := options.RunTestConsistency()
