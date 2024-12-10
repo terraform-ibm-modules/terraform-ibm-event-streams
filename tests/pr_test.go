@@ -14,6 +14,7 @@ import (
 
 const completeExampleTerraformDir = "examples/complete"
 const quickstartSolutionTerraformDir = "solutions/quickstart"
+const enterpriseSolutionTerraformDir = "solutions/enterprise"
 const fsCloudTerraformDir = "examples/fscloud"
 
 // Use existing group for tests
@@ -76,6 +77,35 @@ func TestRunQuickstartSolution(t *testing.T) {
 		"resource_group_name":         options.ResourceGroup,
 		"use_existing_resource_group": true,
 		"prefix":                      options.Prefix,
+		"provider_visibility":         "public",
+	}
+
+	output, err := options.RunTestConsistency()
+	assert.Nil(t, err, "This should not have errored")
+	assert.NotNil(t, output, "Expected some output")
+}
+
+func TestRunEnterpriseSolution(t *testing.T) {
+	t.Parallel()
+
+	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
+		Testing:      t,
+		TerraformDir: enterpriseSolutionTerraformDir,
+		Prefix:       "es-ent",
+		// ResourceGroup: resourceGroup,
+	})
+
+	options.TerraformVars = map[string]interface{}{
+		"ibmcloud_api_key":    options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"],
+		"resource_group_name": options.Prefix,
+		// "use_existing_resource_group": true,
+		"prefix":                     options.Prefix,
+		"service_credential_names":   "{\"es_writer\": \"Writer\", \"es_reader\": \"Reader\"}",
+		"existing_kms_key_crn":       permanentResources["hpcs_south_root_key_crn"],
+		"existing_kms_instance_guid": permanentResources["hpcs_south"],
+		"resource_tags":              options.Tags,
+		"access_tags":                options.Tags,
+		"provider_visibility":        "public",
 	}
 
 	output, err := options.RunTestConsistency()
@@ -112,8 +142,9 @@ func TestFSCloudInSchematics(t *testing.T) {
 		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
 		{Name: "prefix", Value: options.Prefix, DataType: "string"},
 		{Name: "existing_kms_instance_guid", Value: permanentResources["hpcs_south"].(string), DataType: "string"},
-		{Name: "kms_key_crn", Value: permanentResources["hpcs_south_root_key_crn"].(string), DataType: "string"},
+		{Name: "existing_kms_key_crn", Value: permanentResources["hpcs_south_root_key_crn"].(string), DataType: "string"},
 		{Name: "event_streams_source_crn", Value: permanentResources["event_streams_us_south_crn"].(string), DataType: "string"},
+		{Name: "provider_visibility", Value: "public", DataType: "string"},
 	}
 
 	err := options.RunSchematicTest()
