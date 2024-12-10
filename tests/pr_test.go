@@ -96,8 +96,8 @@ func TestRunEnterpriseSolution(t *testing.T) {
 	})
 
 	options.TerraformVars = map[string]interface{}{
-		"ibmcloud_api_key": options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"],
-		// "resource_group_name":         options.ResourceGroup,
+		"ibmcloud_api_key":    options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"],
+		"resource_group_name": options.Prefix,
 		// "use_existing_resource_group": true,
 		"prefix":                     options.Prefix,
 		"service_credential_names":   "{\"es_writer\": \"Writer\", \"es_reader\": \"Reader\"}",
