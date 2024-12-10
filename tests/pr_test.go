@@ -77,7 +77,7 @@ func TestRunQuickstartSolution(t *testing.T) {
 		"resource_group_name":         options.ResourceGroup,
 		"use_existing_resource_group": true,
 		"prefix":                      options.Prefix,
-		"visibility":                  "public",
+		"provider_visibility":         "public",
 	}
 
 	output, err := options.RunTestConsistency()
@@ -101,11 +101,11 @@ func TestRunEnterpriseSolution(t *testing.T) {
 		"use_existing_resource_group": true,
 		"prefix":                      options.Prefix,
 		"service_credential_names":    "{\"es_writer\": \"Writer\", \"es_reader\": \"Reader\"}",
-		"kms_key_crn":                 permanentResources["hpcs_south_root_key_crn"],
+		"existing_kms_key_crn":        permanentResources["hpcs_south_root_key_crn"],
 		"existing_kms_instance_guid":  permanentResources["hpcs_south"],
 		"resource_tags":               options.Tags,
 		"access_tags":                 options.Tags,
-		"visibility":                  "public",
+		"provider_visibility":         "public",
 	}
 
 	output, err := options.RunTestConsistency()
@@ -142,9 +142,9 @@ func TestFSCloudInSchematics(t *testing.T) {
 		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
 		{Name: "prefix", Value: options.Prefix, DataType: "string"},
 		{Name: "existing_kms_instance_guid", Value: permanentResources["hpcs_south"].(string), DataType: "string"},
-		{Name: "kms_key_crn", Value: permanentResources["hpcs_south_root_key_crn"].(string), DataType: "string"},
+		{Name: "existing_kms_key_crn", Value: permanentResources["hpcs_south_root_key_crn"].(string), DataType: "string"},
 		{Name: "event_streams_source_crn", Value: permanentResources["event_streams_us_south_crn"].(string), DataType: "string"},
-		{Name: "visibility", Value: "public", DataType: "string"},
+		{Name: "provider_visibility", Value: "public", DataType: "string"},
 	}
 
 	err := options.RunSchematicTest()
