@@ -18,10 +18,45 @@ module "event_streams" {
   source            = "../../"
   resource_group_id = module.resource_group.resource_group_id
   es_name           = "${var.prefix}-es"
-  schemas           = var.schemas
+  schemas           = [{
+    schema_id = "my-es-schema_1"
+    schema = {
+      type = "string"
+      name = "name_1"
+
+    }
+  },
+  {
+    schema_id = "my-es-schema_2"
+    schema = {
+      type = "string"
+      name = "name_2"
+    }
+  }]
   tags              = var.resource_tags
   access_tags       = var.access_tags
-  topics            = var.topics
+  topics            = [
+    {
+      name       = "topic-1"
+      partitions = 1
+      config = {
+        "cleanup.policy"  = "delete"
+        "retention.ms"    = "86400000"
+        "retention.bytes" = "10485760"
+        "segment.bytes"   = "10485760"
+      }
+    },
+    {
+      name       = "topic-2"
+      partitions = 1
+      config = {
+        "cleanup.policy"  = "compact,delete"
+        "retention.ms"    = "86400000"
+        "retention.bytes" = "1073741824"
+        "segment.bytes"   = "536870912"
+      }
+    }
+  ]
   metrics           = []
   quotas            = []
   service_credential_names = {
