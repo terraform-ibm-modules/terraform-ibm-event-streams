@@ -18,24 +18,24 @@ module "event_streams" {
   source            = "../../"
   resource_group_id = module.resource_group.resource_group_id
   es_name           = "${var.prefix}-es"
-  schemas           = [{
+  schemas = [{
     schema_id = "my-es-schema_1"
     schema = {
       type = "string"
       name = "name_1"
 
     }
-  },
-  {
-    schema_id = "my-es-schema_2"
-    schema = {
-      type = "string"
-      name = "name_2"
-    }
+    },
+    {
+      schema_id = "my-es-schema_2"
+      schema = {
+        type = "string"
+        name = "name_2"
+      }
   }]
-  tags              = var.resource_tags
-  access_tags       = var.access_tags
-  topics            = [
+  tags        = var.resource_tags
+  access_tags = var.access_tags
+  topics = [
     {
       name       = "topic-1"
       partitions = 1
@@ -57,8 +57,8 @@ module "event_streams" {
       }
     }
   ]
-  metrics           = []
-  quotas            = []
+  metrics = []
+  quotas  = []
   service_credential_names = {
     "es_writer" : "Writer",
     "es_reader" : "Reader",
