@@ -12,7 +12,6 @@ const basicExampleTerraformDir = "examples/basic"
 
 func TestRunDefaultExample(t *testing.T) {
 	t.Parallel()
-	t.Skip()
 
 	options := setupOptions(t, "event-streams-default", basicExampleTerraformDir)
 

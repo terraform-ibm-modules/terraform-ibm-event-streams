@@ -58,7 +58,7 @@ You can set mirroring which enables messages in one Event Streams service instan
 - `source_crn` (required): The CRN of the source from where data is mirrored.
 - `source_alias` (required): The source alias (e.g. `us-south`) from where data is mirrored.
 - `target_alias` (required): The target alias (e.g. `us-east`) to where data is mirrored.
-- `options` (optional): Transform configuration for `topic name` and `group id`. Supported configurations are: `topic_name_transform` and `group_id_transform`. Each of them has the following supported values: `add_prefix`, `add_suffix`, `remove_prefix` and `remove_suffix`.
+- `options` (optional): Transform configuration for `topic name` and `group id`. Supported configurations are: `topic_name_transform` and `group_id_transform`. Valid values for `type` are `rename`, `none`, or `use_alias`. If `type` is set to `rename`, then `rename` object must include the following fields: `add_prefix`, `add_suffix`, `remove_prefix` and `remove_suffix`.
 
 ### Example mirroring
 
