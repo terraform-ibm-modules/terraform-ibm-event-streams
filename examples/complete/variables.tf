@@ -33,4 +33,3 @@ variable "access_tags" {
   description = "The list of access tags associated with the Event Steams instance."
   default     = []
 }
-
