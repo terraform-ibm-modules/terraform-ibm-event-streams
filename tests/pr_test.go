@@ -104,7 +104,7 @@ func TestEnterpriseSolutionInSchematics(t *testing.T) {
 			since this module scopes auth policies by resource group.
 		*/
 		//ResourceGroup:      resourceGroup,
-		TemplateFolder:         fsCloudTerraformDir,
+		TemplateFolder:         enterpriseSolutionTerraformDir,
 		Tags:                   []string{"test-schematic"},
 		DeleteWorkspaceOnFail:  false,
 		WaitJobCompleteMinutes: 180,
