@@ -6,8 +6,8 @@ variable "ibmcloud_api_key" {
 
 variable "prefix" {
   type        = string
-  description = "Optional. The prefix to append to all resources that this solution creates."
-  default     = null
+  description = "Optional. The prefix to append to all resources that this solution creates. Prefix is ignored if it is `null` or empty string (\"\")."
+  default     = "quickstart"
 }
 
 variable "use_existing_resource_group" {
