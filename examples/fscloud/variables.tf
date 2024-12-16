@@ -28,32 +28,6 @@ variable "resource_tags" {
   default     = []
 }
 
-variable "schemas" {
-  type = list(object(
-    {
-      schema_id = string
-      schema = object({
-        type = string
-        name = string
-      })
-    }
-  ))
-  description = "The list of schema object which contains schema id and format of the schema"
-  default     = []
-}
-
-variable "topics" {
-  type = list(object(
-    {
-      name       = string
-      partitions = number
-      config     = map(string)
-    }
-  ))
-  description = "List of topics. For lite plan only one topic is allowed."
-  default     = []
-}
-
 variable "existing_kms_instance_guid" {
   description = "The GUID of the Hyper Protect Crypto service in which the key specified in var.kms_key_crn is coming from"
   type        = string

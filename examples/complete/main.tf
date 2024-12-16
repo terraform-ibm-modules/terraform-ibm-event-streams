@@ -18,13 +18,13 @@ module "event_streams" {
   source            = "../../"
   resource_group_id = module.resource_group.resource_group_id
   es_name           = "${var.prefix}-es"
-  schemas = [{
-    schema_id = "my-es-schema_1"
-    schema = {
-      type = "string"
-      name = "name_1"
-
-    }
+  schemas = [
+    {
+      schema_id = "my-es-schema_1"
+      schema = {
+        type = "string"
+        name = "name_1"
+      }
     },
     {
       schema_id = "my-es-schema_2"
@@ -32,7 +32,8 @@ module "event_streams" {
         type = "string"
         name = "name_2"
       }
-  }]
+    }
+  ]
   tags        = var.resource_tags
   access_tags = var.access_tags
   topics = [
