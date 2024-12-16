@@ -38,10 +38,10 @@ unless real values don't help users know what to change.
 ```hcl
 module "event_streams" {
   source  = "terraform-ibm-modules/event-streams/ibm"
-  version = "latest" # Replace "latest" with a release version to lock into a specific release
-  resource_group   = "event-streams-rg"
-  plan             = "standard"
-  topics           = [
+  version = "X.Y.Z" # Replace "X.Y.Z" with a release version to lock into a specific release
+  resource_group_id = "xxXXxxXXxXxXXXXxxXxxxXXXXxXXXXX" # Replace with the actual ID of resource group to use
+  plan              = "standard"
+  topics            = [
     {
       name       = "topic-1"
       partitions = 1

@@ -7,7 +7,7 @@ variable "ibmcloud_api_key" {
 variable "prefix" {
   type        = string
   description = "Optional. The prefix to append to all resources that this solution creates. Prefix is ignored if it is `null` or empty string (\"\")."
-  default     = "quickstart"
+  default     = "dev"
 }
 
 variable "use_existing_resource_group" {
@@ -80,7 +80,7 @@ variable "service_credential_names" {
 variable "provider_visibility" {
   description = "Set the visibility value for the IBM terraform provider. Supported values are `public`, `private`, `public-and-private`. [Learn more](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/guides/custom-service-endpoints)."
   type        = string
-  default     = "private"
+  default     = "public"
 
   validation {
     condition     = contains(["public", "private", "public-and-private"], var.provider_visibility)

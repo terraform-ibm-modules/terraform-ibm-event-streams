@@ -25,6 +25,7 @@ variable "use_existing_resource_group" {
   type        = bool
   description = "Whether to use an existing resource group."
   default     = false
+  nullable    = false
 }
 
 variable "event_streams_name" {
@@ -67,6 +68,11 @@ variable "schema_global_rule" {
   type        = string
   description = "Schema global compatibility rule. Allowed values are 'NONE', 'FULL', 'FULL_TRANSITIVE', 'FORWARD', 'FORWARD_TRANSITIVE', 'BACKWARD', 'BACKWARD_TRANSITIVE'."
   default     = null
+
+  validation {
+    condition     = var.schema_global_rule == null || contains(["NONE", "FULL", "FULL_TRANSITIVE", "FORWARD", "FORWARD_TRANSITIVE", "BACKWARD", "BACKWARD_TRANSITIVE"], coalesce(var.schema_global_rule, "NONE"))
+    error_message = "The schema_global_rule must be null or one of 'NONE', 'FULL', 'FULL_TRANSITIVE', 'FORWARD', 'FORWARD_TRANSITIVE', 'BACKWARD', 'BACKWARD_TRANSITIVE'."
+  }
 }
 
 variable "topics" {
@@ -79,28 +85,6 @@ variable "topics" {
   ))
   description = "The list of topics to apply to resources. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/enterprise/DA-schemas-topics-cbr.md#options-with-topics)."
   default     = []
-}
-
-variable "skip_kms_iam_authorization_policy" {
-  type        = bool
-  description = "Set to true to skip the creation of an IAM authorization policy that permits all Event Streams database instances in the resource group to read the encryption key from the KMS instance. If set to false, pass in a value for the KMS instance in the existing_kms_instance_guid variable."
-  default     = false
-}
-
-variable "skip_event_streams_s2s_iam_authorization_policy" {
-  type        = bool
-  description = "Set to true to skip the creation of an Event Streams s2s IAM authorization policy to provision an Event Streams mirroring instance. This is required to read from the source cluster. This policy is required when creating mirroring instance."
-  default     = false
-}
-
-variable "existing_kms_instance_guid" {
-  description = "The GUID of the Hyper Protect Crypto service in which the key specified in `existing_kms_key_crn` input variable is coming from"
-  type        = string
-}
-
-variable "existing_kms_key_crn" {
-  type        = string
-  description = "The root key CRN of the key management service (Key Protect or Hyper Protect Crypto Services) to use to encrypt the payload data. See https://cloud.ibm.com/docs/cloud-databases?topic=cloud-databases-hpcs&interface=ui for more information on integrating HPCS with Event Streams instance."
 }
 
 ##############################################################
@@ -118,9 +102,14 @@ variable "cbr_rules" {
     }))) }))
     enforcement_mode = string
   }))
-  description = "The list of context-based restriction rules to create. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/enterprise/DA-schemas-topics-cbr.md#options-with-cbr)."
+  description = "A single context-based restriction rule to create. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/enterprise/DA-schemas-topics-cbr.md#options-with-cbr)."
   default     = []
-  # Validation happens in the rule module
+  nullable    = false
+  # Additional validation happens in the rule module
+  validation {
+    condition     = !(length(var.cbr_rules) > 1)
+    error_message = "Only one context-based restriction rule is allowed."
+  }
 }
 
 variable "service_credential_names" {
@@ -133,6 +122,11 @@ variable "metrics" {
   type        = list(string)
   description = "Enhanced metrics to activate, as list of strings. Allowed values: 'topic', 'partition', 'consumers'."
   default     = []
+
+  validation {
+    condition     = alltrue([for name in var.metrics : contains(["topic", "partition", "consumers"], name)])
+    error_message = "The specified metrics are not valid. The following values are valid for metrics: 'topic', 'partition', 'consumers'."
+  }
 }
 
 variable "quotas" {
@@ -185,6 +179,14 @@ variable "mirroring" {
   default = null
 }
 
+variable "skip_event_streams_s2s_iam_authorization_policy" {
+  type        = bool
+  description = "Set to true to skip the creation of an Event Streams s2s IAM authorization policy to provision an Event Streams mirroring instance. This is required to read from the source cluster. This policy is required when creating mirroring instance."
+  default     = false
+  nullable    = false
+}
+
+
 ##############################################################
 # Provider
 ##############################################################
@@ -198,4 +200,55 @@ variable "provider_visibility" {
     condition     = contains(["public", "private", "public-and-private"], var.provider_visibility)
     error_message = "Invalid visibility option. Allowed values are 'public', 'private', or 'public-and-private'."
   }
+}
+
+##############################################################
+# Encryption
+##############################################################
+
+variable "existing_kms_instance_crn" {
+  type        = string
+  description = "The CRN of a Key Protect or Hyper Protect Crypto Services instance. Required to create a new encryption key and key ring which will be used to encrypt event streams. To use an existing key, pass values for `existing_kms_key_crn`."
+}
+
+variable "existing_kms_key_crn" {
+  type        = string
+  description = "The CRN of a Key Protect or Hyper Protect Crypto Services encryption key to encrypt your data. If no value is passed a new key will be created in the instance specified in the `existing_kms_instance_crn` input variable."
+  default     = null
+}
+
+variable "kms_endpoint_type" {
+  type        = string
+  description = "The type of endpoint to use for communicating with the Key Protect or Hyper Protect Crypto Services instance. Possible values: `public`, `private`."
+  default     = "private"
+  validation {
+    condition     = can(regex("public|private", var.kms_endpoint_type))
+    error_message = "The kms_endpoint_type value must be 'public' or 'private'."
+  }
+}
+
+variable "skip_event_streams_kms_auth_policy" {
+  type        = bool
+  description = "Set to true to skip the creation of IAM authorization policies that permits all Event Streams instances in the given resource group 'Reader' access to the Key Protect or Hyper Protect Crypto Services key. This policy is required in order to enable KMS encryption, so only skip creation if there is one already present in your account."
+  default     = false
+  nullable    = false
+}
+
+variable "event_streams_key_ring_name" {
+  type        = string
+  default     = "event-streams-key-ring"
+  description = "The name for the key ring created for the Event Streams key. Applies only if not specifying an existing key. If a prefix input variable is specified, the prefix is added to the name in the `<prefix>-<name>` format."
+}
+
+variable "event_streams_key_name" {
+  type        = string
+  default     = "event-streams-key"
+  description = "The name for the key created for the Event Streams key. Applies only if not specifying an existing key. If a prefix input variable is specified, the prefix is added to the name in the `<prefix>-<name>` format."
+}
+
+variable "ibmcloud_kms_api_key" {
+  type        = string
+  description = "The IBM Cloud API key that can create a root key and key ring in the key management service (KMS) instance. If not specified, the 'ibmcloud_api_key' variable is used. Specify this key if the instance in `existing_kms_instance_crn` is in an account that's different from the Event Streams instance. Leave this input empty if the same account owns both instances."
+  sensitive   = true
+  default     = null
 }

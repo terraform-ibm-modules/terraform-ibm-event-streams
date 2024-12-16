@@ -294,16 +294,7 @@
               "key": "topics"
             },
             {
-              "key": "skip_kms_iam_authorization_policy"
-            },
-            {
               "key": "skip_event_streams_s2s_iam_authorization_policy"
-            },
-            {
-              "key": "existing_kms_instance_guid"
-            },
-            {
-              "key": "existing_kms_key_crn"
             },
             {
               "key": "cbr_rules"
@@ -322,6 +313,27 @@
             },
             {
               "key": "mirroring"
+            },
+            {
+              "key": "event_streams_key_name"
+            },
+            {
+              "key": "event_streams_key_ring_name"
+            },
+            {
+              "key": "existing_kms_instance_crn"
+            },
+            {
+              "key": "ibmcloud_kms_api_key"
+            },
+            {
+              "key": "kms_endpoint_type"
+            },
+            {
+              "key": "skip_event_streams_kms_auth_policy"
+            },
+            {
+              "key": "existing_kms_key_crn"
             }
           ],
           "iam_permissions": [
@@ -352,6 +364,26 @@
               {
                 "title": "Creates schemas in the Event Streams instance",
                 "description": "Creates schemas in IBM Cloud Event Streams instance."
+              },
+              {
+                "title": "Supports mirroring",
+                "description": "Supports mirroring which enables messages in one Event Streams service instance to be continuously copied to a second instance."
+              },
+              {
+                "title": "Suports quotas.",
+                "description": "Supports quotas to control the resources, such as network bandwidth, that a service can consume.."
+              },
+              {
+                "title": "CBR",
+                "description": "Create context-based restriction (CBR) rules for Event Streams instance."
+              },
+              {
+                "title": "Encrypt messages with key management services",
+                "description": "Supports key management encryption (BYOK and KYOK)."
+              },
+              {
+                "title": "Managing users and roles",
+                "description": "Manage IAM service credentials for Event Streams."
               }
             ],
             "diagrams": [
