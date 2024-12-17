@@ -69,49 +69,13 @@ module "cbr_zone_schematics" {
 # #############################################################################
 
 module "event_streams" {
-  source            = "../../modules/fscloud"
-  resource_group_id = module.resource_group.resource_group_id
-  es_name           = "${var.prefix}-es-fs"
-  kms_key_crn       = var.kms_key_crn
-  schemas = [
-    {
-      schema_id = "my-es-schema_1"
-      schema = {
-        type = "string"
-        name = "name_1"
-      }
-    },
-    {
-      schema_id = "my-es-schema_2"
-      schema = {
-        type = "string"
-        name = "name_2"
-      }
-    }
-  ]
-  tags = var.resource_tags
-  topics = [
-    {
-      name       = "topic-1"
-      partitions = 1
-      config = {
-        "cleanup.policy"  = "delete"
-        "retention.ms"    = "86400000"
-        "retention.bytes" = "10485760"
-        "segment.bytes"   = "10485760"
-      }
-    },
-    {
-      name       = "topic-2"
-      partitions = 1
-      config = {
-        "cleanup.policy"  = "compact,delete"
-        "retention.ms"    = "86400000"
-        "retention.bytes" = "1073741824"
-        "segment.bytes"   = "536870912"
-      }
-    }
-  ]
+  source                     = "../../modules/fscloud"
+  resource_group_id          = module.resource_group.resource_group_id
+  es_name                    = "${var.prefix}-es-fs"
+  kms_key_crn                = var.kms_key_crn
+  schemas                    = var.schemas
+  tags                       = var.resource_tags
+  topics                     = var.topics
   existing_kms_instance_guid = var.existing_kms_instance_guid
   metrics                    = ["topic", "partition", "consumers"]
   mirroring_topic_patterns   = ["topic-1", "topic-2"]
