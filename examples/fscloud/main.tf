@@ -69,16 +69,15 @@ module "cbr_zone_schematics" {
 # #############################################################################
 
 module "event_streams" {
-  source                     = "../../modules/fscloud"
-  resource_group_id          = module.resource_group.resource_group_id
-  es_name                    = "${var.prefix}-es-fs"
-  kms_key_crn                = var.kms_key_crn
-  schemas                    = var.schemas
-  tags                       = var.resource_tags
-  topics                     = var.topics
-  existing_kms_instance_guid = var.existing_kms_instance_guid
-  metrics                    = ["topic", "partition", "consumers"]
-  mirroring_topic_patterns   = ["topic-1", "topic-2"]
+  source                   = "../../modules/fscloud"
+  resource_group_id        = module.resource_group.resource_group_id
+  es_name                  = "${var.prefix}-es-fs"
+  kms_key_crn              = var.kms_key_crn
+  schemas                  = var.schemas
+  tags                     = var.resource_tags
+  topics                   = var.topics
+  metrics                  = ["topic", "partition", "consumers"]
+  mirroring_topic_patterns = ["topic-1", "topic-2"]
   mirroring = {
     source_crn   = var.event_streams_source_crn # Required for mirroring
     source_alias = "source-alias"               # Required for mirroring

@@ -3,5 +3,5 @@
   "resource_tags": $TAGS,
   "prefix": $PREFIX,
   "resource_group_name": $PREFIX,
-  "existing_kms_key_crn": $HPCS_US_SOUTH_ROOT_KEY_CRN
+  "existing_kms_instance_crn": $HPCS_US_SOUTH_CRN
 }

@@ -19,7 +19,7 @@ locals {
   # tflint-ignore: terraform_unused_declarations
   validate_kms_vars = var.kms_encryption_enabled && var.kms_key_crn == null ? tobool("When setting var.kms_encryption_enabled to true, a value must be passed for var.kms_key_crn and/or var.backup_encryption_key_crn.") : true
   # tflint-ignore: terraform_unused_declarations
-  validate_auth_policy = var.kms_encryption_enabled && var.skip_kms_iam_authorization_policy == false && var.existing_kms_instance_guid == null ? tobool("When var.skip_kms_iam_authorization_policy is set to false, and var.kms_encryption_enabled to true, a value must be passed for var.existing_kms_instance_guid in order to create the auth policy.") : true
+  validate_auth_policy = var.kms_encryption_enabled && var.skip_kms_iam_authorization_policy == false && var.kms_key_crn == null ? tobool("When var.skip_kms_iam_authorization_policy is set to false, and var.kms_encryption_enabled to true, a value must be passed for var.kms_key_crn in order to create the auth policy.") : true
   # tflint-ignore: terraform_unused_declarations
   validate_throughput_lite_standard = ((var.plan == "lite" || var.plan == "standard") && var.throughput != 150) ? tobool("Throughput value cannot be changed in lite and standard plan. Default value is 150.") : true
   # tflint-ignore: terraform_unused_declarations
@@ -76,6 +76,20 @@ resource "ibm_resource_instance" "es_instance" {
   )
 }
 
+########################################################################################################################
+# Parse KMS info from given CRNs
+########################################################################################################################
+
+module "kms_key_crn_parser" {
+  count   = var.kms_key_crn != null ? 1 : 0
+  source  = "terraform-ibm-modules/common-utilities/ibm//modules/crn-parser"
+  version = "1.1.0"
+  crn     = var.kms_key_crn
+}
+
+locals {
+  kms_instance_guid = var.kms_key_crn != null ? module.kms_key_crn_parser[0].service_instance : null
+}
 ##############################################################################
 # SCHEMA AND COMPATIBILITY RULE
 ##############################################################################
@@ -137,7 +151,7 @@ resource "ibm_iam_authorization_policy" "kms_policy" {
   source_service_name      = "messagehub"
   source_resource_group_id = var.resource_group_id
   roles                    = ["Reader"]
-  description              = "Allow the Event Streams instances in the resource group ${var.resource_group_id} to read the ${local.kms_service} key ${local.kms_key_id} from the instance ${var.existing_kms_instance_guid}"
+  description              = "Allow the Event Streams instances in the resource group ${var.resource_group_id} to read the ${local.kms_service} key ${local.kms_key_id} from the instance ${local.kms_instance_guid}"
   resource_attributes {
     name     = "serviceName"
     operator = "stringEquals"
@@ -151,7 +165,7 @@ resource "ibm_iam_authorization_policy" "kms_policy" {
   resource_attributes {
     name     = "serviceInstance"
     operator = "stringEquals"
-    value    = var.existing_kms_instance_guid
+    value    = local.kms_instance_guid
   }
   resource_attributes {
     name     = "resourceType"

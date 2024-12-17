@@ -294,7 +294,7 @@
               "key": "topics"
             },
             {
-              "key": "skip_event_streams_s2s_iam_authorization_policy"
+              "key": "skip_event_streams_s2s_iam_auth_policy"
             },
             {
               "key": "cbr_rules"

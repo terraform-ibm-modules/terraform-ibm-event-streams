@@ -150,7 +150,7 @@ variable "mirroring_topic_patterns" {
 }
 
 variable "mirroring" {
-  description = "Event Streams mirroring configuration. Required only if creating mirroring instance. For more information on mirroring, see https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-mirroring."
+  description = "Event Streams mirroring configuration. Required only if creating mirroring instance. For more information on mirroring, see https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/enterprise/DA-types.md#mirroring and https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-mirroring."
   type = object({
     source_crn   = string
     source_alias = string
@@ -179,13 +179,12 @@ variable "mirroring" {
   default = null
 }
 
-variable "skip_event_streams_s2s_iam_authorization_policy" {
+variable "skip_event_streams_s2s_iam_auth_policy" {
   type        = bool
   description = "Set to true to skip the creation of an Event Streams s2s IAM authorization policy to provision an Event Streams mirroring instance. This is required to read from the source cluster. This policy is required when creating mirroring instance."
   default     = false
   nullable    = false
 }
-
 
 ##############################################################
 # Provider
@@ -208,7 +207,8 @@ variable "provider_visibility" {
 
 variable "existing_kms_instance_crn" {
   type        = string
-  description = "The CRN of a Key Protect or Hyper Protect Crypto Services instance. Required to create a new encryption key and key ring which will be used to encrypt event streams. To use an existing key, pass values for `existing_kms_key_crn`."
+  description = "The CRN of a Key Protect or Hyper Protect Crypto Services instance. Required only when creating a new encryption key and key ring which will be used to encrypt event streams. To use an existing key, pass values for `existing_kms_key_crn`."
+  default     = null
 }
 
 variable "existing_kms_key_crn" {
