@@ -5,7 +5,6 @@ module "event_streams" {
   plan                                 = "enterprise-3nodes-2tb"
   region                               = var.region
   kms_key_crn                          = var.kms_key_crn
-  existing_kms_instance_guid           = var.existing_kms_instance_guid
   skip_kms_iam_authorization_policy    = var.skip_kms_iam_authorization_policy
   skip_es_s2s_iam_authorization_policy = var.skip_es_s2s_iam_authorization_policy
   schemas                              = var.schemas

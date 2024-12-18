@@ -6,8 +6,8 @@ variable "ibmcloud_api_key" {
 
 variable "prefix" {
   type        = string
-  description = "Optional. The prefix to append to all resources that this solution creates."
-  default     = null
+  description = "Optional. The prefix to append to all resources that this solution creates. Prefix is ignored if it is `null` or empty string (\"\")."
+  default     = "dev"
 }
 
 variable "use_existing_resource_group" {
@@ -19,7 +19,6 @@ variable "use_existing_resource_group" {
 variable "resource_group_name" {
   type        = string
   description = "The name of a new or the existing resource group to provision the Event Streams instance. If a prefix input variable is passed, it is prefixed to the value in the `<prefix>-value` format."
-  default     = null
 }
 
 variable "es_name" {
@@ -72,4 +71,19 @@ variable "service_credential_names" {
   description = "The mapping of names and roles for service credentials that you want to create for the Event streams.[Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/quickstart/DA-types.md#svc-credential-name)"
   type        = map(string)
   default     = {}
+}
+
+##############################################################
+# Provider
+##############################################################
+
+variable "provider_visibility" {
+  description = "Set the visibility value for the IBM terraform provider. Supported values are `public`, `private`, `public-and-private`. [Learn more](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/guides/custom-service-endpoints)."
+  type        = string
+  default     = "public"
+
+  validation {
+    condition     = contains(["public", "private", "public-and-private"], var.provider_visibility)
+    error_message = "Invalid visibility option. Allowed values are 'public', 'private', or 'public-and-private'."
+  }
 }

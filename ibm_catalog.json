@@ -46,7 +46,25 @@
               "key": "ibmcloud_api_key"
             },
             {
-              "key": "prefix"
+              "key": "provider_visibility",
+              "options": [
+                {
+                  "displayname": "private",
+                  "value": "private"
+                },
+                {
+                  "displayname": "public",
+                  "value": "public"
+                },
+                {
+                  "displayname": "public-and-private",
+                  "value": "public-and-private"
+                }
+              ]
+            },
+            {
+              "key": "prefix",
+              "required": true
             },
             {
               "key": "use_existing_resource_group"
@@ -128,6 +146,9 @@
             },
             {
               "key": "topics"
+            },
+            {
+              "key": "service_credential_names"
             }
           ],
           "iam_permissions": [
@@ -164,6 +185,215 @@
                   "type": "image/svg+xml"
                 },
                 "description": "This architecture creates an instance of IBM Event Streams for IBM Cloud."
+              }
+            ]
+          }
+        },
+        {
+          "label": "enterprise",
+          "name": "enterprise",
+          "install_type": "fullstack",
+          "working_directory": "solutions/enterprise",
+          "configuration": [
+            {
+              "key": "ibmcloud_api_key"
+            },
+            {
+              "key": "provider_visibility",
+              "options": [
+                {
+                  "displayname": "private",
+                  "value": "private"
+                },
+                {
+                  "displayname": "public",
+                  "value": "public"
+                },
+                {
+                  "displayname": "public-and-private",
+                  "value": "public-and-private"
+                }
+              ]
+            },
+            {
+              "key": "prefix",
+              "required": true
+            },
+            {
+              "key": "use_existing_resource_group"
+            },
+            {
+              "key": "resource_group_name"
+            },
+            {
+              "key": "event_streams_name"
+            },
+            {
+              "key": "region",
+              "required": true,
+              "options": [
+                {
+                  "displayname": "Dallas (us-south)",
+                  "value": "us-south"
+                },
+                {
+                  "displayname": "Frankfurt (eu-de)",
+                  "value": "eu-de"
+                },
+                {
+                  "displayname": "London (eu-gb)",
+                  "value": "eu-gb"
+                },
+                {
+                  "displayname": "Madrid (eu-es)",
+                  "value": "eu-es"
+                },
+                {
+                  "displayname": "Osaka (jp-osa)",
+                  "value": "jp-osa"
+                },
+                {
+                  "displayname": "Sydney (au-syd)",
+                  "value": "au-syd"
+                },
+                {
+                  "displayname": "Tokyo (jp-tok)",
+                  "value": "jp-tok"
+                },
+                {
+                  "displayname": "Osaka (jp-osa)",
+                  "value": "jp-osa"
+                },
+                {
+                  "displayname": "Sao Paulo (br-sao)",
+                  "value": "br-sao"
+                },
+                {
+                  "displayname": "Toronto (ca-tor)",
+                  "value": "ca-tor"
+                },
+                {
+                  "displayname": "Washington (us-east)",
+                  "value": "us-east"
+                }
+              ]
+            },
+            {
+              "key": "resource_tags"
+            },
+            {
+              "key": "access_tags"
+            },
+            {
+              "key": "schemas"
+            },
+            {
+              "key": "schema_global_rule"
+            },
+            {
+              "key": "topics"
+            },
+            {
+              "key": "skip_event_streams_s2s_iam_auth_policy"
+            },
+            {
+              "key": "cbr_rules"
+            },
+            {
+              "key": "service_credential_names"
+            },
+            {
+              "key": "quotas"
+            },
+            {
+              "key": "metrics"
+            },
+            {
+              "key": "mirroring_topic_patterns"
+            },
+            {
+              "key": "mirroring"
+            },
+            {
+              "key": "event_streams_key_name"
+            },
+            {
+              "key": "event_streams_key_ring_name"
+            },
+            {
+              "key": "existing_kms_instance_crn"
+            },
+            {
+              "key": "ibmcloud_kms_api_key"
+            },
+            {
+              "key": "kms_endpoint_type"
+            },
+            {
+              "key": "skip_event_streams_kms_auth_policy"
+            },
+            {
+              "key": "existing_kms_key_crn"
+            }
+          ],
+          "iam_permissions": [
+            {
+              "role_crns": [
+                "crn:v1:bluemix:public:iam::::serviceRole:Manager"
+              ],
+              "service_name": "messagehub"
+            },
+            {
+              "role_crns": [
+                "crn:v1:bluemix:public:iam::::role:Editor"
+              ],
+              "service_name": "messagehub"
+            }
+          ],
+          "architecture": {
+            "descriptions": "This architecture creates a Financial Services compliant instance of IBM Event Streams for IBM Cloud in enterprise plan. It also supports the creation of topics and schemas in the Event Streams instance.",
+            "features": [
+              {
+                "title": "Creates an Event Streams instance",
+                "description": "Creates and configures the IBM Cloud Event Streams instance."
+              },
+              {
+                "title": "Creates topics in the Event Streams instance",
+                "description": "Creates topics in IBM Cloud Event Streams instance."
+              },
+              {
+                "title": "Creates schemas in the Event Streams instance",
+                "description": "Creates schemas in IBM Cloud Event Streams instance."
+              },
+              {
+                "title": "Supports mirroring",
+                "description": "Supports mirroring which enables messages in one Event Streams service instance to be continuously copied to a second instance."
+              },
+              {
+                "title": "Suports quotas.",
+                "description": "Supports quotas to control the resources, such as network bandwidth, that a service can consume.."
+              },
+              {
+                "title": "CBR",
+                "description": "Create context-based restriction (CBR) rules for Event Streams instance."
+              },
+              {
+                "title": "Encrypt messages with key management services",
+                "description": "Supports key management encryption (BYOK and KYOK)."
+              },
+              {
+                "title": "Managing users and roles",
+                "description": "Manage IAM service credentials for Event Streams."
+              }
+            ],
+            "diagrams": [
+              {
+                "diagram": {
+                  "caption": "Financial Services compliant instance of IBM Event Streams for IBM Cloud.",
+                  "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-streams/main/reference-architecture/da-enterprise.svg",
+                  "type": "image/svg+xml"
+                },
+                "description": "This architecture creates a Financial Services compliant instance of IBM Event Streams for IBM Cloud."
               }
             ]
           }

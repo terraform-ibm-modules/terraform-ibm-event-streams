@@ -83,7 +83,7 @@ variable "service_endpoints" {
 
 variable "skip_kms_iam_authorization_policy" {
   type        = bool
-  description = "Set to true to skip the creation of an IAM authorization policy that permits all Event Streams database instances in the resource group to read the encryption key from the KMS instance. If set to false, pass in a value for the KMS instance in the `existing_kms_instance_guid` variable. In addition, no policy is created if var.kms_encryption_enabled is set to false."
+  description = "Set to true to skip the creation of an IAM authorization policy that permits all Event Streams database instances in the resource group to read the encryption key from the KMS instance. If set to false, pass in a value for the KMS instance in the `kms_key_crn` variable. In addition, no policy is created if var.kms_encryption_enabled is set to false."
   default     = false
 }
 
@@ -151,12 +151,6 @@ variable "kms_key_crn" {
     ])
     error_message = "Must be the root key CRN from either the Key Protect or Hyper Protect Crypto Service."
   }
-}
-
-variable "existing_kms_instance_guid" {
-  description = "The GUID of the Hyper Protect Crypto Services or Key Protect instance in which the key specified in var.kms_key_crn is coming from. Required only if var.kms_encryption_enabled is set to true, var.skip_kms_iam_authorization_policy is set to false, and you pass a value for var.kms_key_crn."
-  type        = string
-  default     = null
 }
 
 variable "create_timeout" {
