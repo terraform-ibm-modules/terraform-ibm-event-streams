@@ -126,11 +126,6 @@ func TestEnterpriseSolutionInSchematics(t *testing.T) {
 }
 
 func TestFSCloudInSchematics(t *testing.T) {
-	// TODO: When running fscloud and enterprise test in parallel, we get the following error:
-	// You have an active provision that is less than 30 minutes old. Please wait until either 30 minutes have passed since your previous provision, or until the previous provision has completed.
-	//
-	// We need to run in parallel, otherwise takes too long. For now we will skip fscloud test. We asked for exemption for that error. (waiting)
-	t.Skip()
 	t.Parallel()
 
 	options := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
