@@ -52,6 +52,10 @@ variable "throughput" {
     ])
     error_message = "Supported throughput values are: 150, 300, 450."
   }
+  validation {
+    condition     = !((var.plan == "lite" || var.plan == "standard") && var.throughput != 150)
+    error_message = "Throughput value cannot be changed in lite and standard plan. Default value is 150."
+  }
 }
 
 variable "storage_size" {
@@ -69,6 +73,10 @@ variable "storage_size" {
     ])
     error_message = "Supported throughput values are: 2048, 4096, 6144, 8192, 10240, 12288."
   }
+  validation {
+    condition     = !((var.plan == "lite" || var.plan == "standard") && var.storage_size != 2048)
+    error_message = "Storage size value cannot be changed in lite and standard plan. Default value is 2048."
+  }
 }
 
 variable "service_endpoints" {
@@ -78,6 +86,10 @@ variable "service_endpoints" {
   validation {
     condition     = contains(["public", "public-and-private", "private"], var.service_endpoints)
     error_message = "The specified service endpoint is not valid. Supported options are public, public-and-private, or private."
+  }
+  validation {
+    condition     = !((var.plan == "lite" || var.plan == "standard") && var.service_endpoints != "public")
+    error_message = "Service endpoint cannot be changed in lite and standard plan. Default is public."
   }
 }
 
@@ -119,6 +131,10 @@ variable "schema_global_rule" {
     condition     = var.schema_global_rule == null || contains(["NONE", "FULL", "FULL_TRANSITIVE", "FORWARD", "FORWARD_TRANSITIVE", "BACKWARD", "BACKWARD_TRANSITIVE"], coalesce(var.schema_global_rule, "NONE"))
     error_message = "The schema_global_rule must be null or one of 'NONE', 'FULL', 'FULL_TRANSITIVE', 'FORWARD', 'FORWARD_TRANSITIVE', 'BACKWARD', 'BACKWARD_TRANSITIVE'."
   }
+  validation {
+    condition     = !(var.plan != "enterprise-3nodes-2tb" && var.schema_global_rule != null)
+    error_message = "Schema global rule is only supported for enterprise plan."
+  }
 }
 
 variable "topics" {
@@ -137,6 +153,18 @@ variable "kms_encryption_enabled" {
   type        = bool
   description = "Set this to true to control the encryption keys used to encrypt the data that you store in IBM Cloud® Databases. If set to false, the data is encrypted by using randomly generated keys. For more info on Key Protect integration, see https://cloud.ibm.com/docs/cloud-databases?topic=cloud-databases-key-protect. For more info on HPCS integration, see https://cloud.ibm.com/docs/cloud-databases?topic=cloud-databases-hpcs"
   default     = false
+  validation {
+    condition     = !(var.kms_encryption_enabled && var.kms_key_crn == null)
+    error_message = "When setting kms_encryption_enabled to true, a value must be passed for kms_key_crn input variables."
+  }
+  validation {
+    condition     = !(!var.kms_encryption_enabled && var.kms_key_crn != null)
+    error_message = "When passing values for kms_key_crn, you must set kms_encryption_enabled to true. Otherwise unset them to use default encryption."
+  }
+  validation {
+    condition     = !(var.kms_encryption_enabled && var.skip_kms_iam_authorization_policy == false && var.kms_key_crn == null)
+    error_message = "When var.skip_kms_iam_authorization_policy is set to false, and var.kms_encryption_enabled to true, a value must be passed for var.kms_key_crn in order to create the auth policy."
+  }
 }
 
 variable "kms_key_crn" {
@@ -150,6 +178,10 @@ variable "kms_key_crn" {
       can(regex(".*hs-crypto.*", var.kms_key_crn)),
     ])
     error_message = "Must be the root key CRN from either the Key Protect or Hyper Protect Crypto Service."
+  }
+  validation {
+    condition     = !(var.plan != "enterprise-3nodes-2tb" && var.kms_key_crn != null)
+    error_message = "KMS encryption is only supported for enterprise plan."
   }
 }
 
@@ -205,11 +237,15 @@ variable "service_credential_names" {
 variable "metrics" {
   type        = list(string)
   description = "Enhanced metrics to activate, as list of strings. Only allowed for enterprise plans. Allowed values: 'topic', 'partition', 'consumers'."
+  default     = []
   validation {
     condition     = alltrue([for name in var.metrics : contains(["topic", "partition", "consumers"], name)])
     error_message = "The specified metrics are not valid. The following values are valid for metrics: 'topic', 'partition', 'consumers'."
   }
-  default = []
+  validation {
+    condition     = !(var.plan != "enterprise-3nodes-2tb" && length(var.metrics) > 0)
+    error_message = "Metrics are only supported for enterprise plan."
+  }
 }
 
 variable "quotas" {
@@ -224,12 +260,24 @@ variable "quotas" {
     condition     = alltrue([for v in var.quotas : v.entity != "" && (v.producer_byte_rate >= 0 || v.consumer_byte_rate >= 0)])
     error_message = "The quota entity must be defined, and at least one of producer_byte_rate or consumer_byte_rate must be set to a non-negative value"
   }
+  validation {
+    condition     = !(var.plan != "enterprise-3nodes-2tb" && length(var.quotas) > 0)
+    error_message = "Quotas are only supported for enterprise plan."
+  }
 }
 
 variable "mirroring_topic_patterns" {
   type        = list(string)
   description = "The list of the topics to set in instance. Required only if creating mirroring instance."
   default     = null
+  validation {
+    condition     = !(var.mirroring == null && var.mirroring_topic_patterns != null)
+    error_message = "When passing values for mirroring_topic_patterns, values must also be passed for mirroring."
+  }
+  validation {
+    condition     = !(var.mirroring != null && var.mirroring_topic_patterns == null)
+    error_message = "When passing values for mirroring, values must also be passed for mirroring_topic_patterns."
+  }
 }
 
 variable "mirroring" {

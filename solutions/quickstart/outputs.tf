@@ -47,3 +47,13 @@ output "service_credentials_object" {
   value       = module.event_streams.service_credentials_object
   sensitive   = true
 }
+
+output "service_credential_secrets" {
+  description = "Service credential secrets"
+  value       = length(local.service_credential_secrets) > 0 ? module.secrets_manager_service_credentials[0].secrets : null
+}
+
+output "service_credential_secret_groups" {
+  description = "Service credential secret groups"
+  value       = length(local.service_credential_secrets) > 0 ? module.secrets_manager_service_credentials[0].secret_groups : null
+}
