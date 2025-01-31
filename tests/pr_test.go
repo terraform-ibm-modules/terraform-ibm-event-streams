@@ -2,6 +2,7 @@
 package test
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"testing"
@@ -72,12 +73,30 @@ func TestRunQuickstartSolution(t *testing.T) {
 		ResourceGroup: resourceGroup,
 	})
 
+	serviceCredentialSecrets := []map[string]interface{}{
+		{
+			"secret_group_name": fmt.Sprintf("%s-secret-group", options.Prefix),
+			"service_credentials": []map[string]string{
+				{
+					"secret_name": fmt.Sprintf("%s-cred-reader", options.Prefix),
+					"service_credentials_source_service_role_crn": "crn:v1:bluemix:public:iam::::role:Reader",
+				},
+				{
+					"secret_name": fmt.Sprintf("%s-cred-writer", options.Prefix),
+					"service_credentials_source_service_role_crn": "crn:v1:bluemix:public:iam::::role:Writer",
+				},
+			},
+		},
+	}
+
 	options.TerraformVars = map[string]interface{}{
-		"ibmcloud_api_key":            options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"],
-		"resource_group_name":         options.ResourceGroup,
-		"use_existing_resource_group": true,
-		"prefix":                      options.Prefix,
-		"provider_visibility":         "public",
+		"ibmcloud_api_key":                      options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"],
+		"resource_group_name":                   options.ResourceGroup,
+		"use_existing_resource_group":           true,
+		"prefix":                                options.Prefix,
+		"provider_visibility":                   "public",
+		"service_credential_secrets":            serviceCredentialSecrets,
+		"existing_secrets_manager_instance_crn": permanentResources["secretsManagerCRN"],
 	}
 
 	output, err := options.RunTestConsistency()
@@ -110,6 +129,22 @@ func TestEnterpriseSolutionInSchematics(t *testing.T) {
 		WaitJobCompleteMinutes: 180,
 	})
 
+	serviceCredentialSecrets := []map[string]interface{}{
+		{
+			"secret_group_name": fmt.Sprintf("%s-secret-group", options.Prefix),
+			"service_credentials": []map[string]string{
+				{
+					"secret_name": fmt.Sprintf("%s-cred-reader", options.Prefix),
+					"service_credentials_source_service_role_crn": "crn:v1:bluemix:public:iam::::role:Reader",
+				},
+				{
+					"secret_name": fmt.Sprintf("%s-cred-writer", options.Prefix),
+					"service_credentials_source_service_role_crn": "crn:v1:bluemix:public:iam::::role:Writer",
+				},
+			},
+		},
+	}
+
 	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
 		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
 		{Name: "prefix", Value: options.Prefix, DataType: "string"},
@@ -119,8 +154,9 @@ func TestEnterpriseSolutionInSchematics(t *testing.T) {
 		{Name: "existing_kms_instance_crn", Value: permanentResources["hpcs_south_crn"], DataType: "string"},
 		{Name: "access_tags", Value: permanentResources["accessTags"], DataType: "list(string)"},
 		{Name: "resource_tags", Value: options.Tags, DataType: "list(string)"},
+		{Name: "existing_secrets_manager_instance_crn", Value: permanentResources["secretsManagerCRN"], DataType: "string"},
+		{Name: "service_credential_secrets", Value: serviceCredentialSecrets, DataType: "list(object)"},
 	}
-
 	err := options.RunSchematicTest()
 	assert.Nil(t, err, "This should not have errored")
 }
