@@ -12,7 +12,7 @@ variable "region" {
 
 variable "prefix" {
   type        = string
-  description = "Optional. The prefix to append to all resources that this solution creates. Prefix is ignored if it is `null` or empty string (\"\")."
+  description = "The prefix to add to all resources that this solution creates. To not use any prefix value, you can set this value to `null` or an empty string."
   default     = "enterprise"
 }
 
