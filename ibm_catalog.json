@@ -149,6 +149,18 @@
             },
             {
               "key": "service_credential_names"
+            },
+            {
+              "key": "existing_secrets_manager_endpoint_type"
+            },
+            {
+              "key": "existing_secrets_manager_instance_crn"
+            },
+            {
+              "key": "service_credential_secrets"
+            },
+            {
+              "key": "skip_event_streams_secrets_manager_auth_policy"
             }
           ],
           "iam_permissions": [
@@ -334,6 +346,18 @@
             },
             {
               "key": "existing_kms_key_crn"
+            },
+            {
+              "key": "existing_secrets_manager_endpoint_type"
+            },
+            {
+              "key": "existing_secrets_manager_instance_crn"
+            },
+            {
+              "key": "service_credential_secrets"
+            },
+            {
+              "key": "skip_event_streams_secrets_manager_auth_policy"
             }
           ],
           "iam_permissions": [
