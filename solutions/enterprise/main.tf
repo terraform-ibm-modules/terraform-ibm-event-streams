@@ -4,7 +4,7 @@
 module "resource_group" {
   source                       = "terraform-ibm-modules/resource-group/ibm"
   version                      = "1.1.6"
-  resource_group_name          = var.use_existing_resource_group == false ? ((var.prefix != null && var.prefix != "") ? "${var.prefix}-${var.resource_group_name}" : var.resource_group_name) : null
+  resource_group_name          = var.use_existing_resource_group == false ? try("${local.prefix}-${var.resource_group_name}", var.resource_group_name) : null
   existing_resource_group_name = var.use_existing_resource_group == true ? var.resource_group_name : null
 }
 
@@ -13,10 +13,10 @@ module "resource_group" {
 #######################################################################################################################
 
 locals {
+  prefix                      = var.prefix != null ? (var.prefix != "" ? var.prefix : null) : null
   create_new_kms_key          = var.existing_kms_key_crn == null ? 1 : 0 # no need to create any KMS resources if passing an existing key
-  event_streams_key_name      = var.prefix != null ? "${var.prefix}-${var.event_streams_key_name}" : var.event_streams_key_name
-  event_streams_key_ring_name = var.prefix != null ? "${var.prefix}-${var.event_streams_key_ring_name}" : var.event_streams_key_ring_name
-
+  event_streams_key_name      = try("${local.prefix}-${var.event_streams_key_name}", var.event_streams_key_name)
+  event_streams_key_ring_name = try("${local.prefix}-${var.event_streams_key_ring_name}", var.event_streams_key_ring_name)
   # tflint-ignore: terraform_unused_declarations
   validate_kms = var.existing_kms_instance_crn == null && var.existing_kms_key_crn == null ? tobool("Both 'existing_kms_instance_crn' and 'existing_kms_key_crn' input variables can not be null. Set 'existing_kms_instance_crn' to create a new KMS key or 'existing_kms_key_crn' to use an existing KMS key.") : true
 }
@@ -145,7 +145,7 @@ resource "time_sleep" "wait_for_authorization_policy" {
 module "event_streams" {
   source                               = "../../modules/fscloud"
   resource_group_id                    = module.resource_group.resource_group_id
-  es_name                              = (var.prefix != null && var.prefix != "") ? "${var.prefix}-${var.event_streams_name}" : var.event_streams_name
+  es_name                              = try("${local.prefix}-${var.event_streams_name}", var.event_streams_name)
   kms_key_crn                          = local.kms_key_crn
   schemas                              = var.schemas
   region                               = var.region
