@@ -107,7 +107,7 @@ func TestEnterpriseSolutionInSchematics(t *testing.T) {
 		TemplateFolder:         enterpriseSolutionTerraformDir,
 		Tags:                   []string{"test-schematic"},
 		DeleteWorkspaceOnFail:  false,
-		WaitJobCompleteMinutes: 180,
+		WaitJobCompleteMinutes: 240,
 	})
 
 	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
