@@ -34,7 +34,7 @@ If you want to add service credentials to secret manager and to allow secret man
 
 ## Service credential secrets <a name="service-credential-secrets"></a>
 
-When you add an IBM Event Notification deployable architecture from the IBM Cloud catalog to IBM Cloud Project, you can configure service credentials. In edit mode for the projects configuration, from the configure panel click the optional tab.
+When you add an IBM Event Streams deployable architecture from the IBM Cloud catalog to IBM Cloud Project, you can configure service credentials. In edit mode for the projects configuration, from the configure panel click the optional tab.
 
 To enter a custom value, use the edit action to open the "Edit Array" panel. Add the service credential secrets configurations to the array here.
 

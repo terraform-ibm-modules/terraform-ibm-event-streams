@@ -317,7 +317,7 @@ variable "service_credential_secrets" {
   }))
   default     = []
   nullable    = false
-  description = "Service credential secrets configuration for Event Notification. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/enterprise/DA-types.md#service-credential-secrets)."
+  description = "Service credential secrets configuration for Event Streams. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/enterprise/DA-types.md#service-credential-secrets)."
   validation {
     # Service roles CRNs can be found at https://cloud.ibm.com/iam/roles, select Event Streams and select the role
     condition = alltrue([
@@ -338,5 +338,5 @@ variable "skip_event_streams_secrets_manager_auth_policy" {
   type        = bool
   default     = false
   nullable    = false
-  description = "Whether an IAM authorization policy is created for Secrets Manager instance to create a service credential secrets for Event Notification.If set to false, the Secrets Manager instance passed by the user is granted the Key Manager access to the Event Streams instance created by the Deployable Architecture. Set to `true` to use an existing policy. The value of this is ignored if any value for 'existing_secrets_manager_instance_crn' is not passed."
+  description = "Whether an IAM authorization policy is created for Secrets Manager instance to create a service credential secrets for Event Streams.If set to false, the Secrets Manager instance passed by the user is granted the Key Manager access to the Event Streams instance created by the Deployable Architecture. Set to `true` to use an existing policy. The value of this is ignored if any value for 'existing_secrets_manager_instance_crn' is not passed."
 }
