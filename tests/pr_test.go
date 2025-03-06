@@ -93,7 +93,7 @@ func setupEnterpriseOptions(t *testing.T, prefix string) *testschematic.TestSche
 		TemplateFolder:         enterpriseSolutionTerraformDir,
 		Tags:                   []string{"test-schematic"},
 		DeleteWorkspaceOnFail:  false,
-		WaitJobCompleteMinutes: 180,
+		WaitJobCompleteMinutes: 360,
 	})
 
 	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
@@ -105,6 +105,8 @@ func setupEnterpriseOptions(t *testing.T, prefix string) *testschematic.TestSche
 		{Name: "existing_kms_instance_crn", Value: permanentResources["hpcs_south_crn"], DataType: "string"},
 		{Name: "access_tags", Value: permanentResources["accessTags"], DataType: "list(string)"},
 		{Name: "resource_tags", Value: options.Tags, DataType: "list(string)"},
+		// Update the create timeout as it can take longer than the default (3 hours) when running multiple tests in parallel
+		{Name: "create_timeout", Value: "5h", DataType: "string"},
 	}
 	return options
 }
