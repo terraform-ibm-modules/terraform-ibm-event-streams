@@ -161,4 +161,7 @@ module "event_streams" {
   schema_global_rule                   = var.schema_global_rule
   skip_kms_iam_authorization_policy    = var.skip_event_streams_kms_auth_policy
   skip_es_s2s_iam_authorization_policy = var.skip_event_streams_s2s_iam_auth_policy
+  create_timeout                       = var.create_timeout
+  update_timeout                       = var.update_timeout
+  delete_timeout                       = var.delete_timeout
 }

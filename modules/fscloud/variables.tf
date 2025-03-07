@@ -162,3 +162,21 @@ variable "mirroring" {
   })
   default = null
 }
+
+variable "create_timeout" {
+  type        = string
+  description = "The timeout value for creating an Event Streams instance. Specify `3h` for an Enterprise plan instance. Add 1 h for each level of non-default throughput. Add 30 min for each level of non-default storage size."
+  default     = "3h"
+}
+
+variable "update_timeout" {
+  type        = string
+  description = "The timeout value for updating an Event Streams instance. Specify `1h` for an Enterprise plan instance. Add 1 h for each level of non-default throughput. A 30 min for each level of non-default storage size."
+  default     = "1h"
+}
+
+variable "delete_timeout" {
+  type        = string
+  description = "The timeout value for deleting an Event Streams instance."
+  default     = "15m"
+}

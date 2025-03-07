@@ -287,6 +287,15 @@
               "key": "access_tags"
             },
             {
+              "key": "create_timeout"
+            },
+            {
+              "key": "delete_timeout"
+            },
+            {
+              "key": "update_timeout"
+            },
+            {
               "key": "schemas"
             },
             {
