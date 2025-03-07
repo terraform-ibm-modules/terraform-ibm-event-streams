@@ -30,11 +30,13 @@ locals {
   validate_mirroring_topics = var.mirroring == null && var.mirroring_topic_patterns != null ? tobool("When passing values for var.mirroring_topic_patterns, values must also be passed for var.mirroring.") : true
   # tflint-ignore: terraform_unused_declarations
   validate_mirroring_config = var.mirroring != null && var.mirroring_topic_patterns == null ? tobool("When passing values for var.mirroring, values must also be passed for var.mirroring_topic_patterns.") : true
-  parsed_kms_key_crn        = var.kms_key_crn != null ? split(":", var.kms_key_crn) : []
-  kms_service               = length(local.parsed_kms_key_crn) > 0 ? local.parsed_kms_key_crn[4] : null
-  kms_scope                 = length(local.parsed_kms_key_crn) > 0 ? local.parsed_kms_key_crn[6] : null
-  kms_account_id            = length(local.parsed_kms_key_crn) > 0 ? split("/", local.kms_scope)[1] : null
-  kms_key_id                = length(local.parsed_kms_key_crn) > 0 ? local.parsed_kms_key_crn[9] : null
+  # tflint-ignore: terraform_unused_declarations
+  validate_iam_token_only = var.plan != "enterprise-3nodes-2tb" && var.iam_token_only ? tobool("iam_token_only is only supported for enterprise plan") : true
+  parsed_kms_key_crn      = var.kms_key_crn != null ? split(":", var.kms_key_crn) : []
+  kms_service             = length(local.parsed_kms_key_crn) > 0 ? local.parsed_kms_key_crn[4] : null
+  kms_scope               = length(local.parsed_kms_key_crn) > 0 ? local.parsed_kms_key_crn[6] : null
+  kms_account_id          = length(local.parsed_kms_key_crn) > 0 ? split("/", local.kms_scope)[1] : null
+  kms_key_id              = length(local.parsed_kms_key_crn) > 0 ? local.parsed_kms_key_crn[9] : null
 }
 
 # workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
@@ -63,6 +65,7 @@ resource "ibm_resource_instance" "es_instance" {
       service-endpoints = var.service_endpoints
       throughput        = tostring(var.throughput)
       storage_size      = tostring(var.storage_size)
+      iam_token_only    = var.iam_token_only
       metrics           = var.metrics
       kms_key_crn       = var.kms_key_crn
       mirroring         = var.mirroring
@@ -72,6 +75,7 @@ resource "ibm_resource_instance" "es_instance" {
       service-endpoints = var.service_endpoints
       throughput        = tostring(var.throughput)
       storage_size      = tostring(var.storage_size)
+      iam_token_only    = var.iam_token_only
     }
   )
 }
