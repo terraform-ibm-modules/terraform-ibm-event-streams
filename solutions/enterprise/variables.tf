@@ -253,6 +253,12 @@ variable "ibmcloud_kms_api_key" {
   default     = null
 }
 
+variable "iam_token_only" {
+  type        = bool
+  description = "If set to true, disables Kafka's SASL PLAIN authentication method, only allowing clients to authenticate with SASL OAUTHBEARER via IAM access token. For more information, see: https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-security. Only allowed for enterprise plans."
+  default     = false
+}
+
 variable "create_timeout" {
   type        = string
   description = "The timeout value for creating an Event Streams instance. Specify `3h` for an Enterprise plan instance. Add 1 h for each level of non-default throughput. Add 30 min for each level of non-default storage size."
