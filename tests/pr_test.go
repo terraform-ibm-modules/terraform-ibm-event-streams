@@ -2,6 +2,7 @@
 package test
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"testing"
@@ -61,11 +62,32 @@ func TestRunQuickstartSolution(t *testing.T) {
 	})
 
 	options.TerraformVars = map[string]interface{}{
-		"ibmcloud_api_key":            options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"],
-		"resource_group_name":         options.ResourceGroup,
-		"use_existing_resource_group": true,
-		"prefix":                      options.Prefix,
-		"provider_visibility":         "public",
+		"ibmcloud_api_key":                       options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"],
+		"resource_group_name":                    options.ResourceGroup,
+		"use_existing_resource_group":            true,
+		"prefix":                                 options.Prefix,
+		"provider_visibility":                    "public",
+		"existing_secrets_manager_instance_crn":  permanentResources["secretsManagerCRN"],
+		"existing_secrets_manager_endpoint_type": "public",
+		"service_credential_secrets": []map[string]interface{}{
+			{
+				"secret_group_name": fmt.Sprintf("%s-secret-group", options.Prefix),
+				"service_credentials": []map[string]string{
+					{
+						"secret_name": fmt.Sprintf("%s-cred-config-reader", options.Prefix),
+						"service_credentials_source_service_role_crn": "crn:v1:bluemix:public:iam::::role:ConfigReader",
+					},
+					{
+						"secret_name": fmt.Sprintf("%s-cred-reader", options.Prefix),
+						"service_credentials_source_service_role_crn": "crn:v1:bluemix:public:iam::::serviceRole:Reader",
+					},
+					{
+						"secret_name": fmt.Sprintf("%s-cred-key-manager", options.Prefix),
+						"service_credentials_source_service_role_crn": "crn:v1:bluemix:public:resource-controller::::role:KeyManager",
+					},
+				},
+			},
+		},
 	}
 
 	output, err := options.RunTestConsistency()
@@ -96,6 +118,26 @@ func setupEnterpriseOptions(t *testing.T, prefix string) *testschematic.TestSche
 		WaitJobCompleteMinutes: 360,
 	})
 
+	serviceCredentialSecrets := []map[string]interface{}{
+		{
+			"secret_group_name": fmt.Sprintf("%s-secret-group", options.Prefix),
+			"service_credentials": []map[string]string{
+				{
+					"secret_name": fmt.Sprintf("%s-cred-config-reader", options.Prefix),
+					"service_credentials_source_service_role_crn": "crn:v1:bluemix:public:iam::::role:ConfigReader",
+				},
+				{
+					"secret_name": fmt.Sprintf("%s-cred-reader", options.Prefix),
+					"service_credentials_source_service_role_crn": "crn:v1:bluemix:public:iam::::serviceRole:Reader",
+				},
+				{
+					"secret_name": fmt.Sprintf("%s-cred-key-manager", options.Prefix),
+					"service_credentials_source_service_role_crn": "crn:v1:bluemix:public:resource-controller::::role:KeyManager",
+				},
+			},
+		},
+	}
+
 	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
 		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
 		{Name: "prefix", Value: options.Prefix, DataType: "string"},
@@ -107,6 +149,8 @@ func setupEnterpriseOptions(t *testing.T, prefix string) *testschematic.TestSche
 		{Name: "resource_tags", Value: options.Tags, DataType: "list(string)"},
 		// Update the create timeout as it can take longer than the default (3 hours) when running multiple tests in parallel
 		{Name: "create_timeout", Value: "5h", DataType: "string"},
+		{Name: "existing_secrets_manager_instance_crn", Value: permanentResources["secretsManagerCRN"], DataType: "string"},
+		{Name: "service_credential_secrets", Value: serviceCredentialSecrets, DataType: "list(object)"},
 	}
 	return options
 }
