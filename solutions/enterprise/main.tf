@@ -159,6 +159,7 @@ module "event_streams" {
   mirroring                            = var.mirroring
   cbr_rules                            = var.cbr_rules
   schema_global_rule                   = var.schema_global_rule
+  iam_token_only                       = var.iam_token_only
   skip_kms_iam_authorization_policy    = var.skip_event_streams_kms_auth_policy
   skip_es_s2s_iam_authorization_policy = var.skip_event_streams_s2s_iam_auth_policy
   create_timeout                       = var.create_timeout

@@ -20,6 +20,7 @@ module "event_streams" {
   kms_encryption_enabled               = true
   mirroring_topic_patterns             = var.mirroring_topic_patterns
   mirroring                            = var.mirroring
+  iam_token_only                       = var.iam_token_only
   create_timeout                       = var.create_timeout
   update_timeout                       = var.update_timeout
   delete_timeout                       = var.delete_timeout
