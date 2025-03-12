@@ -359,10 +359,10 @@
               "key": "existing_kms_key_crn"
             },
             {
-              "key": "existing_secrets_manager_endpoint_type"
+              "key": "iam_token_only"
             },
             {
-              "key": "iam_token_only"
+              "key": "existing_secrets_manager_endpoint_type"
             },
             {
               "key": "existing_secrets_manager_instance_crn"
