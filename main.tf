@@ -3,40 +3,11 @@
 #######################################################################################
 
 locals {
-  # Validation (approach based on https://github.com/hashicorp/terraform/issues/25609#issuecomment-1057614400)
-
-  # tflint-ignore: terraform_unused_declarations
-  validate_kms_plan = var.plan != "enterprise-3nodes-2tb" && var.kms_key_crn != null ? tobool("KMS encryption is only supported for enterprise plan.") : true
-  # tflint-ignore: terraform_unused_declarations
-  validate_metrics = var.plan != "enterprise-3nodes-2tb" && length(var.metrics) > 0 ? tobool("Metrics are only supported for enterprise plan.") : true
-  # tflint-ignore: terraform_unused_declarations
-  validate_quotas = var.plan != "enterprise-3nodes-2tb" && length(var.quotas) > 0 ? tobool("Quotas are only supported for enterprise plan.") : true
-  # tflint-ignore: terraform_unused_declarations
-  validate_schema_global_rule = var.plan != "enterprise-3nodes-2tb" && var.schema_global_rule != null ? tobool("Schema global rule is only supported for enterprise plan.") : true
-
-  # tflint-ignore: terraform_unused_declarations
-  validate_kms_values = !var.kms_encryption_enabled && var.kms_key_crn != null ? tobool("When passing values for var.kms_key_crn, you must set var.kms_encryption_enabled to true. Otherwise unset them to use default encryption.") : true
-  # tflint-ignore: terraform_unused_declarations
-  validate_kms_vars = var.kms_encryption_enabled && var.kms_key_crn == null ? tobool("When setting var.kms_encryption_enabled to true, a value must be passed for var.kms_key_crn and/or var.backup_encryption_key_crn.") : true
-  # tflint-ignore: terraform_unused_declarations
-  validate_auth_policy = var.kms_encryption_enabled && var.skip_kms_iam_authorization_policy == false && var.kms_key_crn == null ? tobool("When var.skip_kms_iam_authorization_policy is set to false, and var.kms_encryption_enabled to true, a value must be passed for var.kms_key_crn in order to create the auth policy.") : true
-  # tflint-ignore: terraform_unused_declarations
-  validate_throughput_lite_standard = ((var.plan == "lite" || var.plan == "standard") && var.throughput != 150) ? tobool("Throughput value cannot be changed in lite and standard plan. Default value is 150.") : true
-  # tflint-ignore: terraform_unused_declarations
-  validate_storage_size_lite_standard = ((var.plan == "lite" || var.plan == "standard") && var.storage_size != 2048) ? tobool("Storage size value cannot be changed in lite and standard plan. Default value is 2048.") : true
-  # tflint-ignore: terraform_unused_declarations
-  validate_service_end_points_lite_standard = ((var.plan == "lite" || var.plan == "standard") && var.service_endpoints != "public") ? tobool("Service endpoint cannot be changed in lite and standard plan. Default is public.") : true
-  # tflint-ignore: terraform_unused_declarations
-  validate_mirroring_topics = var.mirroring == null && var.mirroring_topic_patterns != null ? tobool("When passing values for var.mirroring_topic_patterns, values must also be passed for var.mirroring.") : true
-  # tflint-ignore: terraform_unused_declarations
-  validate_mirroring_config = var.mirroring != null && var.mirroring_topic_patterns == null ? tobool("When passing values for var.mirroring, values must also be passed for var.mirroring_topic_patterns.") : true
-  # tflint-ignore: terraform_unused_declarations
-  validate_iam_token_only = var.plan != "enterprise-3nodes-2tb" && var.iam_token_only ? tobool("iam_token_only is only supported for enterprise plan") : true
-  parsed_kms_key_crn      = var.kms_key_crn != null ? split(":", var.kms_key_crn) : []
-  kms_service             = length(local.parsed_kms_key_crn) > 0 ? local.parsed_kms_key_crn[4] : null
-  kms_scope               = length(local.parsed_kms_key_crn) > 0 ? local.parsed_kms_key_crn[6] : null
-  kms_account_id          = length(local.parsed_kms_key_crn) > 0 ? split("/", local.kms_scope)[1] : null
-  kms_key_id              = length(local.parsed_kms_key_crn) > 0 ? local.parsed_kms_key_crn[9] : null
+  parsed_kms_key_crn = var.kms_key_crn != null ? split(":", var.kms_key_crn) : []
+  kms_service        = length(local.parsed_kms_key_crn) > 0 ? local.parsed_kms_key_crn[4] : null
+  kms_scope          = length(local.parsed_kms_key_crn) > 0 ? local.parsed_kms_key_crn[6] : null
+  kms_account_id     = length(local.parsed_kms_key_crn) > 0 ? split("/", local.kms_scope)[1] : null
+  kms_key_id         = length(local.parsed_kms_key_crn) > 0 ? local.parsed_kms_key_crn[9] : null
 }
 
 # workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
