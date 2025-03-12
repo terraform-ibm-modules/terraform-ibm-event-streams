@@ -261,3 +261,9 @@ variable "mirroring" {
   })
   default = null
 }
+
+variable "iam_token_only" {
+  type        = bool
+  description = "If set to true, disables Kafka's SASL PLAIN authentication method, only allowing clients to authenticate with SASL OAUTHBEARER via IAM access token. For more information, see: https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-security. Only allowed for enterprise plans."
+  default     = false
+}

@@ -345,6 +345,9 @@
             },
             {
               "key": "existing_kms_key_crn"
+            },
+            {
+              "key": "iam_token_only"
             }
           ],
           "iam_permissions": [
