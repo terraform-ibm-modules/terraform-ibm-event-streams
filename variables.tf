@@ -314,4 +314,8 @@ variable "iam_token_only" {
   type        = bool
   description = "If set to true, disables Kafka's SASL PLAIN authentication method, only allowing clients to authenticate with SASL OAUTHBEARER via IAM access token. For more information, see: https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-security. Only allowed for enterprise plans."
   default     = false
+  validation {
+    condition     = !(var.iam_token_only == true && var.plan != "enterprise-3nodes-2tb")
+    error_message = "iam_token_only is only supported for enterprise plan."
+  }
 }
