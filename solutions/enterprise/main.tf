@@ -17,8 +17,6 @@ locals {
   create_new_kms_key          = var.existing_kms_key_crn == null ? 1 : 0 # no need to create any KMS resources if passing an existing key
   event_streams_key_name      = try("${local.prefix}-${var.event_streams_key_name}", var.event_streams_key_name)
   event_streams_key_ring_name = try("${local.prefix}-${var.event_streams_key_ring_name}", var.event_streams_key_ring_name)
-  # tflint-ignore: terraform_unused_declarations
-  validate_kms = var.existing_kms_instance_crn == null && var.existing_kms_key_crn == null ? tobool("Both 'existing_kms_instance_crn' and 'existing_kms_key_crn' input variables can not be null. Set 'existing_kms_instance_crn' to create a new KMS key or 'existing_kms_key_crn' to use an existing KMS key.") : true
 }
 
 module "kms" {
