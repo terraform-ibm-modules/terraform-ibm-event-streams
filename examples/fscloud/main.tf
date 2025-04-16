@@ -76,6 +76,7 @@ module "event_streams" {
   schemas                  = var.schemas
   tags                     = var.resource_tags
   topics                   = var.topics
+  create_timeout           = "6h"
   metrics                  = ["topic", "partition", "consumers"]
   mirroring_topic_patterns = ["topic-1", "topic-2"]
   mirroring = {
