@@ -4,5 +4,5 @@
   "prefix": $PREFIX,
   "resource_group_name": $PREFIX,
   "existing_kms_instance_crn": $HPCS_US_SOUTH_CRN,
-  "create_timeout": "5h"
+  "create_timeout": "6h"
 }
