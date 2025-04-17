@@ -53,7 +53,7 @@ func TestFSCloudInSchematics(t *testing.T) {
 		TemplateFolder:         fsCloudTerraformDir,
 		Tags:                   []string{"test-schematic"},
 		DeleteWorkspaceOnFail:  false,
-		WaitJobCompleteMinutes: 180,
+		WaitJobCompleteMinutes: 420,
 	})
 
 	options.TerraformVars = []testschematic.TestSchematicTerraformVar{

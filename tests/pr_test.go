@@ -148,7 +148,7 @@ func setupEnterpriseOptions(t *testing.T, prefix string) *testschematic.TestSche
 		{Name: "access_tags", Value: permanentResources["accessTags"], DataType: "list(string)"},
 		{Name: "resource_tags", Value: options.Tags, DataType: "list(string)"},
 		// Update the create timeout as it can take longer than the default (3 hours) when running multiple tests in parallel
-		{Name: "create_timeout", Value: "5h", DataType: "string"},
+		{Name: "create_timeout", Value: "6h", DataType: "string"},
 		{Name: "existing_secrets_manager_instance_crn", Value: permanentResources["secretsManagerCRN"], DataType: "string"},
 		{Name: "service_credential_secrets", Value: serviceCredentialSecrets, DataType: "list(object)"},
 	}
