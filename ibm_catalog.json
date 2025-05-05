@@ -37,10 +37,10 @@
       ],
       "flavors": [
         {
-          "label": "quickstart",
-          "name": "quickstart",
+          "label": "Fully configurable",
+          "name": "fully-configurable",
           "install_type": "fullstack",
-          "working_directory": "solutions/quickstart",
+          "working_directory": "solutions/fully-configurable",
           "configuration": [
             {
               "key": "ibmcloud_api_key"
@@ -67,175 +67,7 @@
               "required": true
             },
             {
-              "key": "use_existing_resource_group"
-            },
-            {
-              "key": "resource_group_name"
-            },
-            {
-              "key": "es_name"
-            },
-            {
-              "key": "region",
-              "required": true,
-              "options": [
-                {
-                  "displayname": "Dallas (us-south)",
-                  "value": "us-south"
-                },
-                {
-                  "displayname": "Frankfurt (eu-de)",
-                  "value": "eu-de"
-                },
-                {
-                  "displayname": "London (eu-gb)",
-                  "value": "eu-gb"
-                },
-                {
-                  "displayname": "Madrid (eu-es)",
-                  "value": "eu-es"
-                },
-                {
-                  "displayname": "Osaka (jp-osa)",
-                  "value": "jp-osa"
-                },
-                {
-                  "displayname": "Sydney (au-syd)",
-                  "value": "au-syd"
-                },
-                {
-                  "displayname": "Tokyo (jp-tok)",
-                  "value": "jp-tok"
-                },
-                {
-                  "displayname": "Osaka (jp-osa)",
-                  "value": "jp-osa"
-                },
-                {
-                  "displayname": "Sao Paulo (br-sao)",
-                  "value": "br-sao"
-                },
-                {
-                  "displayname": "Toronto (ca-tor)",
-                  "value": "ca-tor"
-                },
-                {
-                  "displayname": "Washington (us-east)",
-                  "value": "us-east"
-                }
-              ]
-            },
-            {
-              "key": "resource_tags"
-            },
-            {
-              "key": "access_tags"
-            },
-            {
-              "key": "plan",
-              "options": [
-                {
-                  "displayname": "lite",
-                  "value": "lite"
-                },
-                {
-                  "displayname": "standard",
-                  "value": "standard"
-                }
-              ]
-            },
-            {
-              "key": "topics"
-            },
-            {
-              "key": "service_credential_names"
-            },
-            {
-              "key": "existing_secrets_manager_endpoint_type"
-            },
-            {
-              "key": "existing_secrets_manager_instance_crn"
-            },
-            {
-              "key": "service_credential_secrets"
-            },
-            {
-              "key": "skip_event_streams_secrets_manager_auth_policy"
-            }
-          ],
-          "iam_permissions": [
-            {
-              "role_crns": [
-                "crn:v1:bluemix:public:iam::::serviceRole:Manager"
-              ],
-              "service_name": "messagehub"
-            },
-            {
-              "role_crns": [
-                "crn:v1:bluemix:public:iam::::role:Editor"
-              ],
-              "service_name": "messagehub"
-            }
-          ],
-          "architecture": {
-            "descriptions": "This architecture creates an instance of IBM Event Streams for IBM Cloud in lite and standard plan. It also supports the creation of topics in the Event Streams instance.",
-            "features": [
-              {
-                "title": "Creates an Event Streams instance",
-                "description": "Creates and configures the IBM Cloud Event Streams instance."
-              },
-              {
-                "title": "Creates topics in the Event Streams instance",
-                "description": "Creates topics in IBM Cloud Event Streams instance."
-              }
-            ],
-            "diagrams": [
-              {
-                "diagram": {
-                  "caption": "IBM Event Streams for IBM Cloud.",
-                  "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-streams/main/reference-architecture/da-quickstart.svg",
-                  "type": "image/svg+xml"
-                },
-                "description": "This architecture creates an instance of IBM Event Streams for IBM Cloud."
-              }
-            ]
-          }
-        },
-        {
-          "label": "enterprise",
-          "name": "enterprise",
-          "install_type": "fullstack",
-          "working_directory": "solutions/enterprise",
-          "configuration": [
-            {
-              "key": "ibmcloud_api_key"
-            },
-            {
-              "key": "provider_visibility",
-              "options": [
-                {
-                  "displayname": "private",
-                  "value": "private"
-                },
-                {
-                  "displayname": "public",
-                  "value": "public"
-                },
-                {
-                  "displayname": "public-and-private",
-                  "value": "public-and-private"
-                }
-              ]
-            },
-            {
-              "key": "prefix",
-              "required": true
-            },
-            {
-              "key": "use_existing_resource_group"
-            },
-            {
-              "key": "resource_group_name"
+              "key": "existing_resource_group_name"
             },
             {
               "key": "event_streams_name"
@@ -273,10 +105,6 @@
                   "value": "jp-tok"
                 },
                 {
-                  "displayname": "Osaka (jp-osa)",
-                  "value": "jp-osa"
-                },
-                {
                   "displayname": "Sao Paulo (br-sao)",
                   "value": "br-sao"
                 },
@@ -291,10 +119,10 @@
               ]
             },
             {
-              "key": "resource_tags"
+              "key": "event_stream_instance_resource_tags"
             },
             {
-              "key": "access_tags"
+              "key": "event_stream_instance_access_tags"
             },
             {
               "key": "create_timeout"
@@ -336,12 +164,6 @@
               "key": "mirroring"
             },
             {
-              "key": "event_streams_key_name"
-            },
-            {
-              "key": "event_streams_key_ring_name"
-            },
-            {
               "key": "existing_kms_instance_crn"
             },
             {
@@ -357,6 +179,15 @@
               "key": "existing_event_streams_kms_key_crn"
             },
             {
+              "key": "kms_encryption_enabled"
+            },
+            {
+              "key": "kms_key_name"
+            },
+            {
+              "key": "kms_key_ring_name"
+            },
+            {
               "key": "iam_token_only"
             },
             {
@@ -370,19 +201,22 @@
             },
             {
               "key": "skip_event_streams_secrets_manager_auth_policy"
+            },
+            {
+              "key": "event_streams_endpoint_type"
+            },
+            {
+              "key": "plan"
             }
           ],
+
           "iam_permissions": [
             {
-              "role_crns": [
-                "crn:v1:bluemix:public:iam::::serviceRole:Manager"
-              ],
+              "role_crns": ["crn:v1:bluemix:public:iam::::serviceRole:Manager"],
               "service_name": "messagehub"
             },
             {
-              "role_crns": [
-                "crn:v1:bluemix:public:iam::::role:Editor"
-              ],
+              "role_crns": ["crn:v1:bluemix:public:iam::::role:Editor"],
               "service_name": "messagehub"
             }
           ],
