@@ -354,7 +354,7 @@
               "key": "skip_event_streams_kms_auth_policy"
             },
             {
-              "key": "existing_kms_key_crn"
+              "key": "existing_event_streams_kms_key_crn"
             },
             {
               "key": "iam_token_only"
