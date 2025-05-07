@@ -270,6 +270,11 @@ variable "mirroring_topic_patterns" {
   type        = list(string)
   description = "The list of the topics to set in instance. Required only if creating mirroring instance."
   default     = null
+
+   validation {
+    condition     = !(var.mirroring_topic_patterns != null && var.plan != "enterprise-3nodes-2tb")
+    error_message = "mirroring is only supported for enterprise plan."
+  }
   validation {
     condition     = !(var.mirroring == null && var.mirroring_topic_patterns != null)
     error_message = "When passing values for mirroring_topic_patterns, values must also be passed for mirroring."
@@ -308,6 +313,10 @@ variable "mirroring" {
     }))
   })
   default = null
+   validation {
+    condition     = !(var.mirroring != null && var.plan != "enterprise-3nodes-2tb")
+    error_message = "mirroring is only supported for enterprise plan."
+  }
 }
 
 variable "iam_token_only" {

@@ -15,7 +15,7 @@ import (
 
 const completeExampleTerraformDir = "examples/complete"
 const quickstartSolutionTerraformDir = "solutions/quickstart"
-const enterpriseSolutionTerraformDir = "solutions/enterprise"
+const fullyConfigurableTerraformDir = "solutions/fully-configurable"
 const fsCloudTerraformDir = "examples/fscloud"
 
 // Use existing group for tests
@@ -102,17 +102,9 @@ func setupEnterpriseOptions(t *testing.T, prefix string) *testschematic.TestSche
 		BestRegionYAMLPath: regionSelectionPath,
 		TarIncludePatterns: []string{
 			"*.tf",
-			enterpriseSolutionTerraformDir + "/*.tf",
-			"modules/fscloud/*.tf",
+			fullyConfigurableTerraformDir + "/*.tf",
 		},
-		/*
-			Comment out the 'ResourceGroup' input to force this tests to create a unique resource group to ensure tests do
-			not clash. This is due to the fact that an auth policy may already exist in this resource group since we are
-			re-using a permanent HPCS instance and a permanent Event Streams instance. By using a new resource group, the auth policy will not already exist
-			since this module scopes auth policies by resource group.
-		*/
-		//ResourceGroup:      resourceGroup,
-		TemplateFolder:         enterpriseSolutionTerraformDir,
+		TemplateFolder:         fullyConfigurableTerraformDir,
 		Tags:                   []string{"test-schematic"},
 		DeleteWorkspaceOnFail:  false,
 		WaitJobCompleteMinutes: 360,
@@ -141,34 +133,38 @@ func setupEnterpriseOptions(t *testing.T, prefix string) *testschematic.TestSche
 	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
 		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
 		{Name: "prefix", Value: options.Prefix, DataType: "string"},
-		{Name: "resource_group_name", Value: options.Prefix, DataType: "string"},
-		{Name: "service_credential_names", Value: "{\"es_writer\": \"Writer\", \"es_reader\": \"Reader\"}", DataType: "map(string)"},
+		{Name: "region", Value: "us-south", DataType: "string"},
+		{Name: "existing_resource_group_name", Value: resourceGroup, DataType: "string"},
+		{Name: "plan", Value: "lite", DataType: "string"},
 		{Name: "provider_visibility", Value: "private", DataType: "string"},
+		{Name: "event_streams_endpoint_type", Value: "public", DataType: "string"},
+		{Name: "kms_encryption_enabled", Value: true, DataType: "bool"},
 		{Name: "existing_kms_instance_crn", Value: permanentResources["hpcs_south_crn"], DataType: "string"},
-		{Name: "access_tags", Value: permanentResources["accessTags"], DataType: "list(string)"},
-		{Name: "resource_tags", Value: options.Tags, DataType: "list(string)"},
+		{Name: "event_stream_instance_access_tags", Value: permanentResources["accessTags"], DataType: "list(string)"},
+		{Name: "event_stream_instance_resource_tags", Value: options.Tags, DataType: "list(string)"},
 		// Update the create timeout as it can take longer than the default (3 hours) when running multiple tests in parallel
 		{Name: "create_timeout", Value: "6h", DataType: "string"},
 		{Name: "existing_secrets_manager_instance_crn", Value: permanentResources["secretsManagerCRN"], DataType: "string"},
 		{Name: "service_credential_secrets", Value: serviceCredentialSecrets, DataType: "list(object)"},
+		{Name: "service_credential_names", Value: "{\"es_writer\": \"Writer\", \"es_reader\": \"Reader\"}", DataType: "map(string)"},
 	}
 	return options
 }
 
-// Test for the Enterprise DA
-func TestEnterpriseSolutionInSchematics(t *testing.T) {
+// Test for the Fully Configurable DA
+func TestRunFullyConfigurableSchematics(t *testing.T) {
 	t.Parallel()
 
-	options := setupEnterpriseOptions(t, "es-ent")
+	options := setupEnterpriseOptions(t, "es-fc")
 	err := options.RunSchematicTest()
 	assert.Nil(t, err, "This should not have errored")
 }
 
 // Upgrade test for the Enterprise DA
-func TestRunUpgradeEnterpriseDA(t *testing.T) {
+func TestRunFullyConfigurableUpgradeSchematics(t *testing.T) {
 	t.Parallel()
 
-	options := setupEnterpriseOptions(t, "ev-st-upg")
+	options := setupEnterpriseOptions(t, "es-fc-upg")
 	err := options.RunSchematicUpgradeTest()
 	if !options.UpgradeTestSkipped {
 		assert.Nil(t, err, "This should not have errored")
