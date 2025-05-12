@@ -11,7 +11,7 @@ variable "ibmcloud_api_key" {
 variable "provider_visibility" {
   description = "Set the visibility value for the IBM terraform provider. Supported values are `public`, `private`, `public-and-private`. [Learn more](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/guides/custom-service-endpoints)."
   type        = string
-  default     = "public"
+  default     = "private"
 
   validation {
     condition     = contains(["public", "private", "public-and-private"], var.provider_visibility)
@@ -34,16 +34,20 @@ variable "region" {
 
 variable "prefix" {
   type        = string
-  description = "The prefix to add to all resources created by this solution. To not use any prefix value, you can set this value to `null` or an empty string."
+ description = "The prefix to be added to all resources created by this solution. To skip using a prefix, set this value to null or an empty string. The prefix must begin with a lowercase letter and may contain only lowercase letters, digits, and hyphens '-'. It should not exceed 16 characters, must not end with a hyphen('-'), and can not contain consecutive hyphens ('--'). Example: prod-0205-es. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/enterprise/DA.prefix.md)."
 
   validation {
-    condition = (var.prefix == null ? true :
-      alltrue([
-        can(regex("^[a-z]{0,1}[-a-z0-9]{0,14}[a-z0-9]{0,1}$", var.prefix)),
-        length(regexall("^.*--.*", var.prefix)) == 0
-      ])
-    )
-    error_message = "Prefix must begin with a lowercase letter, contain only lowercase letters, numbers, and - characters. Prefixes must end with a lowercase letter or number and be 16 or fewer characters."
+  condition = (var.prefix == null || var.prefix == "" ? true :
+    alltrue([
+      can(regex("^[a-z][-a-z0-9]*[a-z0-9]$", var.prefix)),
+      length(regexall("--", var.prefix)) == 0
+    ])
+  )
+  error_message = "Prefix must begin with a lowercase letter and may contain only lowercase letters, digits, and hyphens '-'. It must not end with a hyphen('-'), and cannot contain consecutive hyphens ('--')."
+ }
+  validation {
+    condition = length(var.prefix) <= 16
+    error_message = "Prefix must not exceed 16 characters."
   }
 }
 
@@ -57,12 +61,6 @@ variable "event_streams_name" {
   default     = "event-streams"
 }
 
-variable "plan" {
-  type        = string
-  description = "The plan for the Event Streams instance. Possible values: `lite`, `standard`, `enterprise-3nodes-2tb`."
-  default     = "standard"
-}
-
 variable "event_stream_instance_resource_tags" {
   type        = list(string)
   description = "List of tags associated with the Event Steams instance"
@@ -73,16 +71,6 @@ variable "event_stream_instance_access_tags" {
   type        = list(string)
   description = "The list of access tags associated with the Event Steams instance."
   default     = []
-}
-
-variable "event_streams_endpoint_type" {
-  type        = string
-  description = "The type of endpoint (public or private) to connect to the Secrets Manager API. The Terraform provider uses this endpoint type to interact with the Secrets Manager API and configure Event Notifications."
-  default     = "private"
-  validation {
-    condition     = contains(["public", "public-and-private", "private"], var.event_streams_endpoint_type)
-    error_message = "The specified service endpoint is not valid. Supported options are public, public-and-private, or private."
-  }
 }
 
 variable "schemas" {
@@ -183,7 +171,7 @@ variable "delete_timeout" {
 variable "mirroring_topic_patterns" {
   type        = list(string)
   description = "The list of the topics to set in instance. Required only if creating mirroring instance."
-  default     = null
+  default     = ["topic-1", "topic-2"]
 }
 
 variable "mirroring" {
@@ -213,7 +201,31 @@ variable "mirroring" {
       })
     }))
   })
-  default = null
+  default = {
+    source_crn   = "crn:v1:bluemix:public:messagehub:us-south:a/abac0df06b644a9cabc6e44f55b3880e:3361b294-d812-4ead-9a54-cc41afb50b78::" // permanent crn
+    source_alias = "source-alias"
+    target_alias = "target-alias"
+    options = {
+      topic_name_transform = {
+        type = "rename"
+        rename = {
+          add_prefix    = "add_prefix"
+          add_suffix    = "add_suffix"
+          remove_prefix = "remove_prefix"
+          remove_suffix = "remove_suffix"
+        }
+      }
+      group_id_transform = {
+        type = "rename"
+        rename = {
+          add_prefix    = "add_prefix"
+          add_suffix    = "add_suffix"
+          remove_prefix = "remove_prefix"
+          remove_suffix = "remove_suffix"
+        }
+      }
+    }
+  }
 }
 
 variable "skip_event_streams_s2s_iam_auth_policy" {
@@ -244,27 +256,7 @@ variable "existing_event_streams_kms_key_crn" {
 # KMS properties required when creating an encryption key, rather than passing an existing key CRN.
 ########################################################################################################################
 
-variable "kms_encryption_enabled" {
-  type        = bool
-  description = "Set to true to enable Event Streams encryption using customer managed keys. When set to true, a value must be passed for either `existing_kms_instance_crn` or `existing_event_streams_kms_key_crn`."
-  default     = false
 
-
-  validation {
-    condition     = var.existing_event_streams_kms_key_crn != null ? var.kms_encryption_enabled : true
-    error_message = "If passing a value for 'existing_event_streams_kms_key_crn', you should set 'kms_encryption_enabled' to true."
-  }
-
-  validation {
-    condition     = var.existing_kms_instance_crn != null ? var.kms_encryption_enabled : true
-    error_message = "If passing a value for 'existing_kms_instance_crn', you should set 'kms_encryption_enabled' to true."
-  }
-
-  validation {
-    condition     = var.kms_encryption_enabled ? ((var.existing_kms_instance_crn != null || var.existing_event_streams_kms_key_crn != null) ? true : false) : true
-    error_message = "Either 'existing_kms_instance_crn' or `existing_event_streams_kms_key_crn` is required if 'kms_encryption_enabled' is set to true."
-  }
-}
 variable "existing_kms_instance_crn" {
   type        = string
   description = "The CRN of a Key Protect or Hyper Protect Crypto Services instance. Required only when creating a new encryption key and key ring which will be used to encrypt event streams. To use an existing key, pass values for `existing_event_streams_kms_key_crn`."
@@ -275,16 +267,6 @@ variable "existing_kms_instance_crn" {
       var.existing_kms_instance_crn == null,
     ])
     error_message = "The provided KMS instance CRN in the input 'existing_kms_instance_crn' in not valid."
-  }
-}
-
-variable "kms_endpoint_type" {
-  type        = string
-  description = "The endpoint for communicating with the Key Protect or Hyper Protect Crypto Services instance. Possible values: `public`, `private`. Applies only if `existing_event_streams_kms_key_crn` is not specified."
-  default     = "public"
-  validation {
-    condition     = can(regex("public|private", var.kms_endpoint_type))
-    error_message = "The kms_endpoint_type value must be 'public' or 'private'."
   }
 }
 

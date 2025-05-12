@@ -17,11 +17,10 @@
         "IaC",
         "infrastructure as code",
         "terraform",
-        "solution",
-        "fscloud"
+        "solution"
       ],
-      "short_description": "Supports provisioning and configuring IBM Event Streams for IBM Cloud.",
-      "long_description": "This architecture supports creation and configuration of IBM Cloud Event Streams.",
+      "short_description": "Automates provisioning and configuration of IBM Event Streams on IBM Cloud for building secure, scalable, and event-driven cloud-native applications.",
+      "long_description": "This automation deploys and configures [IBM Cloud® Event Streams](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-getting-started), a fully managed, high-throughput message bus built on Apache Kafka. It enables seamless communication between services and applications through real-time event ingestion and distribution. With support for encryption using IBM Key Protect or Hyper Protect Crypto Services, IAM access policies, and service credentials, this solution allows you to deploy production-ready Kafka clusters optimized for IBM Cloud. It is ideal for building resilient, event-driven, cloud-native architectures that require reliable and secure messaging across microservices, analytics systems, and integration layers.",
       "offering_docs_url": "https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/blob/main/README.md",
       "offering_icon_url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-streams/main/images/event_streams.svg",
       "provider_name": "IBM",
@@ -41,10 +40,178 @@
       ],
       "flavors": [
         {
-          "label": "Fully configurable",
-          "name": "fully-configurable",
+          "label": "Standard",
+          "name": "standard",
           "install_type": "fullstack",
-          "working_directory": "solutions/fully-configurable",
+          "working_directory": "solutions/standard",
+          "compliance": {
+            "authority": "scc-v3",
+            "profiles": [
+              {
+                "profile_name": "IBM Cloud Framework for Financial Services",
+                "profile_version": "1.7.0"
+              }
+            ]
+          },
+          "architecture": {
+            "descriptions": "This architecture supports provisioning and configuring fully configurable Event Streams.",
+            "features": [
+              {
+                "title": "Create Event Streams instance",
+                "description": "Yes"
+              },
+              {
+                "title": "Create topics in Event Streams",
+                "description": "Yes"
+              }
+            ],
+
+            "diagrams": [
+              {
+                "diagram": {
+                  "caption": "Event Streams Standard topology",
+                  "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-streams/issue_13014/reference-architecture/deployable-architecture-event-streams-standard.svg",
+                  "type": "image/svg+xml"
+                },
+                "description": "This architecture creates an instance of IBM Event Streams for IBM Cloud."
+              }
+            ]
+          },
+          "iam_permissions": [
+            {
+              "role_crns": ["crn:v1:bluemix:public:iam::::serviceRole:Manager"],
+              "service_name": "messagehub"
+            },
+            {
+              "role_crns": ["crn:v1:bluemix:public:iam::::role:Editor"],
+              "service_name": "messagehub"
+            }
+          ],
+          "configuration": [
+            {
+              "key": "ibmcloud_api_key"
+            },
+            {
+              "key": "region",
+              "required": true
+            },
+            {
+              "key": "prefix",
+              "required": true
+            },
+            {
+              "key": "existing_resource_group_name",
+              "required": true,
+              "custom_config": {
+                "type": "resource_group",
+                "grouping": "deployment",
+                "original_grouping": "deployment",
+                "config_constraints": {
+                  "identifier": "rg_name"
+                }
+              }
+            },
+            {
+              "key": "plan",
+              "options": [
+                {
+                  "displayname": "lite",
+                  "value": "lite"
+                },
+                {
+                  "displayname": "standard",
+                  "value": "standard"
+                }
+              ]
+            },
+            {
+              "key": "event_streams_name"
+            },
+            {
+              "key": "event_stream_instance_resource_tags"
+            },
+            {
+              "key": "event_stream_instance_access_tags"
+            },
+            {
+              "key": "create_timeout"
+            },
+            {
+              "key": "delete_timeout"
+            },
+            {
+              "key": "update_timeout"
+            },
+            {
+              "key": "topics"
+            },
+            {
+              "key": "service_credential_names"
+            },
+            {
+              "key": "iam_token_only"
+            },
+            {
+              "key": "existing_secrets_manager_endpoint_type"
+            },
+            {
+              "key": "existing_secrets_manager_instance_crn"
+            },
+            {
+              "key": "service_credential_secrets"
+            },
+            {
+              "key": "skip_event_streams_secrets_manager_auth_policy"
+            },
+            {
+              "key": "provider_visibility",
+              "hidden": true,
+              "options": [
+                {
+                  "displayname": "private",
+                  "value": "private"
+                },
+                {
+                  "displayname": "public",
+                  "value": "public"
+                },
+                {
+                  "displayname": "public-and-private",
+                  "value": "public-and-private"
+                }
+              ]
+            }
+          ],
+          "dependencies": [
+            {
+              "name": "deploy-arch-ibm-account-infra-base",
+              "catalog_id": "7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3",
+              "flavors": ["standard"],
+              "id": "63641cec-6093-4b4f-b7b0-98d2f4185cd6-global",
+              "ignore_auto_referencing": ["*"],
+              "input_mapping": [
+                {
+                  "dependency_output": "workload_resource_group_name",
+                  "version_input": "existing_resource_group_name"
+                },
+                {
+                  "dependency_input": "prefix",
+                  "version_input": "prefix",
+                  "reference_version": true
+                }
+              ],
+              "optional": true,
+              "on_by_default": true,
+              "version": "^v1.18.0"
+            }
+            ],
+          "dependency_version_2": true
+        },
+        {
+          "label": "Security-enforced",
+          "name": "security-enforced",
+          "install_type": "fullstack",
+          "working_directory": "solutions/security-enforced",
           "compliance": {
             "authority": "scc-v3",
             "profiles": [
@@ -102,8 +269,8 @@
             "diagrams": [
               {
                 "diagram": {
-                  "caption": "Event Streams topology",
-                  "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-streams/issue_13014/reference-architecture/deployable-architecture-event-streams.svg",
+                  "caption": "Event Streams Security Enforced topology",
+                  "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-streams/issue_13014/reference-architecture/deployable-architecture-event-streams-security-enforced.svg",
                   "type": "image/svg+xml"
                 },
                 "description": "- Provisions a fully configurable IBM Cloud® Event Streams environment.\n- Supports creation of Kafka topics, schema registries, metrics, and mirroring features.\n- Deploys resources within a defined region and resource group.\n- Enables customer-managed encryption using IBM Key Protect or Hyper Protect Crypto Services.\n- Allows use of an existing Key Management Services (KMS) instance and keys.\n- Supports Context-Based Restrictions (CBRs) to enforce secure access policies.\n- Provides a secure, event-driven messaging infrastructure on IBM Cloud."
@@ -125,39 +292,24 @@
               "key": "ibmcloud_api_key"
             },
             {
-              "key": "provider_visibility",
-              "options": [
-                {
-                  "displayname": "private",
-                  "value": "private"
-                },
-                {
-                  "displayname": "public",
-                  "value": "public"
-                },
-                {
-                  "displayname": "public-and-private",
-                  "value": "public-and-private"
-                }
-              ]
-            },
-            {
-              "key": "prefix",
-              "required": true
-            },
-            {
-              "key": "existing_resource_group_name"
-            },
-            {
-              "key": "event_streams_name"
-            },
-            {
               "key": "region",
               "required": true,
               "options": [
                 {
                   "displayname": "Dallas (us-south)",
                   "value": "us-south"
+                },
+                {
+                  "displayname": "Sao Paulo (br-sao)",
+                  "value": "br-sao"
+                },
+                {
+                  "displayname": "Toronto (ca-tor)",
+                  "value": "ca-tor"
+                },
+                {
+                  "displayname": "Washington DC (us-east)",
+                  "value": "us-east"
                 },
                 {
                   "displayname": "Frankfurt (eu-de)",
@@ -184,18 +336,29 @@
                   "value": "jp-tok"
                 },
                 {
-                  "displayname": "Sao Paulo (br-sao)",
-                  "value": "br-sao"
-                },
-                {
-                  "displayname": "Toronto (ca-tor)",
-                  "value": "ca-tor"
-                },
-                {
-                  "displayname": "Washington (us-east)",
-                  "value": "us-east"
+                  "displayname": "Chennai (che01)",
+                  "value": "che01"
                 }
               ]
+            },
+            {
+              "key": "prefix",
+              "required": true
+            },
+            {
+              "key": "existing_resource_group_name",
+              "required": true,
+              "custom_config": {
+                "type": "resource_group",
+                "grouping": "deployment",
+                "original_grouping": "deployment",
+                "config_constraints": {
+                  "identifier": "rg_name"
+                }
+              }
+            },
+            {
+              "key": "event_streams_name"
             },
             {
               "key": "event_stream_instance_resource_tags"
@@ -213,58 +376,52 @@
               "key": "update_timeout"
             },
             {
-              "key": "schemas"
-            },
-            {
-              "key": "schema_global_rule"
-            },
-            {
               "key": "topics"
-            },
-            {
-              "key": "skip_event_streams_s2s_iam_auth_policy"
-            },
-            {
-              "key": "cbr_rules"
-            },
-            {
-              "key": "service_credential_names"
-            },
-            {
-              "key": "quotas"
-            },
-            {
-              "key": "metrics"
-            },
-            {
-              "key": "mirroring_topic_patterns"
-            },
-            {
-              "key": "mirroring"
-            },
-            {
-              "key": "existing_kms_instance_crn"
-            },
-            {
-              "key": "ibmcloud_kms_api_key"
-            },
-            {
-              "key": "kms_endpoint_type"
             },
             {
               "key": "skip_event_streams_kms_auth_policy"
             },
             {
+              "key": "ibmcloud_kms_api_key"
+            },
+            {
               "key": "existing_event_streams_kms_key_crn"
             },
             {
-              "key": "kms_encryption_enabled"
+              "key": "existing_kms_instance_crn"
             },
             {
               "key": "kms_key_name"
             },
             {
               "key": "kms_key_ring_name"
+            },
+            {
+              "key": "metrics"
+            },
+            {
+              "key": "mirroring"
+            },
+            {
+              "key": "mirroring_topic_patterns"
+            },
+            {
+              "key": "quotas"
+            },
+            {
+              "key": "schema_global_rule"
+            },
+            {
+              "key": "schemas"
+            },
+            {
+              "key": "skip_event_streams_s2s_iam_auth_policy"
+            },
+            {
+              "key": "skip_event_streams_secrets_manager_auth_policy"
+            },
+            {
+              "key": "service_credential_names"
             },
             {
               "key": "iam_token_only"
@@ -279,13 +436,25 @@
               "key": "service_credential_secrets"
             },
             {
-              "key": "skip_event_streams_secrets_manager_auth_policy"
+              "key": "cbr_rules"
             },
             {
-              "key": "event_streams_endpoint_type"
-            },
-            {
-              "key": "plan"
+              "key": "provider_visibility",
+              "hidden": true,
+              "options": [
+                {
+                  "displayname": "private",
+                  "value": "private"
+                },
+                {
+                  "displayname": "public",
+                  "value": "public"
+                },
+                {
+                  "displayname": "public-and-private",
+                  "value": "public-and-private"
+                }
+              ]
             }
           ],
           "dependencies": [

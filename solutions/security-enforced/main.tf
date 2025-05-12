@@ -15,7 +15,7 @@ module "resource_group" {
 # KMS Key
 ######################################################################################################################
 locals {
-  kms_key_crn       = var.existing_event_streams_kms_key_crn != null ? var.existing_event_streams_kms_key_crn : (var.kms_encryption_enabled == true ? module.kms[0].keys[format("%s.%s", local.kms_key_ring_name, local.kms_key_name)].crn : null)
+  kms_key_crn = var.existing_event_streams_kms_key_crn != null ? var.existing_event_streams_kms_key_crn : module.kms[0].keys[format("%s.%s", local.kms_key_ring_name, local.kms_key_name)].crn
   kms_key_ring_name = "${local.prefix}${var.kms_key_ring_name}"
   kms_key_name      = "${local.prefix}${var.kms_key_name}"
   kms_region        = var.existing_kms_instance_crn != null ? module.kms_instance_crn_parser[0].region : null
@@ -104,14 +104,14 @@ module "kms" {
   providers = {
     ibm = ibm.kms
   }
-  count                       = var.kms_encryption_enabled && var.existing_event_streams_kms_key_crn == null ? 1 : 0 # no need to create any KMS resources if passing an existing key
+  count                       = var.existing_event_streams_kms_key_crn == null ? 1 : 0 # no need to create any KMS resources if passing an existing key
   source                      = "terraform-ibm-modules/kms-all-inclusive/ibm"
   version                     = "4.22.0"
   create_key_protect_instance = false
   region                      = local.kms_region
   existing_kms_instance_crn   = var.existing_kms_instance_crn
-  key_ring_endpoint_type      = var.kms_endpoint_type
-  key_endpoint_type           = var.kms_endpoint_type
+  key_ring_endpoint_type      = "private"
+  key_endpoint_type           = "private"
   keys = [
     {
       key_ring_name     = local.kms_key_ring_name
@@ -139,9 +139,9 @@ module "event_streams" {
   source                               = "../../"
   resource_group_id                    = module.resource_group.resource_group_id
   es_name                              = "${local.prefix}${var.event_streams_name}"
-  plan                                 = var.plan
+  plan                                 = "enterprise-3nodes-2tb"
   region                               = var.region
-  kms_encryption_enabled               = var.kms_encryption_enabled
+  kms_encryption_enabled               = true
   kms_key_crn                          = local.kms_key_crn
   skip_kms_iam_authorization_policy    = var.skip_event_streams_kms_auth_policy || local.create_cross_account_auth_policy
   skip_es_s2s_iam_authorization_policy = var.skip_event_streams_s2s_iam_auth_policy
@@ -153,7 +153,7 @@ module "event_streams" {
   schemas                              = var.schemas
   tags                                 = var.event_stream_instance_resource_tags
   access_tags                          = var.event_stream_instance_access_tags
-  service_endpoints                    = var.event_streams_endpoint_type
+  service_endpoints                    = "private"
   service_credential_names             = var.service_credential_names
   cbr_rules                            = var.cbr_rules
   schema_global_rule                   = var.schema_global_rule

@@ -14,8 +14,7 @@ import (
 )
 
 const completeExampleTerraformDir = "examples/complete"
-const quickstartSolutionTerraformDir = "solutions/quickstart"
-const fullyConfigurableTerraformDir = "solutions/fully-configurable"
+const standardTerraformDir = "solutions/standard"
 const fsCloudTerraformDir = "examples/fscloud"
 
 // Use existing group for tests
@@ -30,13 +29,11 @@ var permanentResources map[string]interface{}
 
 // TestMain will be run before any parallel tests, used to read data from yaml for use with tests
 func TestMain(m *testing.M) {
-
 	var err error
 	permanentResources, err = common.LoadMapFromYaml(yamlLocation)
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	os.Exit(m.Run())
 }
 
@@ -51,60 +48,16 @@ func setupOptions(t *testing.T, prefix string, dir string) *testhelper.TestOptio
 	return options
 }
 
-func TestRunQuickstartSolution(t *testing.T) {
-	t.Parallel()
-
-	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
-		Testing:       t,
-		TerraformDir:  quickstartSolutionTerraformDir,
-		Prefix:        "es-qs",
-		ResourceGroup: resourceGroup,
-	})
-
-	options.TerraformVars = map[string]interface{}{
-		"ibmcloud_api_key":                       options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"],
-		"resource_group_name":                    options.ResourceGroup,
-		"use_existing_resource_group":            true,
-		"prefix":                                 options.Prefix,
-		"provider_visibility":                    "public",
-		"existing_secrets_manager_instance_crn":  permanentResources["secretsManagerCRN"],
-		"existing_secrets_manager_endpoint_type": "public",
-		"service_credential_secrets": []map[string]interface{}{
-			{
-				"secret_group_name": fmt.Sprintf("%s-secret-group", options.Prefix),
-				"service_credentials": []map[string]string{
-					{
-						"secret_name": fmt.Sprintf("%s-cred-config-reader", options.Prefix),
-						"service_credentials_source_service_role_crn": "crn:v1:bluemix:public:iam::::role:ConfigReader",
-					},
-					{
-						"secret_name": fmt.Sprintf("%s-cred-reader", options.Prefix),
-						"service_credentials_source_service_role_crn": "crn:v1:bluemix:public:iam::::serviceRole:Reader",
-					},
-					{
-						"secret_name": fmt.Sprintf("%s-cred-key-manager", options.Prefix),
-						"service_credentials_source_service_role_crn": "crn:v1:bluemix:public:resource-controller::::role:KeyManager",
-					},
-				},
-			},
-		},
-	}
-
-	output, err := options.RunTestConsistency()
-	assert.Nil(t, err, "This should not have errored")
-	assert.NotNil(t, output, "Expected some output")
-}
-
-func setupEnterpriseOptions(t *testing.T, prefix string) *testschematic.TestSchematicOptions {
+func setupStandardOptions(t *testing.T, prefix string) *testschematic.TestSchematicOptions {
 	options := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
 		Testing:            t,
 		Prefix:             prefix,
 		BestRegionYAMLPath: regionSelectionPath,
 		TarIncludePatterns: []string{
 			"*.tf",
-			fullyConfigurableTerraformDir + "/*.tf",
+			standardTerraformDir + "/*.tf",
 		},
-		TemplateFolder:         fullyConfigurableTerraformDir,
+		TemplateFolder:         standardTerraformDir,
 		Tags:                   []string{"test-schematic"},
 		DeleteWorkspaceOnFail:  false,
 		WaitJobCompleteMinutes: 360,
@@ -135,11 +88,7 @@ func setupEnterpriseOptions(t *testing.T, prefix string) *testschematic.TestSche
 		{Name: "prefix", Value: options.Prefix, DataType: "string"},
 		{Name: "region", Value: "us-south", DataType: "string"},
 		{Name: "existing_resource_group_name", Value: resourceGroup, DataType: "string"},
-		{Name: "plan", Value: "lite", DataType: "string"},
 		{Name: "provider_visibility", Value: "private", DataType: "string"},
-		{Name: "event_streams_endpoint_type", Value: "public", DataType: "string"},
-		{Name: "kms_encryption_enabled", Value: true, DataType: "bool"},
-		{Name: "existing_kms_instance_crn", Value: permanentResources["hpcs_south_crn"], DataType: "string"},
 		{Name: "event_stream_instance_access_tags", Value: permanentResources["accessTags"], DataType: "list(string)"},
 		{Name: "event_stream_instance_resource_tags", Value: options.Tags, DataType: "list(string)"},
 		// Update the create timeout as it can take longer than the default (3 hours) when running multiple tests in parallel
@@ -151,20 +100,20 @@ func setupEnterpriseOptions(t *testing.T, prefix string) *testschematic.TestSche
 	return options
 }
 
-// Test for the Fully Configurable DA
-func TestRunFullyConfigurableSchematics(t *testing.T) {
+// Test for the Standard DA
+func TestRunStandardSchematics(t *testing.T) {
 	t.Parallel()
 
-	options := setupEnterpriseOptions(t, "es-fc")
+	options := setupStandardOptions(t, "es-std")
 	err := options.RunSchematicTest()
 	assert.Nil(t, err, "This should not have errored")
 }
 
-// Upgrade test for the Enterprise DA
-func TestRunFullyConfigurableUpgradeSchematics(t *testing.T) {
+// Upgrade test for the Standard DA
+func TestRunStandardUpgradeSchematics(t *testing.T) {
 	t.Parallel()
 
-	options := setupEnterpriseOptions(t, "es-fc-upg")
+	options := setupStandardOptions(t, "es-std-upg")
 	err := options.RunSchematicUpgradeTest()
 	if !options.UpgradeTestSkipped {
 		assert.Nil(t, err, "This should not have errored")

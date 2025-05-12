@@ -36,9 +36,31 @@ variable "access_tags" {
 
 variable "region" {
   type        = string
-  description = "The region where the Event Streams are created."
+  description = "The region where the Event Streams instance is created."
   default     = "us-south"
+
+  validation {
+    condition     = !(var.plan == "lite" && var.region != "us-south")
+    error_message = "The 'lite' plan is only supported in the 'us-south' region."
+  }
+
+  validation {
+    condition = !(var.plan == "standard" && !contains([
+      "us-south", "br-sao", "ca-tor", "us-east",
+      "eu-de", "eu-gb", "eu-es", "jp-osa", "au-syd", "jp-tok"
+    ], var.region))
+    error_message = "The 'standard' plan is only supported in the following regions: us-south, br-sao, ca-tor, us-east, eu-de, eu-gb, eu-es, jp-osa, au-syd, jp-tok."
+  }
+
+  validation {
+    condition = !(var.plan == "enterprise-3nodes-2tb" && !contains([
+      "us-south", "br-sao", "ca-tor", "us-east",
+      "eu-de", "eu-gb", "eu-es", "jp-osa", "au-syd", "jp-tok", "che01"
+    ], var.region))
+    error_message = "The 'enterprise-3nodes-2tb' plan is only supported in the following regions: us-south, br-sao, ca-tor, us-east, eu-de, eu-gb, eu-es, jp-osa, au-syd, jp-tok, che01."
+  }
 }
+
 
 variable "throughput" {
   type        = number
@@ -271,7 +293,7 @@ variable "mirroring_topic_patterns" {
   description = "The list of the topics to set in instance. Required only if creating mirroring instance."
   default     = null
 
-   validation {
+  validation {
     condition     = !(var.mirroring_topic_patterns != null && var.plan != "enterprise-3nodes-2tb")
     error_message = "mirroring is only supported for enterprise plan."
   }
@@ -313,7 +335,7 @@ variable "mirroring" {
     }))
   })
   default = null
-   validation {
+  validation {
     condition     = !(var.mirroring != null && var.plan != "enterprise-3nodes-2tb")
     error_message = "mirroring is only supported for enterprise plan."
   }

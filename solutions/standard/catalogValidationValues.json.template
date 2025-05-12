@@ -1,0 +1,7 @@
+{
+  "ibmcloud_api_key": $VALIDATION_APIKEY,
+  "event_stream_instance_resource_tags": $TAGS,
+  "prefix": $PREFIX,
+  "existing_resource_group_name": $PREFIX,
+  "create_timeout": "6h"
+}
