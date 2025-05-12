@@ -34,19 +34,19 @@ variable "region" {
 
 variable "prefix" {
   type        = string
- description = "The prefix to be added to all resources created by this solution. To skip using a prefix, set this value to null or an empty string. The prefix must begin with a lowercase letter and may contain only lowercase letters, digits, and hyphens '-'. It should not exceed 16 characters, must not end with a hyphen('-'), and can not contain consecutive hyphens ('--'). Example: prod-0205-es. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/enterprise/DA.prefix.md)."
+  description = "The prefix to be added to all resources created by this solution. To skip using a prefix, set this value to null or an empty string. The prefix must begin with a lowercase letter and may contain only lowercase letters, digits, and hyphens '-'. It should not exceed 16 characters, must not end with a hyphen('-'), and can not contain consecutive hyphens ('--'). Example: prod-0205-es. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/enterprise/DA.prefix.md)."
 
   validation {
-  condition = (var.prefix == null || var.prefix == "" ? true :
-    alltrue([
-      can(regex("^[a-z][-a-z0-9]*[a-z0-9]$", var.prefix)),
-      length(regexall("--", var.prefix)) == 0
-    ])
-  )
-  error_message = "Prefix must begin with a lowercase letter and may contain only lowercase letters, digits, and hyphens '-'. It must not end with a hyphen('-'), and cannot contain consecutive hyphens ('--')."
- }
+    condition = (var.prefix == null || var.prefix == "" ? true :
+      alltrue([
+        can(regex("^[a-z][-a-z0-9]*[a-z0-9]$", var.prefix)),
+        length(regexall("--", var.prefix)) == 0
+      ])
+    )
+    error_message = "Prefix must begin with a lowercase letter and may contain only lowercase letters, digits, and hyphens '-'. It must not end with a hyphen('-'), and cannot contain consecutive hyphens ('--')."
+  }
   validation {
-    condition = length(var.prefix) <= 16
+    condition     = length(var.prefix) <= 16
     error_message = "Prefix must not exceed 16 characters."
   }
 }
@@ -202,7 +202,7 @@ variable "mirroring" {
     }))
   })
   default = {
-    source_crn   = "crn:v1:bluemix:public:messagehub:us-south:a/abac0df06b644a9cabc6e44f55b3880e:3361b294-d812-4ead-9a54-cc41afb50b78::" // permanent crn
+    source_crn   = "crn:v1:bluemix:public:messagehub:us-south:a/abac0df06b644a9cabc6e44f55b3880e:3361b294-d812-4ead-9a54-cc41afb50b78::" # permanent crn
     source_alias = "source-alias"
     target_alias = "target-alias"
     options = {

@@ -15,7 +15,7 @@ module "resource_group" {
 # KMS Key
 ######################################################################################################################
 locals {
-  kms_key_crn = var.existing_event_streams_kms_key_crn != null ? var.existing_event_streams_kms_key_crn : module.kms[0].keys[format("%s.%s", local.kms_key_ring_name, local.kms_key_name)].crn
+  kms_key_crn       = var.existing_event_streams_kms_key_crn != null ? var.existing_event_streams_kms_key_crn : module.kms[0].keys[format("%s.%s", local.kms_key_ring_name, local.kms_key_name)].crn
   kms_key_ring_name = "${local.prefix}${var.kms_key_ring_name}"
   kms_key_name      = "${local.prefix}${var.kms_key_name}"
   kms_region        = var.existing_kms_instance_crn != null ? module.kms_instance_crn_parser[0].region : null
