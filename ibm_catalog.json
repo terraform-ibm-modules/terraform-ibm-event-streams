@@ -178,7 +178,6 @@
             }
           ],
           "architecture": {
-            "descriptions": "This architecture creates an instance of IBM Event Streams for IBM Cloud in lite and standard plan. It also supports the creation of topics in the Event Streams instance.",
             "features": [
               {
                 "title": "Creates an Event Streams instance",
@@ -387,7 +386,6 @@
             }
           ],
           "architecture": {
-            "descriptions": "This architecture creates a Financial Services compliant instance of IBM Event Streams for IBM Cloud in enterprise plan. It also supports the creation of topics and schemas in the Event Streams instance.",
             "features": [
               {
                 "title": "Creates an Event Streams instance",
