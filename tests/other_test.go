@@ -112,6 +112,32 @@ func setupEnterpriseOptions(t *testing.T, prefix string) *testschematic.TestSche
 		},
 	}
 
+	mirroring := map[string]interface{}{
+		"source_crn":   permanentResources["event_streams_us_south_crn"].(string),
+		"source_alias": "source-alias",
+		"target_alias": "target-alias",
+		"options": map[string]interface{}{
+			"topic_name_transform": map[string]interface{}{
+				"type": "rename",
+				"rename": map[string]interface{}{
+					"add_prefix":    "add_prefix",
+					"add_suffix":    "add_suffix",
+					"remove_prefix": "remove_prefix",
+					"remove_suffix": "remove_suffix",
+				},
+			},
+			"group_id_transform": map[string]interface{}{
+				"type": "rename",
+				"rename": map[string]interface{}{
+					"add_prefix":    "add_prefix",
+					"add_suffix":    "add_suffix",
+					"remove_prefix": "remove_prefix",
+					"remove_suffix": "remove_suffix",
+				},
+			},
+		},
+	}
+
 	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
 		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
 		{Name: "prefix", Value: options.Prefix, DataType: "string"},
@@ -128,6 +154,8 @@ func setupEnterpriseOptions(t *testing.T, prefix string) *testschematic.TestSche
 		{Name: "metrics", Value: []string{"topic", "partition", "consumers"}, DataType: "list(string)"},
 		{Name: "quotas", Value: quotas, DataType: "list(object)"},
 		{Name: "schema_global_rule", Value: "FORWARD", DataType: "string"},
+		{Name: "mirroring_topic_patterns", Value: []string{"topic-1", "topic-2"}, DataType: "list(string)"},
+		{Name: "mirroring", Value: mirroring, DataType: "object"},
 	}
 	return options
 }

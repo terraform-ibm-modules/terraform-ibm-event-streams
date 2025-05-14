@@ -146,7 +146,7 @@ variable "existing_secrets_manager_endpoint_type" {
 }
 variable "service_credential_secrets" {
   type = list(object({
-    secret_group_name        = string
+    secret_group_name        = string # pragma: allowlist secret
     secret_group_description = optional(string)
     existing_secret_group    = optional(bool)
     service_credentials = list(object({

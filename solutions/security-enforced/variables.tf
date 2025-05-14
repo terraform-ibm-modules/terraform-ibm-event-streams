@@ -171,7 +171,7 @@ variable "delete_timeout" {
 variable "mirroring_topic_patterns" {
   type        = list(string)
   description = "The list of the topics to set in instance. Required only if creating mirroring instance."
-  default     = ["topic-1", "topic-2"]
+  default     = []
 }
 
 variable "mirroring" {
@@ -201,31 +201,7 @@ variable "mirroring" {
       })
     }))
   })
-  default = {
-    source_crn   = "crn:v1:bluemix:public:messagehub:us-south:a/abac0df06b644a9cabc6e44f55b3880e:3361b294-d812-4ead-9a54-cc41afb50b78::" # permanent crn
-    source_alias = "source-alias"
-    target_alias = "target-alias"
-    options = {
-      topic_name_transform = {
-        type = "rename"
-        rename = {
-          add_prefix    = "add_prefix"
-          add_suffix    = "add_suffix"
-          remove_prefix = "remove_prefix"
-          remove_suffix = "remove_suffix"
-        }
-      }
-      group_id_transform = {
-        type = "rename"
-        rename = {
-          add_prefix    = "add_prefix"
-          add_suffix    = "add_suffix"
-          remove_prefix = "remove_prefix"
-          remove_suffix = "remove_suffix"
-        }
-      }
-    }
-  }
+  default = null
 }
 
 variable "skip_event_streams_s2s_iam_auth_policy" {
@@ -334,7 +310,7 @@ variable "existing_secrets_manager_endpoint_type" {
 }
 variable "service_credential_secrets" {
   type = list(object({
-    secret_group_name        = string
+    secret_group_name        = string # pragma: allowlist secret
     secret_group_description = optional(string)
     existing_secret_group    = optional(bool)
     service_credentials = list(object({
