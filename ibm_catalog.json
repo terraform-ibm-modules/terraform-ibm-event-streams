@@ -20,24 +20,39 @@
         "solution"
       ],
       "short_description": "Automates provisioning and configuration of IBM Event Streams on IBM Cloud for building secure, scalable, and event-driven cloud-native applications.",
-      "long_description": "This automation deploys and configures [IBM Cloud® Event Streams](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-getting-started), a fully managed, high-throughput message bus built on Apache Kafka. It enables seamless communication between services and applications through real-time event ingestion and distribution. With support for encryption using IBM Key Protect or Hyper Protect Crypto Services, IAM access policies, and service credentials, this solution allows you to deploy production-ready Kafka clusters optimized for IBM Cloud. It is ideal for building resilient, event-driven, cloud-native architectures that require reliable and secure messaging across microservices, analytics systems, and integration layers.",
+      "long_description": "This automation deploys and configures [IBM Cloud® Event Streams](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-getting-started), a fully managed, high-throughput message bus built on Apache Kafka. It enables real-time event ingestion and distribution across services and applications in IBM Cloud®. Event Streams supports production-ready Kafka clusters with encryption via IBM Key Protect or Hyper Protect Crypto Services, IAM access policies, and service credentials. Built on Kafka, it supports Kafka client APIs, Streams, and Connect, allowing scalable pipelines for microservices, log aggregation, event sourcing, and stream processing. Applications produce messages to topics and consume them in order by subscribing individually or in groups. Kafka tools work directly with Event Streams, with required authentication using credentials.<br>",
       "offering_docs_url": "https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/blob/main/README.md",
       "offering_icon_url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-streams/main/images/event_streams.svg",
       "provider_name": "IBM",
       "features": [
-        {
-          "title": "Create IBM Event Streams for IBM Cloud",
-          "description": "Create and configure IBM Event Streams to build responsive, durable, and highly available architecture deployments."
-        },
-        {
-          "title": "Creates topics in the Event Streams instance",
-          "description": "Creates topics in IBM Cloud Event Streams instance."
-        },
-        {
-          "title": "KMS encryption",
-          "description": "Supports Key Management Service (KMS) encryption for event streams, enhancing data security."
-        }
+        [
+          {
+            "title": "Topics",
+            "description": "Create and manage [topics](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-apache_kafka#kafka_topics_partitions) to organize your event streams. Customize partitions, retention, and configurations to optimize data flow and message durability."
+          },
+          {
+            "title": "Metrics",
+            "description": "Monitor your Event Streams instance with [metrics](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-getting-started-metrics) on throughput, latency, partition usage, and more. Use these insights to maintain performance and quickly detect issues."
+          },
+          {
+            "title": "Quotas",
+            "description": "Set [quotas](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-kafka_quotas) to manage client resource usage and ensure fair access. Prevent overloads by controlling bandwidth and partition consumption per application or user."
+          },
+          {
+            "title": "Mirroring",
+            "description": "Enable [mirroring](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-mirroring_setup) to replicate topics and consumer group offsets between clusters. Use this for disaster recovery, high availability, or multi-region deployments."
+          },
+          {
+            "title": "Schemas",
+            "description": "Leverage the [Schema Registry](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-ES_schema_registry#ES_overview) (Enterprise plan) to register, manage, and validate message schemas. Enforce compatibility and data quality across producers and consumers."
+          },
+          {
+            "title": "KMS Encryption",
+            "description": "Supports [customer-managed encryption](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-managing_encryption) with the following IBM Cloud® key management services"
+          }
+        ]
       ],
+      "support_details": "This product is in the community registry, as such support is handled through the originated repo. If you experience issues please open an issue in that repository [https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/issues](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/issues). Please note this product is not supported via the IBM Cloud Support Center.",
       "flavors": [
         {
           "label": "Standard",
@@ -58,11 +73,11 @@
             "features": [
               {
                 "title": "Create Event Streams instance",
-                "description": "Yes"
+                "description": "Provisions an Event Streams instance using either the lite or standard plan, enabling a fully managed Kafka service for high-throughput event streaming."
               },
               {
                 "title": "Create topics in Event Streams",
-                "description": "Yes"
+                "description": "Creates Kafka topics in Event Streams, with the option to configure a single topic for lite plan instances or multiple topics for standard plan instances."
               }
             ],
 
@@ -73,7 +88,7 @@
                   "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-streams/issue_13014/reference-architecture/deployable-architecture-event-streams-standard.svg",
                   "type": "image/svg+xml"
                 },
-                "description": "This architecture creates an instance of IBM Event Streams for IBM Cloud."
+                "description": "This architecture supports provisioning and configuring IBM Cloud® Event Streams:\n\n- Provisions an Event Streams instance using either the lite or standard plan.\n- Creates Kafka topics as part of the deployment.\n  - Lite plan supports a single topic.\n  - Standard plan supports multiple topics.\n\nThis modular design helps you build event-driven applications with a fully managed Kafka service on IBM Cloud®."
               }
             ]
           },
@@ -146,10 +161,10 @@
               "key": "topics"
             },
             {
-              "key": "service_credential_names"
+              "key": "skip_event_streams_secrets_manager_auth_policy"
             },
             {
-              "key": "iam_token_only"
+              "key": "service_credential_names"
             },
             {
               "key": "existing_secrets_manager_endpoint_type"
@@ -159,9 +174,6 @@
             },
             {
               "key": "service_credential_secrets"
-            },
-            {
-              "key": "skip_event_streams_secrets_manager_auth_policy"
             },
             {
               "key": "provider_visibility",
@@ -204,7 +216,7 @@
               "on_by_default": true,
               "version": "^v1.18.0"
             }
-            ],
+          ],
           "dependency_version_2": true
         },
         {
@@ -223,46 +235,39 @@
           },
           "architecture": {
             "descriptions": "This architecture supports provisioning and configuring security enforced Event Streams.",
+
             "features": [
               {
                 "title": "Create Event Streams instance",
-                "description": "Yes"
+                "description": "Provisions an Event Streams instance using the enterprise plan, enabling a fully managed Kafka service for secure and scalable event streaming."
               },
               {
                 "title": "Create topics in Event Streams",
-                "description": "Yes"
+                "description": "Creates Kafka topics in Event Streams, supporting multiple topics with advanced configurations suited for enterprise-grade workloads."
               },
               {
                 "title": "Create schemas in Event Streams",
-                "description": "Yes"
+                "description": "Configures schema registry and global schema compatibility rules for enforcing structured data exchange between producers and consumers."
+              },
+              {
+                "title": "Metrics",
+                "description": "Enables monitoring by collecting metrics on Event Streams usage and performance, including throughput, consumer lag, and partition status."
               },
               {
                 "title": "Supports mirroring",
-                "description": "Yes"
+                "description": "Enables mirroring of topics between Event Streams instances for redundancy, disaster recovery, or cross-region data replication."
               },
               {
                 "title": "Supports quotas",
-                "description": "Yes"
+                "description": "Applies Kafka quotas to control producer and consumer throughput, ensuring fair usage and resource protection across applications."
               },
               {
-                "title": "Create context-based restriction (CBR) rules",
-                "description": "Yes"
+                "title": "Supports context-based restriction (CBR) rules",
+                "description": "Applies context-based access restrictions to control access based on network, geography, or identity attributes."
               },
               {
-                "title": "Manage IAM users and roles",
-                "description": "Yes"
-              },
-              {
-                "title": "Enforced KMS encryption",
-                "description": "No"
-              },
-              {
-                "title": "Use existing KMS key",
-                "description": "Yes"
-              },
-              {
-                "title": "KMS key ring and key creation",
-                "description": "Yes"
+                "title": "Supports KMS encryption",
+                "description": "Supports enforced encryption of data using IBM Key Protect or Hyper Protect Crypto Services for enhanced data protection."
               }
             ],
 
@@ -415,6 +420,9 @@
               "key": "schemas"
             },
             {
+              "key": "iam_token_only"
+            },
+            {
               "key": "skip_event_streams_s2s_iam_auth_policy"
             },
             {
@@ -422,9 +430,6 @@
             },
             {
               "key": "service_credential_names"
-            },
-            {
-              "key": "iam_token_only"
             },
             {
               "key": "existing_secrets_manager_endpoint_type"

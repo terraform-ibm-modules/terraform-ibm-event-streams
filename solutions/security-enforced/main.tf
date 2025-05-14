@@ -110,8 +110,8 @@ module "kms" {
   create_key_protect_instance = false
   region                      = local.kms_region
   existing_kms_instance_crn   = var.existing_kms_instance_crn
-  key_ring_endpoint_type      = "private"
-  key_endpoint_type           = "private"
+  key_ring_endpoint_type      = "public"
+  key_endpoint_type           = "public"
   keys = [
     {
       key_ring_name     = local.kms_key_ring_name

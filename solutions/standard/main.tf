@@ -25,7 +25,6 @@ module "event_streams" {
   tags                     = var.event_stream_instance_resource_tags
   access_tags              = var.event_stream_instance_access_tags
   service_credential_names = var.service_credential_names
-  iam_token_only           = var.iam_token_only
   create_timeout           = var.create_timeout
   update_timeout           = var.update_timeout
   delete_timeout           = var.delete_timeout
