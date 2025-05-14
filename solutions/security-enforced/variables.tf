@@ -171,7 +171,7 @@ variable "delete_timeout" {
 variable "mirroring_topic_patterns" {
   type        = list(string)
   description = "The list of the topics to set in instance. Required only if creating mirroring instance."
-  default     = []
+  default     = null
 }
 
 variable "mirroring" {
