@@ -20,7 +20,6 @@ locals {
   kms_key_name      = "${local.prefix}${var.kms_key_name}"
   kms_region        = var.existing_kms_instance_crn != null ? module.kms_instance_crn_parser[0].region : null
 
-
   create_cross_account_auth_policy = !var.skip_event_streams_kms_auth_policy && var.ibmcloud_kms_api_key != null
 
   kms_service_name  = var.existing_event_streams_kms_key_crn != null ? module.kms_key_crn_parser[0].service_name : (var.existing_kms_instance_crn != null ? module.kms_instance_crn_parser[0].service_name : null)

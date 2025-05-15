@@ -11,7 +11,7 @@ This solution supports provisioning and configuring the following infrastructure
 - Schemas to apply to resources.
 - Mirroring of existing event stream instace.
 
-![da-enterprise](../../reference-architecture/deployable-architecture-event-streams-security-enforced.svg)
+![event-streams-security-enforced-deployable-architecture](../../reference-architecture/deployable-architecture-event-streams-security-enforced.svg)
 
 **Important:** Because this solution contains a provider configuration and is not compatible with the `for_each`, `count`, and `depends_on` arguments, do not call this solution from one or more other modules. For more information about how resources are associated with provider configurations with multiple modules, see [Providers Within Modules](https://developer.hashicorp.com/terraform/language/modules/develop/providers).
 
@@ -88,14 +88,14 @@ This solution supports provisioning and configuring the following infrastructure
 
 | Name | Description |
 |------|-------------|
-| <a name="output_crn"></a> [crn](#output\_crn) | Event Streams instance crn |
-| <a name="output_guid"></a> [guid](#output\_guid) | Event Streams instance guid |
-| <a name="output_id"></a> [id](#output\_id) | Event Streams instance id |
+| <a name="output_event_streams_crn"></a> [event\_streams\_crn](#output\_event\_streams\_crn) | Event Streams instance crn |
+| <a name="output_event_streams_guid"></a> [event\_streams\_guid](#output\_event\_streams\_guid) | Event Streams instance guid |
+| <a name="output_event_streams_id"></a> [event\_streams\_id](#output\_event\_streams\_id) | Event Streams instance id |
+| <a name="output_event_streams_mirroring_config_id"></a> [event\_streams\_mirroring\_config\_id](#output\_event\_streams\_mirroring\_config\_id) | The ID of the mirroring config in CRN format |
+| <a name="output_event_streams_mirroring_topic_patterns"></a> [event\_streams\_mirroring\_topic\_patterns](#output\_event\_streams\_mirroring\_topic\_patterns) | Mirroring topic patterns |
 | <a name="output_kafka_broker_version"></a> [kafka\_broker\_version](#output\_kafka\_broker\_version) | The Kafka version |
 | <a name="output_kafka_brokers_sasl"></a> [kafka\_brokers\_sasl](#output\_kafka\_brokers\_sasl) | (Array of Strings) Kafka brokers use for interacting with Kafka native API |
 | <a name="output_kafka_http_url"></a> [kafka\_http\_url](#output\_kafka\_http\_url) | The API endpoint to interact with Event Streams REST API |
-| <a name="output_mirroring_config_id"></a> [mirroring\_config\_id](#output\_mirroring\_config\_id) | The ID of the mirroring config in CRN format |
-| <a name="output_mirroring_topic_patterns"></a> [mirroring\_topic\_patterns](#output\_mirroring\_topic\_patterns) | Mirroring topic patterns |
 | <a name="output_resource_group_id"></a> [resource\_group\_id](#output\_resource\_group\_id) | Resource group ID |
 | <a name="output_resource_group_name"></a> [resource\_group\_name](#output\_resource\_group\_name) | Resource group name |
 | <a name="output_service_credential_secret_groups"></a> [service\_credential\_secret\_groups](#output\_service\_credential\_secret\_groups) | Service credential secret groups |

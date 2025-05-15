@@ -12,17 +12,17 @@ output "resource_group_id" {
   value       = module.resource_group.resource_group_id
 }
 
-output "crn" {
+output "event_streams_crn" {
   description = "Event Streams instance crn"
   value       = module.event_streams.crn
 }
 
-output "id" {
+output "event_streams_id" {
   description = "Event Streams instance id"
   value       = module.event_streams.id
 }
 
-output "guid" {
+output "event_streams_guid" {
   description = "Event Streams instance guid"
   value       = module.event_streams.guid
 }
