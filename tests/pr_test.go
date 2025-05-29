@@ -14,7 +14,7 @@ import (
 )
 
 const completeExampleTerraformDir = "examples/complete"
-const standardTerraformDir = "solutions/standard"
+const quickstartTerraformDir = "solutions/quickstart"
 const fsCloudTerraformDir = "examples/fscloud"
 
 // Use existing group for tests
@@ -48,16 +48,16 @@ func setupOptions(t *testing.T, prefix string, dir string) *testhelper.TestOptio
 	return options
 }
 
-func setupStandardOptions(t *testing.T, prefix string) *testschematic.TestSchematicOptions {
+func setupQuickstartOptions(t *testing.T, prefix string) *testschematic.TestSchematicOptions {
 	options := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
 		Testing:            t,
 		Prefix:             prefix,
 		BestRegionYAMLPath: regionSelectionPath,
 		TarIncludePatterns: []string{
 			"*.tf",
-			standardTerraformDir + "/*.tf",
+			quickstartTerraformDir + "/*.tf",
 		},
-		TemplateFolder:         standardTerraformDir,
+		TemplateFolder:         quickstartTerraformDir,
 		Tags:                   []string{"test-schematic"},
 		DeleteWorkspaceOnFail:  false,
 		WaitJobCompleteMinutes: 360,
@@ -100,20 +100,20 @@ func setupStandardOptions(t *testing.T, prefix string) *testschematic.TestSchema
 	return options
 }
 
-// Test for the Standard DA
-func TestRunStandardSchematics(t *testing.T) {
+// Test for the Quickstart DA
+func TestRunQuickstartSchematics(t *testing.T) {
 	t.Parallel()
 
-	options := setupStandardOptions(t, "es-std")
+	options := setupQuickstartOptions(t, "es-qs")
 	err := options.RunSchematicTest()
 	assert.Nil(t, err, "This should not have errored")
 }
 
-// Upgrade test for the Standard DA
-func TestRunStandardUpgradeSchematics(t *testing.T) {
+// Upgrade test for the Quickstart DA
+func TestRunQuickstartUpgradeSchematics(t *testing.T) {
 	t.Parallel()
 
-	options := setupStandardOptions(t, "es-std-upg")
+	options := setupQuickstartOptions(t, "es-qs-upg")
 	err := options.RunSchematicUpgradeTest()
 	if !options.UpgradeTestSkipped {
 		assert.Nil(t, err, "This should not have errored")
