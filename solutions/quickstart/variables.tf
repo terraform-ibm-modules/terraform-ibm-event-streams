@@ -156,7 +156,7 @@ variable "service_credential_secrets" {
   }))
   default     = []
   nullable    = false
-  description = "Service credential secrets configuration for Event Streams. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/enterprise/DA-types.md#service-credential-secrets)."
+  description = "Service credential secrets configuration for Event Streams. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/security-enforced/DA-types.md#service-credential-secrets)."
   validation {
     # Service roles CRNs can be found at https://cloud.ibm.com/iam/roles, select Event Streams and select the role
     condition = alltrue([
