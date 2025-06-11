@@ -85,7 +85,7 @@ variable "schemas" {
       })))
     })
   }))
-  description = "The list of schema objects. Include the `schema_id`, `type` and `name` of the schema in the `schema` object. Learn more: https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/enterprise/DA-schemas-topics-cbr.md#options-with-schemas."
+  description = "The list of schema objects. Include the `schema_id`, `type` and `name` of the schema in the `schema` object. Learn more: https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/security-enforced/DA-schemas-topics-cbr.md#options-with-schemas."
   default     = []
 }
 
