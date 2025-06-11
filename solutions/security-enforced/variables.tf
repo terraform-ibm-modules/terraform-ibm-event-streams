@@ -280,7 +280,7 @@ variable "cbr_rules" {
     }))) }))
     enforcement_mode = string
   }))
-  description = "A single context-based restriction rule to create. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/enterprise/DA-schemas-topics-cbr.md#options-with-cbr)."
+  description = "A single context-based restriction rule to create. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/security-enforced/DA-schemas-topics-cbr.md#options-with-cbr)."
   default     = []
   nullable    = false
   # Additional validation happens in the rule module
