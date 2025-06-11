@@ -283,7 +283,7 @@
             ]
           },
           "architecture": {
-            "descriptions": "This architecture supports provisioning and configuring security enforced Event Streams.",
+            "descriptions": "This architecture supports provisioning and configuring security enforced Event Streams instance.",
 
             "features": [
               {
