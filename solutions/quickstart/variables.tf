@@ -88,7 +88,7 @@ variable "topics" {
     {
       name       = string
       partitions = number
-      config     = object({})
+      config     = map(string)
     }
   ))
   description = "The list of topics to apply to resources. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/enterprise/DA-schemas-topics-cbr.md#options-with-topics)."
