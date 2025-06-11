@@ -135,7 +135,7 @@ variable "quotas" {
 }
 
 variable "service_credential_names" {
-  description = "The mapping of names and roles for service credentials that you want to create for the Event streams.[Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/enterprise/DA-types.md#svc-credential-name)"
+  description = "The mapping of names and roles for service credentials that you want to create for the Event streams.[Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/security-enforced/DA-types.md#svc-credential-name)"
   type        = map(string)
   default     = {}
 }
