@@ -34,7 +34,7 @@ variable "region" {
 
 variable "prefix" {
   type        = string
-  description = "The prefix to be added to all resources created by this solution. To skip using a prefix, set this value to null or an empty string. The prefix must begin with a lowercase letter and may contain only lowercase letters, digits, and hyphens '-'. It should not exceed 16 characters, must not end with a hyphen('-'), and can not contain consecutive hyphens ('--'). Example: prod-0205-es. [Learn more](https://terraform-ibm-modules.github.io/documentation/#/da-implementation-guidelines.md)."
+  description = "The prefix to be added to all resources created by this solution. To skip using a prefix, set this value to null or an empty string. The prefix must begin with a lowercase letter and may contain only lowercase letters, digits, and hyphens '-'. It should not exceed 16 characters, must not end with a hyphen('-'), and can not contain consecutive hyphens ('--'). Example: prod-0205-es. [Learn more](https://terraform-ibm-modules.github.io/documentation/#/prefix)."
 
   validation {
     condition = (var.prefix == null || var.prefix == "" ? true :
@@ -63,13 +63,13 @@ variable "event_streams_name" {
 
 variable "event_stream_instance_resource_tags" {
   type        = list(string)
-  description = "List of tags associated with the Event Steams instance"
+  description = "List of tags associated with the Event Streams instance"
   default     = []
 }
 
 variable "event_stream_instance_access_tags" {
   type        = list(string)
-  description = "The list of access tags associated with the Event Steams instance."
+  description = "The list of access tags associated with the Event Streams instance."
   default     = []
 }
 
@@ -106,10 +106,10 @@ variable "topics" {
     {
       name       = string
       partitions = number
-      config     = object({})
+      config     = map(string)
     }
   ))
-  description = "The list of topics to apply to resources. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/enterprise/DA-schemas-topics-cbr.md#options-with-topics)."
+  description = "The list of topics to apply to resources. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/security-enforced/DA-schemas-topics-cbr.md#options-with-topics)."
   default     = []
 }
 

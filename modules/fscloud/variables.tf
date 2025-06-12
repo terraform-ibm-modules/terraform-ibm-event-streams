@@ -7,13 +7,13 @@ variable "resource_group_id" {
 
 variable "tags" {
   type        = list(string)
-  description = "The list of tags associated with the Event Steams instance."
+  description = "The list of tags associated with the Event Streams instance."
   default     = []
 }
 
 variable "access_tags" {
   type        = list(string)
-  description = "The list of access tags associated with the Event Steams instance."
+  description = "The list of access tags associated with the Event Streams instance."
   default     = []
 }
 

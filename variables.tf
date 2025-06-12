@@ -24,7 +24,7 @@ variable "plan" {
 
 variable "tags" {
   type        = list(string)
-  description = "The list of tags associated with the Event Steams instance."
+  description = "The list of tags associated with the Event Streams instance."
   default     = []
 }
 

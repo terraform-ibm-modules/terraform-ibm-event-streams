@@ -34,7 +34,7 @@ module "event_streams" {
 # Service Credentials
 ########################################################################################################################
 
-# If existing SM intance CRN passed, parse details from it
+# If existing SM instance CRN passed, parse details from it
 module "existing_sm_crn_parser" {
   count   = var.existing_secrets_manager_instance_crn != null ? 1 : 0
   source  = "terraform-ibm-modules/common-utilities/ibm//modules/crn-parser"

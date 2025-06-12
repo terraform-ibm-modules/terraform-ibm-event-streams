@@ -70,7 +70,7 @@ func TestFSCloudInSchematics(t *testing.T) {
 	assert.Nil(t, err, "This should not have errored")
 }
 
-func setupEnterpriseOptions(t *testing.T, prefix string) *testschematic.TestSchematicOptions {
+func setupSecurityEnforcedOptions(t *testing.T, prefix string) *testschematic.TestSchematicOptions {
 	options := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
 		Testing:            t,
 		Prefix:             prefix,
@@ -161,9 +161,9 @@ func setupEnterpriseOptions(t *testing.T, prefix string) *testschematic.TestSche
 }
 
 // Test for the SecurityEnforced DA
-func TestEnterpriseSolutionInSchematics(t *testing.T) {
+func TestSecurityEnforcedSolutionInSchematics(t *testing.T) {
 	t.Parallel()
-	options := setupEnterpriseOptions(t, "es-ent")
+	options := setupSecurityEnforcedOptions(t, "es-sec-enf")
 	err := options.RunSchematicTest()
 	assert.Nil(t, err, "This should not have errored")
 }
