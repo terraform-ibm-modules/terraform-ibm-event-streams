@@ -316,7 +316,7 @@
               ],
               "optional": true,
               "on_by_default": false,
-              "version": "v3.0.11"
+              "version": "v3.0.7"
             },
             {
               "name": "deploy-arch-ibm-observability",
@@ -354,7 +354,7 @@
             }
           ],
           "dependency_version_2": true,
-           "terraform_version": "1.10.5"
+          "terraform_version": "1.10.5"
         },
         {
           "label": "Security-enforced",
@@ -689,13 +689,13 @@
               ],
               "optional": true,
               "on_by_default": false,
-              "version": "v3.0.11"
+              "version": "v3.0.7"
             },
             {
               "name": "deploy-arch-ibm-kms",
               "description": "Enable Cloud Automation for Key Protect when you want services to use your own managed encryption keys for encrypting the payload data. If disabled, it will fall back on IBM Cloud's default service-managed encryption.",
               "id": "2cad4789-fa90-4886-9c9e-857081c273ee-global",
-              "version": "v5.1.6",
+              "version": "v5.1.4",
               "flavors": ["fully-configurable"],
               "catalog_id": "7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3",
               "optional": true,
