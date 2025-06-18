@@ -61,13 +61,13 @@ variable "event_streams_name" {
   default     = "event-streams"
 }
 
-variable "event_stream_instance_resource_tags" {
+variable "resource_tags" {
   type        = list(string)
   description = "List of tags associated with the Event Streams instance"
   default     = []
 }
 
-variable "event_stream_instance_access_tags" {
+variable "access_tags" {
   type        = list(string)
   description = "The list of access tags associated with the Event Streams instance."
   default     = []
@@ -204,7 +204,7 @@ variable "mirroring" {
   default = null
 }
 
-variable "skip_event_streams_s2s_iam_auth_policy" {
+variable "skip_s2s_iam_auth_policy" {
   type        = bool
   description = "Set to true to skip the creation of an Event Streams s2s IAM authorization policy to provision an Event Streams mirroring instance. This is required to read from the source cluster. This policy is required when creating mirroring instance."
   default     = false
@@ -222,7 +222,7 @@ variable "skip_event_streams_kms_auth_policy" {
   nullable    = false
 }
 
-variable "existing_event_streams_kms_key_crn" {
+variable "existing_kms_key_crn" {
   type        = string
   description = "The CRN of a Key Protect or Hyper Protect Crypto Services key to use for Event Streams. If not specified, a key ring and key are created."
   default     = null
@@ -235,7 +235,7 @@ variable "existing_event_streams_kms_key_crn" {
 
 variable "existing_kms_instance_crn" {
   type        = string
-  description = "The CRN of a Key Protect or Hyper Protect Crypto Services instance. Required only when creating a new encryption key and key ring which will be used to encrypt event streams. To use an existing key, pass values for `existing_event_streams_kms_key_crn`."
+  description = "The CRN of a Key Protect or Hyper Protect Crypto Services instance. Required only when creating a new encryption key and key ring which will be used to encrypt event streams. To use an existing key, pass values for `existing_kms_key_crn`."
   default     = null
   validation {
     condition = anytrue([
@@ -249,13 +249,13 @@ variable "existing_kms_instance_crn" {
 variable "kms_key_ring_name" {
   type        = string
   default     = "event-streams-key-ring"
-  description = "The name for the new key ring to store the key. Applies only if `existing_event_streams_kms_key_crn` is not specified. If a prefix input variable is passed, it is added to the value in the `<prefix>-value` format. ."
+  description = "The name for the new key ring to store the key. Applies only if `existing_kms_key_crn` is not specified. If a prefix input variable is passed, it is added to the value in the `<prefix>-value` format. ."
 }
 
 variable "kms_key_name" {
   type        = string
   default     = "event-streams-key"
-  description = "The name for the new root key. Applies only if existing_event_streams_kms_key_crn` is not specified. If a prefix input variable is passed, it is added to the value in the `<prefix>-value` format."
+  description = "The name for the new root key. Applies only if existing_kms_key_crn` is not specified. If a prefix input variable is passed, it is added to the value in the `<prefix>-value` format."
 }
 
 variable "ibmcloud_kms_api_key" {

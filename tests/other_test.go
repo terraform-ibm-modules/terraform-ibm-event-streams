@@ -5,6 +5,7 @@ package test
 import (
 	"fmt"
 	"testing"
+
 	/*	"encoding/json" */
 
 	"github.com/stretchr/testify/assert"
@@ -145,8 +146,8 @@ func setupSecurityEnforcedOptions(t *testing.T, prefix string) *testschematic.Te
 		{Name: "existing_resource_group_name", Value: resourceGroup, DataType: "string"},
 		{Name: "provider_visibility", Value: "private", DataType: "string"},
 		{Name: "existing_kms_instance_crn", Value: permanentResources["hpcs_south_crn"], DataType: "string"},
-		{Name: "event_stream_instance_access_tags", Value: permanentResources["accessTags"], DataType: "list(string)"},
-		{Name: "event_stream_instance_resource_tags", Value: options.Tags, DataType: "list(string)"},
+		{Name: "access_tags", Value: permanentResources["accessTags"], DataType: "list(string)"},
+		{Name: "resource_tags", Value: options.Tags, DataType: "list(string)"},
 		{Name: "create_timeout", Value: "6h", DataType: "string"},
 		{Name: "existing_secrets_manager_instance_crn", Value: permanentResources["secretsManagerCRN"], DataType: "string"},
 		{Name: "service_credential_secrets", Value: serviceCredentialSecrets, DataType: "list(object)"},

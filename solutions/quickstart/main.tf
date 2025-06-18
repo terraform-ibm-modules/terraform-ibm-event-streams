@@ -22,8 +22,8 @@ module "event_streams" {
   plan                     = var.plan
   region                   = var.region
   topics                   = var.topics
-  tags                     = var.event_stream_instance_resource_tags
-  access_tags              = var.event_stream_instance_access_tags
+  tags                     = var.resource_tags
+  access_tags              = var.access_tags
   service_credential_names = var.service_credential_names
   create_timeout           = var.create_timeout
   update_timeout           = var.update_timeout

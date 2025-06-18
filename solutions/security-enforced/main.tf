@@ -15,17 +15,17 @@ module "resource_group" {
 # KMS Key
 ######################################################################################################################
 locals {
-  kms_key_crn       = var.existing_event_streams_kms_key_crn != null ? var.existing_event_streams_kms_key_crn : module.kms[0].keys[format("%s.%s", local.kms_key_ring_name, local.kms_key_name)].crn
+  kms_key_crn       = var.existing_kms_key_crn != null ? var.existing_kms_key_crn : module.kms[0].keys[format("%s.%s", local.kms_key_ring_name, local.kms_key_name)].crn
   kms_key_ring_name = "${local.prefix}${var.kms_key_ring_name}"
   kms_key_name      = "${local.prefix}${var.kms_key_name}"
   kms_region        = var.existing_kms_instance_crn != null ? module.kms_instance_crn_parser[0].region : null
 
   create_cross_account_auth_policy = !var.skip_event_streams_kms_auth_policy && var.ibmcloud_kms_api_key != null
 
-  kms_service_name  = var.existing_event_streams_kms_key_crn != null ? module.kms_key_crn_parser[0].service_name : (var.existing_kms_instance_crn != null ? module.kms_instance_crn_parser[0].service_name : null)
-  kms_key_id        = var.existing_event_streams_kms_key_crn != null ? module.kms_key_crn_parser[0].resource : (var.existing_kms_instance_crn != null ? module.kms_instance_crn_parser[0].resource : null)
-  kms_instance_guid = var.existing_event_streams_kms_key_crn != null ? module.kms_key_crn_parser[0].service_instance : (var.existing_kms_instance_crn != null ? module.kms_instance_crn_parser[0].service_instance : null)
-  kms_account_id    = var.existing_event_streams_kms_key_crn != null ? module.kms_key_crn_parser[0].account_id : (var.existing_kms_instance_crn != null ? module.kms_instance_crn_parser[0].account_id : null)
+  kms_service_name  = var.existing_kms_key_crn != null ? module.kms_key_crn_parser[0].service_name : (var.existing_kms_instance_crn != null ? module.kms_instance_crn_parser[0].service_name : null)
+  kms_key_id        = var.existing_kms_key_crn != null ? module.kms_key_crn_parser[0].resource : (var.existing_kms_instance_crn != null ? module.kms_instance_crn_parser[0].resource : null)
+  kms_instance_guid = var.existing_kms_key_crn != null ? module.kms_key_crn_parser[0].service_instance : (var.existing_kms_instance_crn != null ? module.kms_instance_crn_parser[0].service_instance : null)
+  kms_account_id    = var.existing_kms_key_crn != null ? module.kms_key_crn_parser[0].account_id : (var.existing_kms_instance_crn != null ? module.kms_instance_crn_parser[0].account_id : null)
 }
 
 data "ibm_iam_account_settings" "iam_account_settings" {
@@ -45,10 +45,10 @@ module "kms_instance_crn_parser" {
 }
 
 module "kms_key_crn_parser" {
-  count   = var.existing_event_streams_kms_key_crn != null ? 1 : 0
+  count   = var.existing_kms_key_crn != null ? 1 : 0
   source  = "terraform-ibm-modules/common-utilities/ibm//modules/crn-parser"
   version = "1.1.0"
-  crn     = var.existing_event_streams_kms_key_crn
+  crn     = var.existing_kms_key_crn
 }
 
 # Create auth policy (scoped to exact KMS key)
@@ -103,7 +103,7 @@ module "kms" {
   providers = {
     ibm = ibm.kms
   }
-  count                       = var.existing_event_streams_kms_key_crn == null ? 1 : 0 # no need to create any KMS resources if passing an existing key
+  count                       = var.existing_kms_key_crn == null ? 1 : 0 # no need to create any KMS resources if passing an existing key
   source                      = "terraform-ibm-modules/kms-all-inclusive/ibm"
   version                     = "5.1.7"
   create_key_protect_instance = false
@@ -143,15 +143,15 @@ module "event_streams" {
   kms_encryption_enabled               = true
   kms_key_crn                          = local.kms_key_crn
   skip_kms_iam_authorization_policy    = var.skip_event_streams_kms_auth_policy || local.create_cross_account_auth_policy
-  skip_es_s2s_iam_authorization_policy = var.skip_event_streams_s2s_iam_auth_policy
+  skip_es_s2s_iam_authorization_policy = var.skip_s2s_iam_auth_policy
   topics                               = var.topics
   metrics                              = var.metrics
   quotas                               = var.quotas
   mirroring_topic_patterns             = var.mirroring_topic_patterns
   mirroring                            = var.mirroring
   schemas                              = var.schemas
-  tags                                 = var.event_stream_instance_resource_tags
-  access_tags                          = var.event_stream_instance_access_tags
+  tags                                 = var.resource_tags
+  access_tags                          = var.access_tags
   service_endpoints                    = "private"
   service_credential_names             = var.service_credential_names
   cbr_rules                            = var.cbr_rules

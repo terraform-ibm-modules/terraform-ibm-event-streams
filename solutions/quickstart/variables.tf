@@ -71,13 +71,13 @@ variable "plan" {
   }
 }
 
-variable "event_stream_instance_resource_tags" {
+variable "resource_tags" {
   type        = list(string)
   description = "List of tags associated with the Event Streams instance"
   default     = []
 }
 
-variable "event_stream_instance_access_tags" {
+variable "access_tags" {
   type        = list(string)
   description = "The list of access tags associated with the Event Streams instance."
   default     = []

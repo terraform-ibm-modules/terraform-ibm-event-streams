@@ -89,8 +89,8 @@ func setupQuickstartOptions(t *testing.T, prefix string) *testschematic.TestSche
 		{Name: "region", Value: "us-south", DataType: "string"},
 		{Name: "existing_resource_group_name", Value: resourceGroup, DataType: "string"},
 		{Name: "provider_visibility", Value: "private", DataType: "string"},
-		{Name: "event_stream_instance_access_tags", Value: permanentResources["accessTags"], DataType: "list(string)"},
-		{Name: "event_stream_instance_resource_tags", Value: options.Tags, DataType: "list(string)"},
+		{Name: "access_tags", Value: permanentResources["accessTags"], DataType: "list(string)"},
+		{Name: "resource_tags", Value: options.Tags, DataType: "list(string)"},
 		// Update the create timeout as it can take longer than the default (3 hours) when running multiple tests in parallel
 		{Name: "create_timeout", Value: "6h", DataType: "string"},
 		{Name: "existing_secrets_manager_instance_crn", Value: permanentResources["secretsManagerCRN"], DataType: "string"},
