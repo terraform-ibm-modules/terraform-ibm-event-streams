@@ -2,6 +2,5 @@
   "ibmcloud_api_key": $VALIDATION_APIKEY,
   "resource_tags": $TAGS,
   "prefix": $PREFIX,
-  "existing_resource_group_name":  "geretain-test-event-streams",
-  "create_timeout": "6h"
+  "existing_resource_group_name":  "geretain-test-event-streams"
 }

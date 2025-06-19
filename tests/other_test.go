@@ -144,7 +144,6 @@ func setupSecurityEnforcedOptions(t *testing.T, prefix string) *testschematic.Te
 		{Name: "prefix", Value: options.Prefix, DataType: "string"},
 		{Name: "region", Value: "us-south", DataType: "string"},
 		{Name: "existing_resource_group_name", Value: resourceGroup, DataType: "string"},
-		{Name: "provider_visibility", Value: "private", DataType: "string"},
 		{Name: "existing_kms_instance_crn", Value: permanentResources["hpcs_south_crn"], DataType: "string"},
 		{Name: "access_tags", Value: permanentResources["accessTags"], DataType: "list(string)"},
 		{Name: "resource_tags", Value: options.Tags, DataType: "list(string)"},
