@@ -216,13 +216,20 @@
               "key": "service_credential_names"
             },
             {
-              "key": "existing_secrets_manager_endpoint_type"
+              "key": "existing_secrets_manager_endpoint_type",
+              "hidden": true
             },
             {
               "key": "existing_secrets_manager_instance_crn"
             },
             {
-              "key": "service_credential_secrets"
+              "key": "service_credential_secrets",
+              "type": "array",
+              "custom_config": {
+                "type": "textarea",
+                "grouping": "deployment",
+                "original_grouping": "deployment"
+              }
             },
             {
               "key": "enable_platform_metrics",
@@ -553,16 +560,29 @@
               "key": "service_credential_names"
             },
             {
-              "key": "existing_secrets_manager_endpoint_type"
+              "key": "existing_secrets_manager_endpoint_type",
+              "hidden": true
             },
             {
               "key": "existing_secrets_manager_instance_crn"
             },
             {
-              "key": "service_credential_secrets"
+              "key": "service_credential_secrets",
+              "type": "array",
+              "custom_config": {
+                "type": "textarea",
+                "grouping": "deployment",
+                "original_grouping": "deployment"
+              }
             },
             {
-              "key": "cbr_rules"
+              "key": "cbr_rules",
+              "type": "array",
+              "custom_config": {
+                "type": "textarea",
+                "grouping": "deployment",
+                "original_grouping": "deployment"
+              }
             },
             {
               "key": "enable_platform_metrics",
