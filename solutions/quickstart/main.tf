@@ -1,38 +1,40 @@
+########################################################################################################################
+# Resource Group
+########################################################################################################################
 locals {
-  prefix = var.prefix != null ? (var.prefix != "" ? var.prefix : null) : null
+  prefix = var.prefix != null ? trimspace(var.prefix) != "" ? "${var.prefix}-" : "" : ""
 }
 
-#######################################################################################################################
-# Resource Group
-#######################################################################################################################
 module "resource_group" {
   source                       = "terraform-ibm-modules/resource-group/ibm"
-  version                      = "1.2.0"
-  resource_group_name          = var.use_existing_resource_group == false ? try("${local.prefix}-${var.resource_group_name}", var.resource_group_name) : null
-  existing_resource_group_name = var.use_existing_resource_group == true ? var.resource_group_name : null
+  version                      = "1.1.6"
+  existing_resource_group_name = var.existing_resource_group_name
 }
 
 #######################################################################################################################
 # Event Streams Instance
 #######################################################################################################################
+
 module "event_streams" {
   source                   = "../../"
   resource_group_id        = module.resource_group.resource_group_id
-  es_name                  = try("${local.prefix}-${var.es_name}", var.es_name)
+  es_name                  = "${local.prefix}${var.event_streams_name}"
   plan                     = var.plan
   region                   = var.region
   topics                   = var.topics
   tags                     = var.resource_tags
   access_tags              = var.access_tags
   service_credential_names = var.service_credential_names
+  create_timeout           = var.create_timeout
+  update_timeout           = var.update_timeout
+  delete_timeout           = var.delete_timeout
 }
-
 
 ########################################################################################################################
 # Service Credentials
 ########################################################################################################################
 
-# If existing EN intance CRN passed, parse details from it
+# If existing SM instance CRN passed, parse details from it
 module "existing_sm_crn_parser" {
   count   = var.existing_secrets_manager_instance_crn != null ? 1 : 0
   source  = "terraform-ibm-modules/common-utilities/ibm//modules/crn-parser"

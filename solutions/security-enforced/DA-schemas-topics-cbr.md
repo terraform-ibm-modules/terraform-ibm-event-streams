@@ -85,8 +85,8 @@ The following example includes all the configuration options for cbr rule.
         rule_contexts = [{
             attributes = [
                 {
-                    "name" : "endpointType",
-                    "value" : "private"
+                    name = "endpointType",
+                    value = "private"
                 },
                 {
                     name  = "networkZoneId"
