@@ -9,7 +9,6 @@
         "target_terraform",
         "terraform",
         "solution",
-        "support_ibm",
         "integration"
       ],
       "keywords": [
@@ -17,63 +16,106 @@
         "IaC",
         "infrastructure as code",
         "terraform",
-        "solution",
-        "fscloud"
+        "solution"
       ],
-      "short_description": "Supports provisioning and configuring IBM Event Streams for IBM Cloud.",
-      "long_description": "This architecture supports creation and configuration of IBM Cloud Event Streams.",
+      "short_description": "Automates provisioning and configuration of IBM Event Streams instance on IBM Cloud for building secure, scalable, and event-driven cloud-native applications.",
+      "long_description": "This solution deploys and configures [IBM Cloud® Event Streams](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-getting-started), a fully managed, high-throughput message bus built on Apache Kafka. It supports real-time event ingestion and distribution across services and applications in IBM Cloud®. It supports provisioning the Event Streams instance and configuring Kafka topics, schemas, and quotas. It also enables mirroring of topics for high availability and disaster recovery. Additionally, it supports the creation of context-based restriction (CBR) rules for fine-grained access control. Data encryption is enforced through IBM Key Protect or Hyper Protect Crypto Services, ensuring data protection. This architecture is designed to provide a production-ready, scalable Kafka environment optimized for event-driven workloads in IBM Cloud®.",
       "offering_docs_url": "https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/blob/main/README.md",
       "offering_icon_url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-streams/main/images/event_streams.svg",
       "provider_name": "IBM",
       "features": [
         {
-          "title": "Create IBM Event Streams for IBM Cloud",
-          "description": "Create and configure IBM Event Streams to build responsive, durable, and highly available architecture deployments."
+          "title": "Topics",
+          "description": "Create and manage [topics](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-apache_kafka#kafka_topics_partitions) to organize your event streams. Customize partitions, retention, and configurations to optimize data flow and message durability."
         },
         {
-          "title": "Creates topics in the Event Streams instance",
-          "description": "Creates topics in IBM Cloud Event Streams instance."
+          "title": "Metrics",
+          "description": "Monitor your Event Streams instance with [metrics](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-getting-started-metrics) on throughput, latency, partition usage, and more. Use these insights to maintain performance and quickly detect issues."
+        },
+        {
+          "title": "Quotas",
+          "description": "Set [quotas](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-kafka_quotas) to manage client resource usage and ensure fair access. Prevent overloads by controlling bandwidth and partition consumption per application or user."
+        },
+        {
+          "title": "Mirroring",
+          "description": "Enable [mirroring](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-mirroring_setup) to replicate topics and consumer group offsets between clusters. Use this for disaster recovery, high availability, or multi-region deployments."
+        },
+        {
+          "title": "Schemas",
+          "description": "Leverage the [Schema Registry](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-ES_schema_registry#ES_overview) (Enterprise plan) to register, manage, and validate message schemas. Enforce compatibility and data quality across producers and consumers."
+        },
+        {
+          "title": "KMS Encryption",
+          "description": "Supports [customer-managed encryption](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-managing_encryption) with the following IBM Cloud® key management services"
         }
       ],
+      "support_details": "This product is in the community registry, as such support is handled through the originated repo. If you experience issues please open an issue in the repository [https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/issues](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/issues). Please note this product is not supported via the IBM Cloud Support Center.",
       "flavors": [
         {
-          "label": "quickstart",
+          "label": "Quickstart",
           "name": "quickstart",
+          "index": 1,
           "install_type": "fullstack",
           "working_directory": "solutions/quickstart",
+          "architecture": {
+            "descriptions": "This architecture supports provisioning and configuring quickstart Event Streams.",
+            "features": [
+              {
+                "title": "Quickstart variation",
+                "description": "Configured to use an Event Streams instance with either the lite or standard plan, including Kafka topics and optional add-on integrations, editable to fit your use case.."
+              }
+            ],
+            "diagrams": [
+              {
+                "diagram": {
+                  "caption": "Event Streams quickstart topology",
+                  "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-streams/main/reference-architecture/deployable-architecture-event-streams-quickstart.svg",
+                  "type": "image/svg+xml"
+                },
+                "description": "This architecture supports provisioning and configuring IBM Cloud® Event Streams:\n\n- Provisions an Event Streams instance using either the lite or standard plan.\n- Creates Kafka topics as part of the deployment.\n  - Lite plan supports a single topic.\n  - Standard plan supports multiple topics.\n\nThis modular design helps you build event-driven applications with a fully managed Kafka service on IBM Cloud®."
+              }
+            ]
+          },
+          "iam_permissions": [
+            {
+              "role_crns": ["crn:v1:bluemix:public:iam::::serviceRole:Manager"],
+              "service_name": "messagehub",
+              "notes": "Required for creating EventStreams instance."
+            },
+            {
+              "role_crns": ["crn:v1:bluemix:public:iam::::role:Editor"],
+              "service_name": "messagehub",
+              "notes": "Required for creating EventStreams instance."
+            },
+            {
+              "role_crns": ["crn:v1:bluemix:public:iam::::role:Administrator"],
+              "service_name": "iam-identity",
+              "notes": "[Optional] Required if Cloud automation for account configuration is enabled."
+            },
+            {
+              "role_crns": [
+                "crn:v1:bluemix:public:iam::::serviceRole:Manager",
+                "crn:v1:bluemix:public:iam::::role:Editor"
+              ],
+              "service_name": "sysdig-monitor",
+              "notes": "[Optional] Required if you are consuming Observability deployable architecture which sets up Cloud monitoring."
+            },
+            {
+              "role_crns": [
+                "crn:v1:bluemix:public:iam::::serviceRole:Manager",
+                "crn:v1:bluemix:public:iam::::role:Editor"
+              ],
+              "service_name": "logs",
+              "notes": "[Optional] Required if you are consuming Observability deployable architecture which sets up Cloud logs."
+            }
+          ],
           "configuration": [
             {
               "key": "ibmcloud_api_key"
             },
             {
-              "key": "provider_visibility",
-              "options": [
-                {
-                  "displayname": "private",
-                  "value": "private"
-                },
-                {
-                  "displayname": "public",
-                  "value": "public"
-                },
-                {
-                  "displayname": "public-and-private",
-                  "value": "public-and-private"
-                }
-              ]
-            },
-            {
               "key": "prefix",
               "required": true
-            },
-            {
-              "key": "use_existing_resource_group"
-            },
-            {
-              "key": "resource_group_name"
-            },
-            {
-              "key": "es_name"
             },
             {
               "key": "region",
@@ -82,6 +124,18 @@
                 {
                   "displayname": "Dallas (us-south)",
                   "value": "us-south"
+                },
+                {
+                  "displayname": "Sao Paulo (br-sao)",
+                  "value": "br-sao"
+                },
+                {
+                  "displayname": "Toronto (ca-tor)",
+                  "value": "ca-tor"
+                },
+                {
+                  "displayname": "Washington DC (us-east)",
+                  "value": "us-east"
                 },
                 {
                   "displayname": "Frankfurt (eu-de)",
@@ -106,30 +160,20 @@
                 {
                   "displayname": "Tokyo (jp-tok)",
                   "value": "jp-tok"
-                },
-                {
-                  "displayname": "Osaka (jp-osa)",
-                  "value": "jp-osa"
-                },
-                {
-                  "displayname": "Sao Paulo (br-sao)",
-                  "value": "br-sao"
-                },
-                {
-                  "displayname": "Toronto (ca-tor)",
-                  "value": "ca-tor"
-                },
-                {
-                  "displayname": "Washington (us-east)",
-                  "value": "us-east"
                 }
               ]
             },
             {
-              "key": "resource_tags"
-            },
-            {
-              "key": "access_tags"
+              "key": "existing_resource_group_name",
+              "display_name": "resource_group",
+              "custom_config": {
+                "type": "resource_group",
+                "grouping": "deployment",
+                "original_grouping": "deployment",
+                "config_constraints": {
+                  "identifier": "rg_name"
+                }
+              }
             },
             {
               "key": "plan",
@@ -145,149 +189,7 @@
               ]
             },
             {
-              "key": "topics"
-            },
-            {
-              "key": "service_credential_names"
-            },
-            {
-              "key": "existing_secrets_manager_endpoint_type"
-            },
-            {
-              "key": "existing_secrets_manager_instance_crn"
-            },
-            {
-              "key": "service_credential_secrets"
-            },
-            {
-              "key": "skip_event_streams_secrets_manager_auth_policy"
-            }
-          ],
-          "iam_permissions": [
-            {
-              "role_crns": [
-                "crn:v1:bluemix:public:iam::::serviceRole:Manager"
-              ],
-              "service_name": "messagehub"
-            },
-            {
-              "role_crns": [
-                "crn:v1:bluemix:public:iam::::role:Editor"
-              ],
-              "service_name": "messagehub"
-            }
-          ],
-          "architecture": {
-            "features": [
-              {
-                "title": "Creates an Event Streams instance",
-                "description": "Creates and configures the IBM Cloud Event Streams instance."
-              },
-              {
-                "title": "Creates topics in the Event Streams instance",
-                "description": "Creates topics in IBM Cloud Event Streams instance."
-              }
-            ],
-            "diagrams": [
-              {
-                "diagram": {
-                  "caption": "IBM Event Streams for IBM Cloud.",
-                  "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-streams/main/reference-architecture/da-quickstart.svg",
-                  "type": "image/svg+xml"
-                },
-                "description": "This architecture creates an instance of IBM Event Streams for IBM Cloud."
-              }
-            ]
-          }
-        },
-        {
-          "label": "enterprise",
-          "name": "enterprise",
-          "install_type": "fullstack",
-          "working_directory": "solutions/enterprise",
-          "configuration": [
-            {
-              "key": "ibmcloud_api_key"
-            },
-            {
-              "key": "provider_visibility",
-              "options": [
-                {
-                  "displayname": "private",
-                  "value": "private"
-                },
-                {
-                  "displayname": "public",
-                  "value": "public"
-                },
-                {
-                  "displayname": "public-and-private",
-                  "value": "public-and-private"
-                }
-              ]
-            },
-            {
-              "key": "prefix",
-              "required": true
-            },
-            {
-              "key": "use_existing_resource_group"
-            },
-            {
-              "key": "resource_group_name"
-            },
-            {
               "key": "event_streams_name"
-            },
-            {
-              "key": "region",
-              "required": true,
-              "options": [
-                {
-                  "displayname": "Dallas (us-south)",
-                  "value": "us-south"
-                },
-                {
-                  "displayname": "Frankfurt (eu-de)",
-                  "value": "eu-de"
-                },
-                {
-                  "displayname": "London (eu-gb)",
-                  "value": "eu-gb"
-                },
-                {
-                  "displayname": "Madrid (eu-es)",
-                  "value": "eu-es"
-                },
-                {
-                  "displayname": "Osaka (jp-osa)",
-                  "value": "jp-osa"
-                },
-                {
-                  "displayname": "Sydney (au-syd)",
-                  "value": "au-syd"
-                },
-                {
-                  "displayname": "Tokyo (jp-tok)",
-                  "value": "jp-tok"
-                },
-                {
-                  "displayname": "Osaka (jp-osa)",
-                  "value": "jp-osa"
-                },
-                {
-                  "displayname": "Sao Paulo (br-sao)",
-                  "value": "br-sao"
-                },
-                {
-                  "displayname": "Toronto (ca-tor)",
-                  "value": "ca-tor"
-                },
-                {
-                  "displayname": "Washington (us-east)",
-                  "value": "us-east"
-                }
-              ]
             },
             {
               "key": "resource_tags"
@@ -305,132 +207,554 @@
               "key": "update_timeout"
             },
             {
-              "key": "schemas"
-            },
-            {
-              "key": "schema_global_rule"
-            },
-            {
               "key": "topics"
             },
             {
-              "key": "skip_event_streams_s2s_iam_auth_policy"
-            },
-            {
-              "key": "cbr_rules"
+              "key": "skip_event_streams_secrets_manager_auth_policy"
             },
             {
               "key": "service_credential_names"
             },
             {
-              "key": "quotas"
-            },
-            {
-              "key": "metrics"
-            },
-            {
-              "key": "mirroring_topic_patterns"
-            },
-            {
-              "key": "mirroring"
-            },
-            {
-              "key": "event_streams_key_name"
-            },
-            {
-              "key": "event_streams_key_ring_name"
-            },
-            {
-              "key": "existing_kms_instance_crn"
-            },
-            {
-              "key": "ibmcloud_kms_api_key"
-            },
-            {
-              "key": "kms_endpoint_type"
-            },
-            {
-              "key": "skip_event_streams_kms_auth_policy"
-            },
-            {
-              "key": "existing_kms_key_crn"
-            },
-            {
-              "key": "iam_token_only"
-            },
-            {
-              "key": "existing_secrets_manager_endpoint_type"
+              "key": "existing_secrets_manager_endpoint_type",
+              "hidden": true
             },
             {
               "key": "existing_secrets_manager_instance_crn"
             },
             {
-              "key": "service_credential_secrets"
+              "key": "service_credential_secrets",
+              "type": "array",
+              "custom_config": {
+                "type": "textarea",
+                "grouping": "deployment",
+                "original_grouping": "deployment"
+              }
             },
             {
-              "key": "skip_event_streams_secrets_manager_auth_policy"
-            }
-          ],
-          "iam_permissions": [
-            {
-              "role_crns": [
-                "crn:v1:bluemix:public:iam::::serviceRole:Manager"
-              ],
-              "service_name": "messagehub"
+              "key": "enable_platform_metrics",
+              "type": "string",
+              "default_value": "true",
+              "description": "When set to `true`, the IBM Cloud Monitoring instance will be configured to collect platform metrics from the provided region. You can configure 1 instance only of the IBM Cloud Monitoring service per region to collect platform metrics in that location. Check with the account or service administrator if another monitoring instance has already been configured. You may not have permissions to see all monitoring instances in the region. [Learn more](https://cloud.ibm.com/docs/monitoring?topic=monitoring-platform_metrics_enabling).",
+              "required": true,
+              "virtual": true,
+              "options": [
+                {
+                  "displayname": "true",
+                  "value": "true"
+                },
+                {
+                  "displayname": "false",
+                  "value": "false"
+                }
+              ]
             },
             {
-              "role_crns": [
-                "crn:v1:bluemix:public:iam::::role:Editor"
-              ],
-              "service_name": "messagehub"
+              "key": "logs_routing_tenant_regions",
+              "type": "list(string)",
+              "default_value": "[]",
+              "description": "To manage platform logs that are generated by IBM Cloud services in a region of IBM Cloud, you must create a tenant in each region that you operate. Pass a list of regions to create a tenant in. [Learn more](https://cloud.ibm.com/docs/logs-router?topic=logs-router-about-platform-logs).",
+              "required": true,
+              "virtual": true,
+              "custom_config": {
+                "grouping": "deployment",
+                "original_grouping": "deployment",
+                "config_constraints": {
+                  "type": "string"
+                }
+              }
+            },
+            {
+              "key": "provider_visibility",
+              "hidden": true,
+              "options": [
+                {
+                  "displayname": "private",
+                  "value": "private"
+                },
+                {
+                  "displayname": "public",
+                  "value": "public"
+                },
+                {
+                  "displayname": "public-and-private",
+                  "value": "public-and-private"
+                }
+              ]
             }
           ],
+          "dependencies": [
+            {
+              "name": "deploy-arch-ibm-account-infra-base",
+              "description": "Cloud automation for Account Configuration organizes your IBM Cloud account with a ready-made set of resource groups by default and when you enable the \"with Account Settings\" option, it also applies baseline security and governance settings. ",
+              "catalog_id": "7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3",
+              "flavors": [
+                "resource-group-only",
+                "resource-groups-with-account-settings"
+              ],
+              "default_flavor": "resource-group-only",
+              "id": "63641cec-6093-4b4f-b7b0-98d2f4185cd6-global",
+              "input_mapping": [
+                {
+                  "dependency_output": "workload_resource_group_name",
+                  "version_input": "existing_resource_group_name"
+                },
+                {
+                  "dependency_input": "prefix",
+                  "version_input": "prefix",
+                  "reference_version": true
+                }
+              ],
+              "optional": true,
+              "on_by_default": false,
+              "version": "v3.0.7"
+            },
+            {
+              "name": "deploy-arch-ibm-observability",
+              "description": "Enable to provision and configure IBM Cloud Logs, Cloud Monitoring, Metrics routing and Activity Tracker event routing for analysing logs and metrics generated by the Eventstreams instance.",
+              "flavors": ["instances"],
+              "id": "a3137d28-79e0-479d-8a24-758ebd5a0eab-global",
+              "catalog_id": "7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3",
+              "input_mapping": [
+                {
+                  "dependency_input": "prefix",
+                  "version_input": "prefix",
+                  "reference_version": true
+                },
+                {
+                  "dependency_input": "region",
+                  "version_input": "region",
+                  "reference_version": true
+                },
+                {
+                  "dependency_input": "enable_platform_metrics",
+                  "version_input": "enable_platform_metrics",
+                  "reference_version": true
+                },
+                {
+                  "dependency_input": "logs_routing_tenant_regions",
+                  "version_input": "logs_routing_tenant_regions",
+                  "reference_version": true
+                }
+              ],
+              "optional": true,
+              "on_by_default": false,
+              "version": "v3.0.3"
+            },
+            {
+              "name": "deploy-arch-ibm-secrets-manager",
+              "description": "Enable to provisions and configures IBM Cloud Secrets Manager for securely storing service credentials.",
+              "id": "6d6ebc76-7bbd-42f5-8bc7-78f4fabd5944-global",
+              "flavors": ["fully-configurable"],
+              "catalog_id": "7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3",
+              "default_flavor": "fully-configurable",
+              "input_mapping": [
+                {
+                  "reference_version": true,
+                  "dependency_input": "prefix",
+                  "version_input": "prefix"
+                },
+                {
+                  "dependency_output": "secrets_manager_crn",
+                  "version_input": "existing_secrets_manager_instance_crn"
+                }
+              ],
+              "optional": true,
+              "on_by_default": false,
+              "version": "v2.6.1"
+            }
+          ],
+          "dependency_version_2": true,
+          "terraform_version": "1.10.5"
+        },
+        {
+          "label": "Security-enforced",
+          "name": "security-enforced",
+          "index": 2,
+          "install_type": "fullstack",
+          "working_directory": "solutions/security-enforced",
+          "compliance": {
+            "authority": "scc-v3",
+            "profiles": [
+              {
+                "profile_name": "IBM Cloud Framework for Financial Services",
+                "profile_version": "1.7.0"
+              }
+            ]
+          },
           "architecture": {
+            "descriptions": "This architecture supports provisioning and configuring security enforced Event Streams instance.",
             "features": [
               {
-                "title": "Creates an Event Streams instance",
-                "description": "Creates and configures the IBM Cloud Event Streams instance."
-              },
-              {
-                "title": "Creates topics in the Event Streams instance",
-                "description": "Creates topics in IBM Cloud Event Streams instance."
-              },
-              {
-                "title": "Creates schemas in the Event Streams instance",
-                "description": "Creates schemas in IBM Cloud Event Streams instance."
-              },
-              {
-                "title": "Supports mirroring",
-                "description": "Supports mirroring which enables messages in one Event Streams service instance to be continuously copied to a second instance."
-              },
-              {
-                "title": "Suports quotas.",
-                "description": "Supports quotas to control the resources, such as network bandwidth, that a service can consume.."
-              },
-              {
-                "title": "CBR",
-                "description": "Create context-based restriction (CBR) rules for Event Streams instance."
-              },
-              {
-                "title": "Encrypt messages with key management services",
-                "description": "Supports key management encryption (BYOK and KYOK)."
-              },
-              {
-                "title": "Managing users and roles",
-                "description": "Manage IAM service credentials for Event Streams."
+                "title": "Security enforced variation",
+                "description": "Configured to use an Event Streams instance, secure-by-default with the enterprise plan, including Kafka topics, schema registry, KMS encryption, CBR rules, quotas, mirroring; editable to fit your use case."
               }
             ],
             "diagrams": [
               {
                 "diagram": {
-                  "caption": "Financial Services compliant instance of IBM Event Streams for IBM Cloud.",
-                  "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-streams/main/reference-architecture/da-enterprise.svg",
+                  "caption": "Event Streams Security Enforced topology",
+                  "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-streams/main/reference-architecture/deployable-architecture-event-streams-security-enforced.svg",
                   "type": "image/svg+xml"
                 },
-                "description": "This architecture creates a Financial Services compliant instance of IBM Event Streams for IBM Cloud."
+                "description": "- Provisions a security enforced IBM Cloud® Event Streams environment.\n- Supports creation of Kafka topics, schema registries, metrics, and mirroring features.\n- Deploys resources within a defined region and resource group.\n- Enables customer-managed encryption using IBM Key Protect or Hyper Protect Crypto Services.\n- Allows use of an existing Key Management Services (KMS) instance and keys.\n- Supports Context-Based Restrictions (CBRs) to enforce secure access policies.\n- Provides a secure, event-driven messaging infrastructure on IBM Cloud."
               }
             ]
-          }
+          },
+          "iam_permissions": [
+            {
+              "role_crns": ["crn:v1:bluemix:public:iam::::serviceRole:Manager"],
+              "service_name": "messagehub",
+              "notes": "Required for creating EventStreams instance."
+            },
+            {
+              "role_crns": ["crn:v1:bluemix:public:iam::::role:Editor"],
+              "service_name": "messagehub",
+              "notes": "Required for creating EventStreams instance."
+            },
+            {
+              "service_name": "kms",
+              "role_crns": [
+                "crn:v1:bluemix:public:iam::::serviceRole:Manager",
+                "crn:v1:bluemix:public:iam::::role:Editor"
+              ],
+              "notes": "[Optional] Required if KMS encryption is enabled to encrypt the payload data."
+            },
+            {
+              "role_crns": ["crn:v1:bluemix:public:iam::::role:Administrator"],
+              "service_name": "iam-identity",
+              "notes": "[Optional] Required if Cloud automation for account configuration is enabled."
+            },
+            {
+              "role_crns": [
+                "crn:v1:bluemix:public:iam::::serviceRole:Manager",
+                "crn:v1:bluemix:public:iam::::role:Editor"
+              ],
+              "service_name": "sysdig-monitor",
+              "notes": "[Optional] Required if you are consuming Observability deployable architecture which sets up Cloud monitoring."
+            },
+            {
+              "role_crns": [
+                "crn:v1:bluemix:public:iam::::serviceRole:Manager",
+                "crn:v1:bluemix:public:iam::::role:Editor"
+              ],
+              "service_name": "logs",
+              "notes": "[Optional] Required if you are consuming Observability deployable architecture which sets up Cloud logs."
+            }
+          ],
+          "configuration": [
+            {
+              "key": "ibmcloud_api_key"
+            },
+            {
+              "key": "region",
+              "required": true,
+              "options": [
+                {
+                  "displayname": "Dallas (us-south)",
+                  "value": "us-south"
+                },
+                {
+                  "displayname": "Sao Paulo (br-sao)",
+                  "value": "br-sao"
+                },
+                {
+                  "displayname": "Toronto (ca-tor)",
+                  "value": "ca-tor"
+                },
+                {
+                  "displayname": "Washington DC (us-east)",
+                  "value": "us-east"
+                },
+                {
+                  "displayname": "Frankfurt (eu-de)",
+                  "value": "eu-de"
+                },
+                {
+                  "displayname": "London (eu-gb)",
+                  "value": "eu-gb"
+                },
+                {
+                  "displayname": "Madrid (eu-es)",
+                  "value": "eu-es"
+                },
+                {
+                  "displayname": "Osaka (jp-osa)",
+                  "value": "jp-osa"
+                },
+                {
+                  "displayname": "Sydney (au-syd)",
+                  "value": "au-syd"
+                },
+                {
+                  "displayname": "Tokyo (jp-tok)",
+                  "value": "jp-tok"
+                },
+                {
+                  "displayname": "Chennai (che01)",
+                  "value": "che01"
+                }
+              ]
+            },
+            {
+              "key": "prefix",
+              "required": true
+            },
+            {
+              "key": "existing_resource_group_name",
+              "display_name": "resource_group",
+              "custom_config": {
+                "type": "resource_group",
+                "grouping": "deployment",
+                "original_grouping": "deployment",
+                "config_constraints": {
+                  "identifier": "rg_name"
+                }
+              }
+            },
+            {
+              "key": "event_streams_name"
+            },
+            {
+              "key": "resource_tags"
+            },
+            {
+              "key": "access_tags"
+            },
+            {
+              "key": "create_timeout"
+            },
+            {
+              "key": "delete_timeout"
+            },
+            {
+              "key": "update_timeout"
+            },
+            {
+              "key": "topics"
+            },
+            {
+              "key": "skip_event_streams_kms_auth_policy"
+            },
+            {
+              "key": "ibmcloud_kms_api_key"
+            },
+            {
+              "key": "existing_kms_key_crn"
+            },
+            {
+              "key": "existing_kms_instance_crn"
+            },
+            {
+              "key": "kms_key_name"
+            },
+            {
+              "key": "kms_key_ring_name"
+            },
+            {
+              "key": "metrics"
+            },
+            {
+              "key": "mirroring"
+            },
+            {
+              "key": "mirroring_topic_patterns"
+            },
+            {
+              "key": "quotas"
+            },
+            {
+              "key": "schema_global_rule"
+            },
+            {
+              "key": "schemas"
+            },
+            {
+              "key": "iam_token_only"
+            },
+            {
+              "key": "skip_s2s_iam_auth_policy"
+            },
+            {
+              "key": "skip_event_streams_secrets_manager_auth_policy"
+            },
+            {
+              "key": "service_credential_names"
+            },
+            {
+              "key": "existing_secrets_manager_endpoint_type",
+              "hidden": true
+            },
+            {
+              "key": "existing_secrets_manager_instance_crn"
+            },
+            {
+              "key": "service_credential_secrets",
+              "type": "array",
+              "custom_config": {
+                "type": "textarea",
+                "grouping": "deployment",
+                "original_grouping": "deployment"
+              }
+            },
+            {
+              "key": "cbr_rules",
+              "type": "array",
+              "custom_config": {
+                "type": "textarea",
+                "grouping": "deployment",
+                "original_grouping": "deployment"
+              }
+            },
+            {
+              "key": "enable_platform_metrics",
+              "type": "string",
+              "default_value": "true",
+              "description": "When set to `true`, the IBM Cloud Monitoring instance will be configured to collect platform metrics from the provided region. You can configure 1 instance only of the IBM Cloud Monitoring service per region to collect platform metrics in that location. Check with the account or service administrator if another monitoring instance has already been configured. You may not have permissions to see all monitoring instances in the region. [Learn more](https://cloud.ibm.com/docs/monitoring?topic=monitoring-platform_metrics_enabling).",
+              "required": true,
+              "virtual": true,
+              "options": [
+                {
+                  "displayname": "true",
+                  "value": "true"
+                },
+                {
+                  "displayname": "false",
+                  "value": "false"
+                }
+              ]
+            },
+            {
+              "key": "logs_routing_tenant_regions",
+              "type": "list(string)",
+              "default_value": "[]",
+              "description": "To manage platform logs that are generated by IBM Cloud services in a region of IBM Cloud, you must create a tenant in each region that you operate. Pass a list of regions to create a tenant in. [Learn more](https://cloud.ibm.com/docs/logs-router?topic=logs-router-about-platform-logs).",
+              "required": true,
+              "virtual": true,
+              "custom_config": {
+                "grouping": "deployment",
+                "original_grouping": "deployment",
+                "config_constraints": {
+                  "type": "string"
+                }
+              }
+            }
+          ],
+          "dependencies": [
+            {
+              "name": "deploy-arch-ibm-account-infra-base",
+              "description": "Cloud automation for Account Configuration organizes your IBM Cloud account with a ready-made set of resource groups by default and when you enable the \"with Account Settings\" option, it also applies baseline security and governance settings. ",
+              "catalog_id": "7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3",
+              "flavors": [
+                "resource-group-only",
+                "resource-groups-with-account-settings"
+              ],
+              "default_flavor": "resource-group-only",
+              "id": "63641cec-6093-4b4f-b7b0-98d2f4185cd6-global",
+              "input_mapping": [
+                {
+                  "dependency_output": "workload_resource_group_name",
+                  "version_input": "existing_resource_group_name"
+                },
+                {
+                  "dependency_input": "prefix",
+                  "version_input": "prefix",
+                  "reference_version": true
+                }
+              ],
+              "optional": true,
+              "on_by_default": false,
+              "version": "v3.0.7"
+            },
+            {
+              "name": "deploy-arch-ibm-kms",
+              "description": "Enable Cloud Automation for Key Protect when you want services to use your own managed encryption keys for encrypting the payload data. If disabled, it will fall back on IBM Cloud's default service-managed encryption.",
+              "id": "2cad4789-fa90-4886-9c9e-857081c273ee-global",
+              "version": "v5.1.4",
+              "flavors": ["fully-configurable"],
+              "catalog_id": "7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3",
+              "optional": true,
+              "on_by_default": true,
+              "ignore_auto_referencing": ["*"],
+              "input_mapping": [
+                {
+                  "dependency_output": "kms_instance_crn",
+                  "version_input": "existing_kms_instance_crn"
+                },
+                {
+                  "dependency_input": "existing_resource_group_name",
+                  "version_input": "existing_resource_group_name",
+                  "reference_version": true
+                },
+                {
+                  "dependency_input": "prefix",
+                  "version_input": "prefix",
+                  "reference_version": true
+                },
+                {
+                  "dependency_input": "region",
+                  "version_input": "region",
+                  "reference_version": true
+                }
+              ]
+            },
+            {
+              "name": "deploy-arch-ibm-observability",
+              "description": "Enable to provision and configure IBM Cloud Logs, Cloud Monitoring, Metrics routing and Activity Tracker event routing for analysing logs and metrics generated by the Eventstreams instance.",
+              "flavors": ["instances"],
+              "id": "a3137d28-79e0-479d-8a24-758ebd5a0eab-global",
+              "catalog_id": "7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3",
+              "input_mapping": [
+                {
+                  "dependency_input": "prefix",
+                  "version_input": "prefix",
+                  "reference_version": true
+                },
+                {
+                  "dependency_input": "region",
+                  "version_input": "region",
+                  "reference_version": true
+                },
+                {
+                  "dependency_input": "enable_platform_metrics",
+                  "version_input": "enable_platform_metrics",
+                  "reference_version": true
+                },
+                {
+                  "dependency_input": "logs_routing_tenant_regions",
+                  "version_input": "logs_routing_tenant_regions",
+                  "reference_version": true
+                }
+              ],
+              "optional": true,
+              "on_by_default": true,
+              "version": "v3.0.3"
+            },
+            {
+              "name": "deploy-arch-ibm-secrets-manager",
+              "description": "Enable to provisions and configures IBM Cloud Secrets Manager for securely storing service credentials.",
+              "id": "6d6ebc76-7bbd-42f5-8bc7-78f4fabd5944-global",
+              "flavors": ["fully-configurable"],
+              "catalog_id": "7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3",
+              "default_flavor": "fully-configurable",
+              "input_mapping": [
+                {
+                  "reference_version": true,
+                  "dependency_input": "prefix",
+                  "version_input": "prefix"
+                },
+                {
+                  "dependency_output": "secrets_manager_crn",
+                  "version_input": "existing_secrets_manager_instance_crn"
+                }
+              ],
+              "optional": true,
+              "on_by_default": true,
+              "version": "v2.6.1"
+            }
+          ],
+          "dependency_version_2": true,
+          "terraform_version": "1.10.5"
         }
       ]
     }

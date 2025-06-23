@@ -1,32 +1,47 @@
+########################################################################################################################
+# Common variables
+########################################################################################################################
+
 variable "ibmcloud_api_key" {
   type        = string
-  description = "The IBM Cloud API Key"
+  description = "The IBM Cloud API key used to provision resources."
   sensitive   = true
+}
+variable "existing_resource_group_name" {
+  type        = string
+  description = "The name of an existing resource group to provision resource in."
+  default     = "Default"
+  nullable    = false
 }
 
 variable "region" {
   type        = string
-  description = "Region to provision all resources created by this example"
+  description = "The region in which the Event Streams resources are provisioned. [Learn more](https://terraform-ibm-modules.github.io/documentation/#/region) about how to select different regions for different services."
   default     = "us-south"
 }
 
 variable "prefix" {
   type        = string
-  description = "The prefix to add to all resources that this solution creates. To not use any prefix value, you can set this value to `null` or an empty string."
-  default     = "enterprise"
+  description = "The prefix to be added to all resources created by this solution. To skip using a prefix, set this value to null or an empty string. The prefix must begin with a lowercase letter and may contain only lowercase letters, digits, and hyphens '-'. It should not exceed 16 characters, must not end with a hyphen('-'), and can not contain consecutive hyphens ('--'). Example: prod-0205-es. [Learn more](https://terraform-ibm-modules.github.io/documentation/#/prefix)."
+
+  validation {
+    condition = (var.prefix == null || var.prefix == "" ? true :
+      alltrue([
+        can(regex("^[a-z][-a-z0-9]*[a-z0-9]$", var.prefix)),
+        length(regexall("--", var.prefix)) == 0
+      ])
+    )
+    error_message = "Prefix must begin with a lowercase letter and may contain only lowercase letters, digits, and hyphens '-'. It must not end with a hyphen('-'), and cannot contain consecutive hyphens ('--')."
+  }
+  validation {
+    condition     = length(var.prefix) <= 16
+    error_message = "Prefix must not exceed 16 characters."
+  }
 }
 
-variable "resource_group_name" {
-  type        = string
-  description = "The name of a new or the existing resource group to provision the Event Streams instance. If a prefix input variable is passed, it is prefixed to the value in the `<prefix>-value` format."
-}
-
-variable "use_existing_resource_group" {
-  type        = bool
-  description = "Whether to use an existing resource group."
-  default     = false
-  nullable    = false
-}
+########################################################################################################################
+# Event Streams
+########################################################################################################################
 
 variable "event_streams_name" {
   description = "The name of the Event Streams instance to create. If a prefix input variable is passed, it is prefixed to the value in the `<prefix>-value` format."
@@ -36,33 +51,32 @@ variable "event_streams_name" {
 
 variable "resource_tags" {
   type        = list(string)
-  description = "List of tags associated with the Event Steams instance"
+  description = "List of tags associated with the Event Streams instance"
   default     = []
 }
 
 variable "access_tags" {
   type        = list(string)
-  description = "The list of access tags associated with the Event Steams instance."
+  description = "The list of access tags associated with the Event Streams instance."
   default     = []
 }
 
 variable "schemas" {
-  type = list(object(
-    {
-      schema_id = string
-      schema = object({
-        type = string
+  type = list(object({
+    schema_id = string
+    schema = object({
+      type = string
+      name = string
+      fields = optional(list(object({
         name = string
-        fields = optional(list(object({
-          name = string
-          type = string
-        })))
-      })
-    }
-  ))
-  description = "The list of schema objects. Include the `schema_id`, `type` and `name` of the schema in the `schema` object. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/enterprise/DA-schemas-topics-cbr.md#options-with-schemas)."
+        type = string
+      })))
+    })
+  }))
+  description = "The list of schema objects. Include the `schema_id`, `type` and `name` of the schema in the `schema` object. Learn more: https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/security-enforced/DA-schemas-topics-cbr.md#options-with-schemas."
   default     = []
 }
+
 
 variable "schema_global_rule" {
   type        = string
@@ -80,42 +94,11 @@ variable "topics" {
     {
       name       = string
       partitions = number
-      config     = object({})
+      config     = map(string)
     }
   ))
-  description = "The list of topics to apply to resources. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/enterprise/DA-schemas-topics-cbr.md#options-with-topics)."
+  description = "The list of topics to apply to resources. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/security-enforced/DA-schemas-topics-cbr.md#options-with-topics)."
   default     = []
-}
-
-##############################################################
-# Context-based restriction (CBR)
-##############################################################
-
-variable "cbr_rules" {
-  type = list(object({
-    description = string
-    account_id  = string
-    rule_contexts = list(object({
-      attributes = optional(list(object({
-        name  = string
-        value = string
-    }))) }))
-    enforcement_mode = string
-  }))
-  description = "A single context-based restriction rule to create. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/enterprise/DA-schemas-topics-cbr.md#options-with-cbr)."
-  default     = []
-  nullable    = false
-  # Additional validation happens in the rule module
-  validation {
-    condition     = !(length(var.cbr_rules) > 1)
-    error_message = "Only one context-based restriction rule is allowed."
-  }
-}
-
-variable "service_credential_names" {
-  description = "The mapping of names and roles for service credentials that you want to create for the Event streams.[Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/enterprise/DA-types.md#svc-credential-name)"
-  type        = map(string)
-  default     = {}
 }
 
 variable "metrics" {
@@ -137,6 +120,36 @@ variable "quotas" {
   }))
   description = "Quotas to be applied to the Event Streams instance. Entity may be 'default' to apply to all users, or an IAM ServiceID for a specific user. Rates are bytes/second, with -1 meaning no quota. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/enterprise/DA-types.md#quotas)"
   default     = []
+}
+
+variable "service_credential_names" {
+  description = "The mapping of names and roles for service credentials that you want to create for the Event streams.[Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/security-enforced/DA-types.md#svc-credential-name)"
+  type        = map(string)
+  default     = {}
+}
+
+variable "iam_token_only" {
+  type        = bool
+  description = "If set to true, disables Kafka's SASL PLAIN authentication method, only allowing clients to authenticate with SASL OAUTHBEARER via IAM access token. For more information, see: https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-security. Only allowed for enterprise plans."
+  default     = false
+}
+
+variable "create_timeout" {
+  type        = string
+  description = "The timeout value for creating an Event Streams instance. Specify `3h` for an Enterprise plan instance. Add 1 h for each level of non-default throughput. Add 30 min for each level of non-default storage size."
+  default     = "3h"
+}
+
+variable "update_timeout" {
+  type        = string
+  description = "The timeout value for updating an Event Streams instance. Specify `1h` for an Enterprise plan instance. Add 1 h for each level of non-default throughput. A 30 min for each level of non-default storage size."
+  default     = "1h"
+}
+
+variable "delete_timeout" {
+  type        = string
+  description = "The timeout value for deleting an Event Streams instance."
+  default     = "15m"
 }
 
 ##############################################################
@@ -179,57 +192,16 @@ variable "mirroring" {
   default = null
 }
 
-variable "skip_event_streams_s2s_iam_auth_policy" {
+variable "skip_s2s_iam_auth_policy" {
   type        = bool
   description = "Set to true to skip the creation of an Event Streams s2s IAM authorization policy to provision an Event Streams mirroring instance. This is required to read from the source cluster. This policy is required when creating mirroring instance."
   default     = false
   nullable    = false
 }
 
-##############################################################
-# Provider
-##############################################################
-
-variable "provider_visibility" {
-  description = "Set the visibility value for the IBM terraform provider. Supported values are `public`, `private`, `public-and-private`. [Learn more](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/guides/custom-service-endpoints)."
-  type        = string
-  default     = "private"
-
-  validation {
-    condition     = contains(["public", "private", "public-and-private"], var.provider_visibility)
-    error_message = "Invalid visibility option. Allowed values are 'public', 'private', or 'public-and-private'."
-  }
-}
-
-##############################################################
-# Encryption
-##############################################################
-
-variable "existing_kms_instance_crn" {
-  type        = string
-  description = "The CRN of a Key Protect or Hyper Protect Crypto Services instance. Required only when creating a new encryption key and key ring which will be used to encrypt event streams. To use an existing key, pass values for `existing_kms_key_crn`."
-  default     = null
-  validation {
-    condition     = !(var.existing_kms_instance_crn == null && var.existing_kms_key_crn == null)
-    error_message = "Both 'existing_kms_instance_crn' and 'existing_kms_key_crn' input variables can not be null. Set 'existing_kms_instance_crn' to create a new KMS key or 'existing_kms_key_crn' to use an existing KMS key."
-  }
-}
-
-variable "existing_kms_key_crn" {
-  type        = string
-  description = "The CRN of a Key Protect or Hyper Protect Crypto Services encryption key to encrypt your data. If no value is passed a new key will be created in the instance specified in the `existing_kms_instance_crn` input variable."
-  default     = null
-}
-
-variable "kms_endpoint_type" {
-  type        = string
-  description = "The type of endpoint to use for communicating with the Key Protect or Hyper Protect Crypto Services instance. Possible values: `public`, `private`."
-  default     = "private"
-  validation {
-    condition     = can(regex("public|private", var.kms_endpoint_type))
-    error_message = "The kms_endpoint_type value must be 'public' or 'private'."
-  }
-}
+########################################################################################################################
+# Key Protect
+########################################################################################################################
 
 variable "skip_event_streams_kms_auth_policy" {
   type        = bool
@@ -238,16 +210,40 @@ variable "skip_event_streams_kms_auth_policy" {
   nullable    = false
 }
 
-variable "event_streams_key_ring_name" {
+variable "existing_kms_key_crn" {
   type        = string
-  default     = "event-streams-key-ring"
-  description = "The name for the key ring created for the Event Streams key. Applies only if not specifying an existing key. If a prefix input variable is specified, the prefix is added to the name in the `<prefix>-<name>` format."
+  description = "The CRN of a Key Protect or Hyper Protect Crypto Services key to use for Event Streams. If not specified, a key ring and key are created."
+  default     = null
 }
 
-variable "event_streams_key_name" {
+########################################################################################################################
+# KMS properties required when creating an encryption key, rather than passing an existing key CRN.
+########################################################################################################################
+
+
+variable "existing_kms_instance_crn" {
+  type        = string
+  description = "The CRN of a Key Protect or Hyper Protect Crypto Services instance. Required only when creating a new encryption key and key ring which will be used to encrypt event streams. To use an existing key, pass values for `existing_kms_key_crn`."
+  default     = null
+  validation {
+    condition = anytrue([
+      can(regex("^crn:(.*:){3}(kms|hs-crypto):(.*:){2}[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}::$", var.existing_kms_instance_crn)),
+      var.existing_kms_instance_crn == null,
+    ])
+    error_message = "The provided KMS instance CRN in the input 'existing_kms_instance_crn' in not valid."
+  }
+}
+
+variable "kms_key_ring_name" {
+  type        = string
+  default     = "event-streams-key-ring"
+  description = "The name for the new key ring to store the key. Applies only if `existing_kms_key_crn` is not specified. If a prefix input variable is passed, it is added to the value in the `<prefix>-value` format. ."
+}
+
+variable "kms_key_name" {
   type        = string
   default     = "event-streams-key"
-  description = "The name for the key created for the Event Streams key. Applies only if not specifying an existing key. If a prefix input variable is specified, the prefix is added to the name in the `<prefix>-<name>` format."
+  description = "The name for the new root key. Applies only if existing_kms_key_crn` is not specified. If a prefix input variable is passed, it is added to the value in the `<prefix>-value` format."
 }
 
 variable "ibmcloud_kms_api_key" {
@@ -257,28 +253,29 @@ variable "ibmcloud_kms_api_key" {
   default     = null
 }
 
-variable "iam_token_only" {
-  type        = bool
-  description = "If set to true, disables Kafka's SASL PLAIN authentication method, only allowing clients to authenticate with SASL OAUTHBEARER via IAM access token. For more information, see: https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-security. Only allowed for enterprise plans."
-  default     = false
-}
+##############################################################
+# Context-based restriction (CBR)
+##############################################################
 
-variable "create_timeout" {
-  type        = string
-  description = "The timeout value for creating an Event Streams instance. Specify `3h` for an Enterprise plan instance. Add 1 h for each level of non-default throughput. Add 30 min for each level of non-default storage size."
-  default     = "3h"
-}
-
-variable "update_timeout" {
-  type        = string
-  description = "The timeout value for updating an Event Streams instance. Specify `1h` for an Enterprise plan instance. Add 1 h for each level of non-default throughput. A 30 min for each level of non-default storage size."
-  default     = "1h"
-}
-
-variable "delete_timeout" {
-  type        = string
-  description = "The timeout value for deleting an Event Streams instance."
-  default     = "15m"
+variable "cbr_rules" {
+  type = list(object({
+    description = string
+    account_id  = string
+    rule_contexts = list(object({
+      attributes = optional(list(object({
+        name  = string
+        value = string
+    }))) }))
+    enforcement_mode = string
+  }))
+  description = "A single context-based restriction rule to create. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/security-enforced/DA-schemas-topics-cbr.md#options-with-cbr)."
+  default     = []
+  nullable    = false
+  # Additional validation happens in the rule module
+  validation {
+    condition     = !(length(var.cbr_rules) > 1)
+    error_message = "Only one context-based restriction rule is allowed."
+  }
 }
 
 #############################################################################
@@ -301,7 +298,7 @@ variable "existing_secrets_manager_endpoint_type" {
 }
 variable "service_credential_secrets" {
   type = list(object({
-    secret_group_name        = string
+    secret_group_name        = string # pragma: allowlist secret
     secret_group_description = optional(string)
     existing_secret_group    = optional(bool)
     service_credentials = list(object({

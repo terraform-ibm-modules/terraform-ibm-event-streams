@@ -24,7 +24,7 @@ variable "resource_group" {
 
 variable "resource_tags" {
   type        = list(string)
-  description = "List of tags associated with the Event Steams instance"
+  description = "List of tags associated with the Event Streams instance"
   default     = []
 }
 
