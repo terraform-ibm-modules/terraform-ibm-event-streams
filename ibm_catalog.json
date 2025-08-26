@@ -248,11 +248,11 @@
               "options": [
                 {
                   "displayname": "true",
-                  "value": "true"
+                  "value": true
                 },
                 {
                   "displayname": "false",
-                  "value": "false"
+                  "value": false
                 }
               ]
             },
@@ -633,11 +633,11 @@
               "options": [
                 {
                   "displayname": "true",
-                  "value": "true"
+                  "value": true
                 },
                 {
                   "displayname": "false",
-                  "value": "false"
+                  "value": false
                 }
               ]
             },
