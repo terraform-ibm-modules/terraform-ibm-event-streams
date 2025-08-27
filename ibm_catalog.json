@@ -275,7 +275,7 @@
               "key": "secrets_manager_service_plan",
               "type": "string",
               "default_value": "standard",
-              "description": "The pricing plan to use when provisioning a Secrets Manager instance. Possible values: `standard`, `trial`. You can create only one Trial instance of Secrets Manager per account. Before you can create a new Trial instance, you must delete the existing Trial instance and its reclamation. [Learn more](https://cloud.ibm.com/docs/secrets-manager?topic=secrets-manager-create-instance&interface=ui#upgrade-instance-standard).",
+              "description": "The pricing plan to use when provisioning a Secrets Manager instance. You can create only one Trial instance of Secrets Manager per account. Before you can create a new Trial instance, you must delete the existing Trial instance and its reclamation. [Learn more](https://cloud.ibm.com/docs/secrets-manager?topic=secrets-manager-create-instance&interface=ui#upgrade-instance-standard).",
               "required": true,
               "virtual": true,
               "options": [
@@ -417,6 +417,30 @@
               "optional": true,
               "on_by_default": true,
               "version": "v1.2.12"
+            },
+            {
+              "name": "deploy-arch-ibm-scc-workload-protection",
+              "description": "Configure IBM Security and Compliance Center Workload Protection resources",
+              "flavors": [
+                "fully-configurable"
+              ],
+              "id": "4322cf44-2289-49aa-a719-dd79e39b14dc-global",
+              "catalog_id": "7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3",
+              "input_mapping": [
+                {
+                  "dependency_input": "prefix",
+                  "version_input": "prefix",
+                  "reference_version": true
+                },
+                {
+                  "dependency_input": "region",
+                  "version_input": "region",
+                  "reference_version": true
+                }
+              ],
+              "optional": true,
+              "on_by_default": true,
+              "version": "v1.11.1"
             },
             {
               "name": "deploy-arch-ibm-secrets-manager",
