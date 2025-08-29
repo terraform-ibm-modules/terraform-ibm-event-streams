@@ -7,11 +7,11 @@ variable "ibmcloud_api_key" {
   description = "The IBM Cloud API key used to provision resources."
   sensitive   = true
 }
+
 variable "existing_resource_group_name" {
   type        = string
-  description = "The name of an existing resource group to provision resource in."
-  default     = "Default"
-  nullable    = false
+  description = "The name of an existing resource group to provision the resources. If not provided the default resource group will be used."
+  default     = null
 }
 
 variable "region" {
