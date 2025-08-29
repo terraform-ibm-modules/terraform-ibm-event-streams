@@ -154,9 +154,9 @@ func TestDependencyPermutations(t *testing.T) {
 	options := testaddons.TestAddonsOptionsDefault(&testaddons.TestAddonOptions{
 		Testing:          t,
 		Prefix:           "es-perm",
-		StaggerDelay:     testaddons.StaggerDelay(20 * time.Second),    // 20s delay between batches
-		StaggerBatchSize: testaddons.StaggerBatchSize(4),               // 4 tests per batch
-		WithinBatchDelay: testaddons.WithinBatchDelay(8 * time.Second), // 8s delay within batch
+		StaggerDelay:     testaddons.StaggerDelay(20 * time.Second),     // 20s delay between batches
+		StaggerBatchSize: testaddons.StaggerBatchSize(4),                // 4 tests per batch
+		WithinBatchDelay: testaddons.WithinBatchDelay(16 * time.Second), // 8s delay within batch
 		AddonConfig: cloudinfo.AddonConfig{
 			OfferingName:   "deploy-arch-ibm-event-streams",
 			OfferingFlavor: "quickstart",
