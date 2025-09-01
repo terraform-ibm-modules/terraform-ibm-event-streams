@@ -458,7 +458,7 @@
             },
             {
               "name": "deploy-arch-ibm-secrets-manager",
-              "description": "Configure an Secrets Manager instance for managing Event Streams service credentials.",
+              "description": "Configure a Secrets Manager instance for managing Event Streams service credentials.",
               "id": "6d6ebc76-7bbd-42f5-8bc7-78f4fabd5944-global",
               "flavors": [
                 "fully-configurable"
