@@ -150,6 +150,7 @@ func TestEventStreamsDefaultConfiguration(t *testing.T) {
 
 // TestDependencyPermutations runs dependency permutations for Event Streams and all its dependencies
 func TestDependencyPermutations(t *testing.T) {
+	t.Parallel()
 
 	options := testaddons.TestAddonsOptionsDefault(&testaddons.TestAddonOptions{
 		Testing:          t,
