@@ -47,9 +47,9 @@ variable "region" {
   validation {
     condition = !(var.plan == "standard" && !contains([
       "us-south", "br-sao", "ca-tor", "us-east",
-      "eu-de", "eu-fr2", "eu-gb", "eu-es", "jp-osa", "au-syd", "jp-tok"
+      "eu-de", "eu-gb", "eu-es", "jp-osa", "au-syd", "jp-tok"
     ], var.region))
-    error_message = "The 'standard' plan is only supported in the following regions: us-south, br-sao, ca-tor, us-east, eu-de, eu-fr2, eu-gb, eu-es, jp-osa, au-syd, jp-tok."
+    error_message = "The 'standard' plan is only supported in the following regions: us-south, br-sao, ca-tor, us-east, eu-de, eu-gb, eu-es, jp-osa, au-syd, jp-tok."
   }
 
   validation {
