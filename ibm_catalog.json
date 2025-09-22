@@ -10,7 +10,7 @@
         "terraform",
         "solution",
         "integration",
-        "converged_infra"
+        "platform_engineering"
       ],
       "keywords": [
         "event streams",
