@@ -350,3 +350,9 @@ variable "iam_token_only" {
     error_message = "iam_token_only is only supported for enterprise plan."
   }
 }
+
+variable "service_credentials_endpoints" {
+  description = "Map of service credential names to endpoint type (public or private). If not specified, defaults to public."
+  type        = map(string)
+  default     = {}
+}
