@@ -107,6 +107,12 @@ variable "service_credential_names" {
   default     = {}
 }
 
+variable "service_credentials_endpoints" {
+  description = "Map of service credential names to endpoint type (public or private). If not specified, defaults to public."
+  type        = map(string)
+  default     = {}
+}
+
 variable "metrics" {
   type        = list(string)
   description = "Enhanced metrics to activate, as list of strings. Allowed values: 'topic', 'partition', 'consumers'."
