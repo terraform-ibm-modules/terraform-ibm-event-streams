@@ -178,3 +178,9 @@ variable "skip_event_streams_secrets_manager_auth_policy" {
   nullable    = false
   description = "Whether an IAM authorization policy is created for Secrets Manager instance to create a service credential secrets for Event Streams.If set to false, the Secrets Manager instance passed by the user is granted the Key Manager access to the Event Streams instance created by the Deployable Architecture. Set to `true` to use an existing policy. The value of this is ignored if any value for 'existing_secrets_manager_instance_crn' is not passed."
 }
+
+variable "service_credential_endpoint" {
+  description = "Service credential endpoint type (public or private). If not specified, defaults to public."
+  type        = string
+  default     = "public"
+}

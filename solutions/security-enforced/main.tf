@@ -154,6 +154,7 @@ module "event_streams" {
   access_tags                          = var.access_tags
   service_endpoints                    = "private"
   service_credential_names             = var.service_credential_names
+  service_credential_endpoint          = "private"
   cbr_rules                            = var.cbr_rules
   schema_global_rule                   = var.schema_global_rule
   iam_token_only                       = var.iam_token_only

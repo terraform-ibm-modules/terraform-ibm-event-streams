@@ -230,9 +230,9 @@ resource "ibm_resource_key" "service_credentials" {
   name                 = each.key
   role                 = each.value
   resource_instance_id = ibm_resource_instance.es_instance.id
-  parameters = lookup(var.service_credentials_endpoints, each.key, null) != null ? {
-    service-endpoints = var.service_credentials_endpoints[each.key]
-  } : null
+  parameters = {
+    "service-endpoints" = var.service_credential_endpoint
+  }
 }
 
 locals {
