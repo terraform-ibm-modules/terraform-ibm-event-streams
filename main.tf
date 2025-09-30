@@ -231,7 +231,7 @@ resource "ibm_resource_key" "service_credentials" {
   role                 = each.value
   resource_instance_id = ibm_resource_instance.es_instance.id
   parameters = {
-    "service-endpoints" = var.service_credential_endpoint
+    service-endpoints = var.service_credential_endpoint
   }
 }
 
