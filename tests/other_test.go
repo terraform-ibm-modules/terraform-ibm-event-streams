@@ -162,7 +162,6 @@ func setupSecurityEnforcedOptions(t *testing.T, prefix string) *testschematic.Te
 
 // Test for the SecurityEnforced DA
 func TestSecurityEnforcedSolutionInSchematics(t *testing.T) {
-	t.Parallel()
 	options := setupSecurityEnforcedOptions(t, "es-sen")
 	err := options.RunSchematicTest()
 	assert.Nil(t, err, "This should not have errored")

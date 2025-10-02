@@ -55,9 +55,9 @@ variable "region" {
   validation {
     condition = !(var.plan == "enterprise-3nodes-2tb" && !contains([
       "us-south", "br-sao", "ca-tor", "us-east",
-      "eu-de", "eu-gb", "eu-es", "jp-osa", "au-syd", "jp-tok", "che01"
+      "eu-de", "eu-fr2", "eu-gb", "eu-es", "jp-osa", "au-syd", "jp-tok", "che01"
     ], var.region))
-    error_message = "The 'enterprise-3nodes-2tb' plan is only supported in the following regions: us-south, br-sao, ca-tor, us-east, eu-de, eu-gb, eu-es, jp-osa, au-syd, jp-tok, che01."
+    error_message = "The 'enterprise-3nodes-2tb' plan is only supported in the following regions: us-south, br-sao, ca-tor, us-east, eu-de, eu-fr2, eu-gb, eu-es, jp-osa, au-syd, jp-tok, che01."
   }
 }
 
