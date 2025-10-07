@@ -6,8 +6,8 @@ import (
 	"log"
 	"os"
 	"testing"
-	"time"
 
+	"github.com/IBM/go-sdk-core/core"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/cloudinfo"
@@ -20,6 +20,7 @@ import (
 const completeExampleTerraformDir = "examples/complete"
 const quickstartTerraformDir = "solutions/quickstart"
 const fsCloudTerraformDir = "examples/fscloud"
+const terraformVersion = "terraform_v1.10" // This should match the version in the ibm_catalog.json
 
 // Use existing group for tests
 const resourceGroup = "geretain-test-event-streams"
@@ -65,6 +66,7 @@ func setupQuickstartOptions(t *testing.T, prefix string) *testschematic.TestSche
 		Tags:                   []string{"test-schematic"},
 		DeleteWorkspaceOnFail:  false,
 		WaitJobCompleteMinutes: 360,
+		TerraformVersion:       terraformVersion,
 	})
 
 	serviceCredentialSecrets := []map[string]interface{}{
@@ -118,6 +120,8 @@ func TestRunQuickstartUpgradeSchematics(t *testing.T) {
 	t.Parallel()
 
 	options := setupQuickstartOptions(t, "es-qs-upg")
+	options.CheckApplyResultForUpgrade = true
+
 	err := options.RunSchematicUpgradeTest()
 	if !options.UpgradeTestSkipped {
 		assert.Nil(t, err, "This should not have errored")
@@ -144,32 +148,35 @@ func TestEventStreamsDefaultConfiguration(t *testing.T) {
 		},
 	)
 
+	// Disable target / route creation to prevent hitting quota in account
+	// Use existing SM instance to prevent hitting quota in account
+	options.AddonConfig.Dependencies = []cloudinfo.AddonConfig{
+		{
+			OfferingName:   "deploy-arch-ibm-cloud-monitoring",
+			OfferingFlavor: "fully-configurable",
+			Inputs: map[string]interface{}{
+				"enable_metrics_routing_to_cloud_monitoring": false,
+			},
+			Enabled: core.BoolPtr(true),
+		},
+		{
+			OfferingName:   "deploy-arch-ibm-activity-tracker",
+			OfferingFlavor: "fully-configurable",
+			Inputs: map[string]interface{}{
+				"enable_activity_tracker_event_routing_to_cloud_logs": false,
+			},
+			Enabled: core.BoolPtr(true),
+		},
+		{
+			OfferingName:   "deploy-arch-ibm-secrets-manager",
+			OfferingFlavor: "fully-configurable",
+			Inputs: map[string]interface{}{
+				"existing_secrets_manager_crn": permanentResources["secretsManagerCRN"],
+			},
+			Enabled: core.BoolPtr(true),
+		},
+	}
+
 	err := options.RunAddonTest()
 	require.NoError(t, err)
-}
-
-// TestDependencyPermutations runs dependency permutations for Event Streams and all its dependencies
-func TestDependencyPermutations(t *testing.T) {
-	t.Skip("Skipping dependency permutations")
-	t.Parallel()
-
-	options := testaddons.TestAddonsOptionsDefault(&testaddons.TestAddonOptions{
-		Testing:          t,
-		Prefix:           "es-perm",
-		StaggerDelay:     testaddons.StaggerDelay(20 * time.Second),     // 20s delay between batches
-		StaggerBatchSize: testaddons.StaggerBatchSize(4),                // 4 tests per batch
-		WithinBatchDelay: testaddons.WithinBatchDelay(16 * time.Second), // 8s delay within batch
-		AddonConfig: cloudinfo.AddonConfig{
-			OfferingName:   "deploy-arch-ibm-event-streams",
-			OfferingFlavor: "quickstart",
-			Inputs: map[string]interface{}{
-				"prefix":                       "es-perm",
-				"existing_resource_group_name": resourceGroup,
-				"service_plan":                 "standard",
-			},
-		},
-	})
-
-	err := options.RunAddonPermutationTest()
-	assert.NoError(t, err, "Dependency permutation test should not fail")
 }
