@@ -18,8 +18,13 @@ github.com/IBM/go-sdk-core v1.1.0/go.mod h1:2pcx9YWsIsZ3I7kH+1amiAkXvLTZtAq9kbxs
 github.com/IBM/go-sdk-core/v5 v5.9.2/go.mod h1:YlOwV9LeuclmT/qi/LAK2AsobbAP42veV0j68/rlZsE=
 github.com/IBM/go-sdk-core/v5 v5.21.0 h1:DUnYhvC4SoC8T84rx5omnhY3+xcQg/Whyoa3mDPIMkk=
 github.com/IBM/go-sdk-core/v5 v5.21.0/go.mod h1:Q3BYO6iDA2zweQPDGbNTtqft5tDcEpm6RTuqMlPcvbw=
+<<<<<<< HEAD
 github.com/IBM/platform-services-go-sdk v0.89.0 h1:fIvKR1bQchPoMUXQf69gaRKak/giVAkRDISiAX8TlE8=
 github.com/IBM/platform-services-go-sdk v0.89.0/go.mod h1:aGD045m6I8pfcB77wft8w2cHqWOJjcM3YSSV55BX0Js=
+=======
+github.com/IBM/platform-services-go-sdk v0.86.1 h1:ngBpaXvUF3gmLvbU1Z4lX1wowOSYgGoKBEBaR/urt30=
+github.com/IBM/platform-services-go-sdk v0.86.1/go.mod h1:aGD045m6I8pfcB77wft8w2cHqWOJjcM3YSSV55BX0Js=
+>>>>>>> 6a24859 (update terratest version)
 github.com/IBM/project-go-sdk v0.3.9 h1:D/UfMMn+vMQyvYf9EfocV6HrD3HcVpeIVoUSjNKuROo=
 github.com/IBM/project-go-sdk v0.3.9/go.mod h1:FOJM9ihQV3EEAY6YigcWiTNfVCThtdY8bLC/nhQHFvo=
 github.com/IBM/schematics-go-sdk v0.4.0 h1:x01f/tPquYJYLQzJLGuxWfCbV/EdSMXRikOceNy/JLM=
@@ -310,8 +315,13 @@ github.com/stretchr/testify v1.8.0/go.mod h1:yNjHg4UonilssWZ8iaSj1OCr/vHnekPRkoO
 github.com/stretchr/testify v1.8.2/go.mod h1:w2LPCIKwWwSfY2zedu0+kehJoqGctiVI29o6fzry7u4=
 github.com/stretchr/testify v1.11.1 h1:7s2iGBzp5EwR7/aIZr8ao5+dra3wiQyKjjFuvgVKu7U=
 github.com/stretchr/testify v1.11.1/go.mod h1:wZwfW3scLgRK+23gO65QZefKpKQRnfz6sD981Nm4B6U=
+<<<<<<< HEAD
 github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper v1.60.12 h1:u+OIh3X/JGLWoBHCd4saYQzbLzS5ZzS7EO+etBidTOw=
 github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper v1.60.12/go.mod h1:bKjJy3Hk26Vc++TmB5PDlTzDb312YemSkZdznAR51Wc=
+=======
+github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper v1.60.11 h1:+ATsuqFoHUg/EWpBfF7o8wzxibSan8hG5DJV2NIgrO4=
+github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper v1.60.11/go.mod h1:9QXyZWo0MotbNavJDyeEdpTj1YKoI6IT1wOPJnI1ahI=
+>>>>>>> 6a24859 (update terratest version)
 github.com/tidwall/pretty v1.0.0/go.mod h1:XNkn88O1ChpSDQmQeStsy+sBenx6DDtFZJxhVysOjyk=
 github.com/tmccombs/hcl2json v0.6.4 h1:/FWnzS9JCuyZ4MNwrG4vMrFrzRgsWEOVi+1AyYUVLGw=
 github.com/tmccombs/hcl2json v0.6.4/go.mod h1:+ppKlIW3H5nsAsZddXPy2iMyvld3SHxyjswOZhavRDk=
