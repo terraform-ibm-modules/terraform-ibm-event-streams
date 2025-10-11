@@ -237,6 +237,19 @@
               "key": "service_credential_names"
             },
             {
+              "key": "service_credential_endpoint",
+              "options": [
+                {
+                  "displayname": "private",
+                  "value": "private"
+                },
+                {
+                  "displayname": "public",
+                  "value": "public"
+                }
+              ]
+            },
+            {
               "key": "existing_secrets_manager_endpoint_type",
               "hidden": true
             },
