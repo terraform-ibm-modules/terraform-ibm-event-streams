@@ -106,6 +106,9 @@ module "event_streams" {
         }
       }
     }
+
+    # 'schemas' is optional. Valid values are 'proxied', 'read-only', and 'inactive' (default).
+    schemas = "inactive"
   }
   quotas = [
     {
