@@ -82,7 +82,7 @@
               {
                 "diagram": {
                   "caption": "Event Streams quickstart topology",
-                  "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-streams/main/reference-architecture/deployable-architecture-event-streams-quickstart.svg",
+                  "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-streams/main/reference-architectures/deployable-architecture-event-streams-quickstart.svg",
                   "type": "image/svg+xml"
                 },
                 "description": "This architecture supports provisioning and configuring IBM Cloud® Event Streams:\n\n- Provisions an Event Streams instance using either the lite or standard plan.\n- Creates Kafka topics as part of the deployment.\n  - Lite plan supports a single topic.\n  - Standard plan supports multiple topics.\n\nThis modular design helps you build event-driven applications with a fully managed Kafka service on IBM Cloud®."
@@ -518,7 +518,7 @@
               {
                 "diagram": {
                   "caption": "Event Streams Security Enforced topology",
-                  "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-streams/main/reference-architecture/deployable-architecture-event-streams-security-enforced.svg",
+                  "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-streams/main/reference-architectures/deployable-architecture-event-streams-security-enforced.svg",
                   "type": "image/svg+xml"
                 },
                 "description": "- Provisions a security enforced IBM Cloud® Event Streams environment.\n- Supports creation of Kafka topics, schema registries, metrics, and mirroring features.\n- Deploys resources within a defined region and resource group.\n- Enables customer-managed encryption using IBM Key Protect or Hyper Protect Crypto Services.\n- Allows use of an existing Key Management Services (KMS) instance and keys.\n- Supports Context-Based Restrictions (CBRs) to enforce secure access policies.\n- Provides a secure, event-driven messaging infrastructure on IBM Cloud."
