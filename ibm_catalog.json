@@ -128,7 +128,9 @@
               "notes": "[Optional] Required if you are consuming Observability deployable architecture which sets up Cloud logs."
             },
             {
-              "role_crns": ["crn:v1:bluemix:public:iam::::role:Viewer"],
+              "role_crns": [
+                "crn:v1:bluemix:public:iam::::role:Viewer"
+              ],
               "service_name": "Resource group only",
               "notes": "Viewer access is required in the resource group you want to provision in."
             }
