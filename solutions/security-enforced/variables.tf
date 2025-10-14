@@ -188,6 +188,7 @@ variable "mirroring" {
         }))
       })
     }))
+    schemas = optional(string)
   })
   default = null
 }
