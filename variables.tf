@@ -335,11 +335,33 @@ variable "mirroring" {
     }))
     schemas = optional(string)
   })
-  default = null
+
   validation {
     condition     = !(var.mirroring != null && var.plan != "enterprise-3nodes-2tb")
-    error_message = "mirroring is only supported for enterprise plan."
+    error_message = "Mirroring is only supported for enterprise plan."
   }
+
+  validation {
+    condition = (
+      var.mirroring == null ||
+      try(var.mirroring.options, null) == null ||
+      (
+        contains(["rename", "none", "use_alias"], try(var.mirroring.options.topic_name_transform.type, "")) &&
+        contains(["rename", "none", "use_alias"], try(var.mirroring.options.group_id_transform.type, ""))
+      )
+    )
+    error_message = "Valid options for topic_name_transform.type and group_id_transform.type are `rename`, `none`, or `use_alias`."
+  }
+
+  validation {
+    condition = (
+      var.mirroring == null ||
+      try(var.mirroring.schemas, null) == null ||
+      contains(["proxied", "read-only", "inactive"], try(var.mirroring.schemas, ""))
+    )
+    error_message = "Valid options for schemas are `proxied`, `read-only`, or `inactive`."
+  }
+  default = null
 }
 
 variable "iam_token_only" {
