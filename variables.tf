@@ -350,7 +350,7 @@ variable "mirroring" {
         contains(["rename", "none", "use_alias"], try(var.mirroring.options.group_id_transform.type, ""))
       )
     )
-    error_message = "Valid options for topic_name_transform.type and group_id_transform.type are `rename`, `none`, or `use_alias`."
+    error_message = "Valid options for topic_name_transform.type and group_id_transform.type are `rename`, `none`, or `use_alias`. If 'type' is set to 'rename', then 'rename' object must include the following fields: 'add_prefix', 'add_suffix', 'remove_prefix', and 'remove_suffix'"
   }
 
   validation {
