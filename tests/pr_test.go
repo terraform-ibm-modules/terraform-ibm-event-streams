@@ -171,7 +171,8 @@ func TestEventStreamsDefaultConfiguration(t *testing.T) {
 			OfferingName:   "deploy-arch-ibm-secrets-manager",
 			OfferingFlavor: "fully-configurable",
 			Inputs: map[string]interface{}{
-				"existing_secrets_manager_crn": permanentResources["secretsManagerCRN"],
+				"existing_secrets_manager_crn":         permanentResources["secretsManagerCRN"],
+				"skip_secrets_manager_iam_auth_policy": true,
 			},
 			Enabled: core.BoolPtr(true),
 		},
