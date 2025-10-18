@@ -120,6 +120,8 @@ module "event_streams" {
     "es_reader" : "Reader",
     "es_manager" : "Manager"
   }
+  service_credential_endpoint = "private"
+
   cbr_rules = [
     {
       description      = "${var.prefix}-event streams access from vpc and schematics"
