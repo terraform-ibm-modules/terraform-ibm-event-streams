@@ -2,7 +2,7 @@ module github.com/terraform-ibm-modules/terraform-ibm-event-streams
 
 go 1.24.0
 
-toolchain go1.25.2
+toolchain go1.25.3
 
 require (
 	github.com/IBM/go-sdk-core v1.1.0
