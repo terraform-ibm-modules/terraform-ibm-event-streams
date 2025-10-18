@@ -2,12 +2,12 @@ module github.com/terraform-ibm-modules/terraform-ibm-event-streams
 
 go 1.24.0
 
-toolchain go1.25.2
+toolchain go1.25.3
 
 require (
 	github.com/IBM/go-sdk-core v1.1.0
 	github.com/stretchr/testify v1.11.1
-	github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper v1.60.12
+	github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper v1.60.14
 )
 
 require (
