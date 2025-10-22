@@ -350,14 +350,12 @@ variable "mirroring" {
         contains(["rename", "none", "use_alias"], try(var.mirroring.options.group_id_transform.type, ""))
       )
     )
-    error_message = "Valid options for topic_name_transform.type and group_id_transform.type are `rename`, `none`, or `use_alias`. If 'type' is set to 'rename', then 'rename' object must include the following fields: 'add_prefix', 'add_suffix', 'remove_prefix', and 'remove_suffix'"
+    error_message = "Valid options for topic_name_transform.type and group_id_transform.type are `rename`, `none`, or `use_alias`. If `type` is set to `rename`, then `rename` object must include the following fields: `add_prefix`, `add_suffix`, `remove_prefix`, and `remove_suffix`"
   }
 
   validation {
-    condition = (
-      var.mirroring == null ||
-      try(var.mirroring.schemas, null) == null ||
-      contains(["proxied", "read-only", "inactive"], try(var.mirroring.schemas, ""))
+    condition = var.mirroring == null ? true : (try(var.mirroring.schemas, null) == null ? true :
+      contains(["proxied", "read-only", "inactive"], var.mirroring.schemas)
     )
     error_message = "Valid options for schemas are `proxied`, `read-only`, or `inactive`."
   }
