@@ -21,8 +21,8 @@ variable "provider_visibility" {
 
 variable "existing_resource_group_name" {
   type        = string
-  description = "The name of an existing resource group to provision the resources. If not provided the default resource group will be used."
-  default     = null
+  description = "The name of an existing resource group to provision the resources. [Learn more](https://cloud.ibm.com/docs/account?topic=account-rgs&interface=ui#create_rgs) about how to create a resource group."
+  default     = "Default"
 }
 
 variable "region" {
@@ -103,13 +103,13 @@ variable "service_credential_names" {
 
 variable "create_timeout" {
   type        = string
-  description = "The timeout value for creating an Event Streams instance. Specify `3h` for an Enterprise plan instance. Add 1 h for each level of non-default throughput. Add 30 min for each level of non-default storage size."
-  default     = "3h"
+  description = "The timeout value for creating an Event Streams instance. Add 1 h for each level of non-default throughput. Add 30 min for each level of non-default storage size."
+  default     = "30m"
 }
 
 variable "update_timeout" {
   type        = string
-  description = "The timeout value for updating an Event Streams instance. Specify `1h` for an Enterprise plan instance. Add 1 h for each level of non-default throughput. A 30 min for each level of non-default storage size."
+  description = "The timeout value for updating an Event Streams instance. Add 1 h for each level of non-default throughput. A 30 min for each level of non-default storage size."
   default     = "1h"
 }
 

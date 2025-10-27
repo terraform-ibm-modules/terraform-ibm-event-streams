@@ -106,13 +106,6 @@
             },
             {
               "role_crns": [
-                "crn:v1:bluemix:public:iam::::role:Administrator"
-              ],
-              "service_name": "iam-identity",
-              "notes": "[Optional] Required if Cloud automation for account configuration is enabled."
-            },
-            {
-              "role_crns": [
                 "crn:v1:bluemix:public:iam::::serviceRole:Manager",
                 "crn:v1:bluemix:public:iam::::role:Editor"
               ],
@@ -126,6 +119,13 @@
               ],
               "service_name": "logs",
               "notes": "[Optional] Required if you are consuming Observability deployable architecture which sets up Cloud logs."
+            },
+            {
+              "role_crns": [
+                "crn:v1:bluemix:public:iam::::role:Viewer"
+              ],
+              "service_name": "Resource group only",
+              "notes": "Viewer access is required in the resource group you want to provision in."
             }
           ],
           "configuration": [
@@ -134,7 +134,18 @@
             },
             {
               "key": "prefix",
-              "required": true
+              "required": true,
+              "default_value": "dev",
+              "random_string": {
+                "length": 4
+              },
+              "value_constraints": [
+                {
+                  "type": "regex",
+                  "description": "Prefix must begin with a lowercase letter and may contain only lowercase letters, digits, and hyphens '-'. It must not end with a hyphen('-'), and cannot contain consecutive hyphens ('--'). It should not exceed 16 characters.",
+                  "value": "^$|^__NULL__$|^[a-z](?!.*--)(?:[a-z0-9-]{0,14}[a-z0-9])?$"
+                }
+              ]
             },
             {
               "key": "region",
@@ -194,7 +205,7 @@
                 }
               },
               "default_value": "Default",
-              "description": "The name of an existing resource group to provision the resources."
+              "description": "The name of an existing resource group to provision the resources. [Learn more](https://cloud.ibm.com/docs/account?topic=account-rgs&interface=ui#create_rgs) about how to create a resource group."
             },
             {
               "key": "plan",
@@ -337,31 +348,6 @@
           ],
           "dependencies": [
             {
-              "name": "deploy-arch-ibm-account-infra-base",
-              "description": "Organize your IBM Cloud account with preconfigured resource groups. If not selected, the default resource group is used. Optionally, expand to apply recommended security controls via \"with Account Settings\" variation.",
-              "catalog_id": "7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3",
-              "flavors": [
-                "resource-group-only",
-                "resource-groups-with-account-settings"
-              ],
-              "default_flavor": "resource-group-only",
-              "id": "63641cec-6093-4b4f-b7b0-98d2f4185cd6-global",
-              "input_mapping": [
-                {
-                  "dependency_output": "workload_resource_group_name",
-                  "version_input": "existing_resource_group_name"
-                },
-                {
-                  "dependency_input": "prefix",
-                  "version_input": "prefix",
-                  "reference_version": true
-                }
-              ],
-              "optional": true,
-              "on_by_default": false,
-              "version": "v3.0.7"
-            },
-            {
               "name": "deploy-arch-ibm-cloud-monitoring",
               "description": "Configure IBM Cloud Monitoring to collect the platform metrics.",
               "flavors": [
@@ -388,11 +374,16 @@
                   "dependency_input": "enable_platform_metrics",
                   "version_input": "enable_platform_metrics",
                   "reference_version": true
+                },
+                {
+                  "dependency_input": "existing_resource_group_name",
+                  "version_input": "existing_resource_group_name",
+                  "reference_version": true
                 }
               ],
               "optional": true,
               "on_by_default": true,
-              "version": "v1.6.4"
+              "version": "v1.9.0"
             },
             {
               "name": "deploy-arch-ibm-cloud-logs",
@@ -417,11 +408,16 @@
                   "dependency_input": "logs_routing_tenant_regions",
                   "version_input": "logs_routing_tenant_regions",
                   "reference_version": true
+                },
+                {
+                  "dependency_input": "existing_resource_group_name",
+                  "version_input": "existing_resource_group_name",
+                  "reference_version": true
                 }
               ],
               "optional": true,
               "on_by_default": true,
-              "version": "v1.6.11"
+              "version": "v1.9.0"
             },
             {
               "name": "deploy-arch-ibm-activity-tracker",
@@ -441,11 +437,16 @@
                   "dependency_input": "region",
                   "version_input": "region",
                   "reference_version": true
+                },
+                {
+                  "dependency_input": "existing_resource_group_name",
+                  "version_input": "existing_resource_group_name",
+                  "reference_version": true
                 }
               ],
               "optional": true,
               "on_by_default": true,
-              "version": "v1.2.25"
+              "version": "v1.4.3"
             },
             {
               "name": "deploy-arch-ibm-scc-workload-protection",
@@ -465,11 +466,16 @@
                   "dependency_input": "region",
                   "version_input": "region",
                   "reference_version": true
+                },
+                {
+                  "dependency_input": "existing_resource_group_name",
+                  "version_input": "existing_resource_group_name",
+                  "reference_version": true
                 }
               ],
               "optional": true,
               "on_by_default": true,
-              "version": "v1.11.4"
+              "version": "v1.14.0"
             },
             {
               "name": "deploy-arch-ibm-secrets-manager",
@@ -494,11 +500,16 @@
                   "reference_version": true,
                   "dependency_input": "service_plan",
                   "version_input": "secrets_manager_service_plan"
+                },
+                {
+                  "dependency_input": "existing_resource_group_name",
+                  "version_input": "existing_resource_group_name",
+                  "reference_version": true
                 }
               ],
               "optional": true,
               "on_by_default": false,
-              "version": "v2.8.6"
+              "version": "v2.11.0"
             }
           ],
           "dependency_version_2": true,
@@ -560,13 +571,6 @@
                 "crn:v1:bluemix:public:iam::::role:Editor"
               ],
               "notes": "[Optional] Required if KMS encryption is enabled to encrypt the payload data."
-            },
-            {
-              "role_crns": [
-                "crn:v1:bluemix:public:iam::::role:Administrator"
-              ],
-              "service_name": "iam-identity",
-              "notes": "[Optional] Required if Cloud automation for account configuration is enabled."
             },
             {
               "role_crns": [
@@ -641,7 +645,18 @@
             },
             {
               "key": "prefix",
-              "required": true
+              "required": true,
+              "default_value": "dev",
+              "random_string": {
+                "length": 4
+              },
+              "value_constraints": [
+                {
+                  "type": "regex",
+                  "description": "Prefix must begin with a lowercase letter and may contain only lowercase letters, digits, and hyphens '-'. It must not end with a hyphen('-'), and cannot contain consecutive hyphens ('--'). It should not exceed 16 characters.",
+                  "value": "^$|^__NULL__$|^[a-z](?!.*--)(?:[a-z0-9-]{0,14}[a-z0-9])?$"
+                }
+              ]
             },
             {
               "key": "existing_resource_group_name",
@@ -655,7 +670,7 @@
                 }
               },
               "default_value": "Default",
-              "description": "The name of an existing resource group to provision the resources."
+              "description": "The name of an existing resource group to provision the resources. [Learn more](https://cloud.ibm.com/docs/account?topic=account-rgs&interface=ui#create_rgs) about how to create a resource group."
             },
             {
               "key": "event_streams_name"
@@ -787,35 +802,10 @@
           ],
           "dependencies": [
             {
-              "name": "deploy-arch-ibm-account-infra-base",
-              "description": "Cloud automation for Account Configuration organizes your IBM Cloud account with a ready-made set of resource groups by default and when you enable the \"with Account Settings\" option, it also applies baseline security and governance settings. ",
-              "catalog_id": "7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3",
-              "flavors": [
-                "resource-group-only",
-                "resource-groups-with-account-settings"
-              ],
-              "default_flavor": "resource-group-only",
-              "id": "63641cec-6093-4b4f-b7b0-98d2f4185cd6-global",
-              "input_mapping": [
-                {
-                  "dependency_output": "workload_resource_group_name",
-                  "version_input": "existing_resource_group_name"
-                },
-                {
-                  "dependency_input": "prefix",
-                  "version_input": "prefix",
-                  "reference_version": true
-                }
-              ],
-              "optional": true,
-              "on_by_default": false,
-              "version": "v3.0.7"
-            },
-            {
               "name": "deploy-arch-ibm-kms",
               "description": "Enable Cloud Automation for Key Protect when you want services to use your own managed encryption keys for encrypting the payload data. If disabled, it will fall back on IBM Cloud's default service-managed encryption.",
               "id": "2cad4789-fa90-4886-9c9e-857081c273ee-global",
-              "version": "v5.1.4",
+              "version": "v5.1.19",
               "flavors": [
                 "fully-configurable"
               ],
@@ -848,14 +838,18 @@
               ]
             },
             {
-              "name": "deploy-arch-ibm-observability",
-              "description": "Enable to provision and configure IBM Cloud Logs, Cloud Monitoring, Metrics routing and Activity Tracker event routing for analysing logs and metrics generated by the Eventstreams instance.",
+              "name": "deploy-arch-ibm-cloud-monitoring",
+              "description": "Configure IBM Cloud Monitoring to collect the platform metrics.",
               "flavors": [
-                "instances"
+                "fully-configurable"
               ],
-              "id": "a3137d28-79e0-479d-8a24-758ebd5a0eab-global",
+              "id": "73debdbf-894f-4c14-81c7-5ece3a70b67d-global",
               "catalog_id": "7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3",
               "input_mapping": [
+                {
+                  "dependency_output": "cloud_monitoring_crn",
+                  "version_input": "existing_monitoring_crn"
+                },
                 {
                   "dependency_input": "prefix",
                   "version_input": "prefix",
@@ -872,14 +866,77 @@
                   "reference_version": true
                 },
                 {
-                  "dependency_input": "logs_routing_tenant_regions",
-                  "version_input": "logs_routing_tenant_regions",
+                  "dependency_input": "existing_resource_group_name",
+                  "version_input": "existing_resource_group_name",
                   "reference_version": true
                 }
               ],
               "optional": true,
               "on_by_default": true,
-              "version": "v3.0.3"
+              "version": "v1.9.0"
+            },
+            {
+              "name": "deploy-arch-ibm-cloud-logs",
+              "description": "Configure IBM Cloud Logs to analyse the platform logs.",
+              "flavors": [
+                "fully-configurable"
+              ],
+              "id": "63d8ae58-fbf3-41ce-b844-0fb5b85882ab-global",
+              "catalog_id": "7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3",
+              "input_mapping": [
+                {
+                  "dependency_input": "prefix",
+                  "version_input": "prefix",
+                  "reference_version": true
+                },
+                {
+                  "dependency_input": "region",
+                  "version_input": "region",
+                  "reference_version": true
+                },
+                {
+                  "dependency_input": "logs_routing_tenant_regions",
+                  "version_input": "logs_routing_tenant_regions",
+                  "reference_version": true
+                },
+                {
+                  "dependency_input": "existing_resource_group_name",
+                  "version_input": "existing_resource_group_name",
+                  "reference_version": true
+                }
+              ],
+              "optional": true,
+              "on_by_default": true,
+              "version": "v1.9.0"
+            },
+            {
+              "name": "deploy-arch-ibm-activity-tracker",
+              "description": "Configure Activity Tracker Event Routing to route the auditing events.",
+              "flavors": [
+                "fully-configurable"
+              ],
+              "id": "918453c3-4f97-4583-8c4a-83ef12fc7916-global",
+              "catalog_id": "7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3",
+              "input_mapping": [
+                {
+                  "dependency_input": "prefix",
+                  "version_input": "prefix",
+                  "reference_version": true
+                },
+                {
+                  "dependency_input": "region",
+                  "version_input": "region",
+                  "reference_version": true
+                },
+                {
+                  "dependency_input": "existing_resource_group_name",
+                  "version_input": "existing_resource_group_name",
+                  "reference_version": true
+                }
+              ],
+              "optional": true,
+              "on_by_default": true,
+              "version": "v1.4.3"
             },
             {
               "name": "deploy-arch-ibm-secrets-manager",
@@ -899,11 +956,16 @@
                 {
                   "dependency_output": "secrets_manager_crn",
                   "version_input": "existing_secrets_manager_instance_crn"
+                },
+                {
+                  "dependency_input": "existing_resource_group_name",
+                  "version_input": "existing_resource_group_name",
+                  "reference_version": true
                 }
               ],
               "optional": true,
               "on_by_default": true,
-              "version": "v2.6.1"
+              "version": "v2.11.0"
             }
           ],
           "dependency_version_2": true,
