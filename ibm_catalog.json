@@ -251,7 +251,7 @@
               "key": "service_credential_endpoint",
               "options": [
                 {
-                  "displayname": "private",
+                  "displayname": "Private",
                   "value": "private"
                 },
                 {
