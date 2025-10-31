@@ -520,7 +520,7 @@
             }
           ],
           "dependency_version_2": true,
-          "terraform_version": "1.10.5"
+          "terraform_version": "1.12.2"
         },
         {
           "label": "Security-enforced",
@@ -528,15 +528,6 @@
           "index": 2,
           "install_type": "fullstack",
           "working_directory": "solutions/security-enforced",
-          "compliance": {
-            "authority": "scc-v3",
-            "profiles": [
-              {
-                "profile_name": "IBM Cloud Framework for Financial Services",
-                "profile_version": "1.7.0"
-              }
-            ]
-          },
           "architecture": {
             "descriptions": "This architecture supports provisioning and configuring security enforced Event Streams instance.",
             "features": [
@@ -997,7 +988,7 @@
             }
           ],
           "dependency_version_2": true,
-          "terraform_version": "1.10.5"
+          "terraform_version": "1.12.2"
         }
       ]
     }
