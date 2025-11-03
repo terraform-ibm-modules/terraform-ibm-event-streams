@@ -2,34 +2,43 @@
 
 Several optional input variables in the IBM Cloud Event Streams deployable architecture use complex object types. You specify these inputs when you configure you deployable architecture.
 
-- [Service credentials](#svc-credential-name) (`service_credential_names`)
+- [Resource keys](#resource-keys) (`resource_keys`)
 - [Service credential secrets](#service-credential-secrets) (`service_credential_secrets`)
 - [Quotas](#quotas) (`quotas`)
 - [Mirroring](#mirroring) (`quotas`)
 
-## Service credentials <a name="svc-credential-name"></a>
+## Resource keys <a name="resource-keys"></a>
+When you add an IBM Cloud Object Storage service from the IBM Cloud catalog to an IBM Cloud Projects service, you can configure resource keys. In the edit mode for the projects configuration, select the Configure panel and then click the optional tab.
 
-You can specify a set of IAM credentials to connect to the instance with the `service_credential_names` input variable. Include a credential name and IAM service role for each key-value pair. Each role provides a specific level of access to the instance. For more information, see [Adding and viewing credentials](https://cloud.ibm.com/docs/account?topic=account-service_credentials&interface=ui).
+In the configuration, specify the name of the resource key, , the Role of the key and an optional endpoint.
 
-If you want to add service credentials to secret manager and to allow secret manager to manage it, you should use `service_credential_secrets` , see [Service credential secrets](#service-credential-secrets).
+To enter a custom value, use the edit action to open the "Edit Array" panel. Add the resource key configurations to the array here.
 
-- Variable name: `service_credential_names`.
-- Type: A map. The key is the name of the service credential. The value is the role that is assigned to that credential.
-- Default value: An empty map (`{}`).
+ [Learn more](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/resource_key) about resource keys.
 
-### Options for service_credential_names
+- Variable name: `resource_keys`.
+- Type: A list of objects that represent a resource key
+- Default value: An empty list (`[]`)
 
-- Key (required): The name of the service credential.
-- Value (required): The IAM service role that is assigned to the credential. The following values are valid for service credential roles: 'Manager', 'Writer', 'Reader'. For more information, see [IBM Cloud IAM roles](https://cloud.ibm.com/docs/account?topic=account-userroles).
+### Options for resource_key
 
-### Example service credentials
+- `name` (required): A unique human-readable name that identifies this resource key.
+- `role` (optional, default = `Reader`): The name of the user role.
+- `endpoint` (optional, default = `public`): The endpoint of resource key.
 
+The following example includes all the configuration options for two resource keys. One is with a `Reader` role with `Private` endpoint, the other with an IAM key with `Writer` role.
 ```hcl
-{
-    "es_writer" : "Writer",
-    "es_reader" : "Reader",
-    "es_manager" : "Manager"
-}
+[
+  {
+    "name": "cos-reader-resource-key",
+    "role": "Reader",
+    "endpoint": "private"
+  },
+  {
+    "name": "cos-writer-resource-key",
+    "role": "Writer"
+  }
+]
 ```
 
 ## Service credential secrets <a name="service-credential-secrets"></a>

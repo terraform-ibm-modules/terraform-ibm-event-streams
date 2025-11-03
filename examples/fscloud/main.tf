@@ -117,11 +117,7 @@ module "event_streams" {
     }
   ]
   schema_global_rule = "FORWARD"
-  service_credential_names = {
-    "es_writer" : "Writer",
-    "es_reader" : "Reader",
-    "es_manager" : "Manager"
-  }
+
   cbr_rules = [
     {
       description      = "${var.prefix}-event streams access from vpc and schematics"

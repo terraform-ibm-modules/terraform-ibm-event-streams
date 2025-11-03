@@ -14,8 +14,7 @@ module "event_streams" {
   topics                               = var.topics
   service_endpoints                    = "private"
   cbr_rules                            = var.cbr_rules
-  service_credential_names             = var.service_credential_names
-  service_credential_endpoint          = "private"
+  resource_keys                        = var.resource_keys
   metrics                              = var.metrics
   quotas                               = var.quotas
   kms_encryption_enabled               = true

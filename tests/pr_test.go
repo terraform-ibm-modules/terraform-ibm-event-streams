@@ -101,7 +101,6 @@ func setupQuickstartOptions(t *testing.T, prefix string) *testschematic.TestSche
 		{Name: "create_timeout", Value: "6h", DataType: "string"},
 		{Name: "existing_secrets_manager_instance_crn", Value: permanentResources["secretsManagerCRN"], DataType: "string"},
 		{Name: "service_credential_secrets", Value: serviceCredentialSecrets, DataType: "list(object)"},
-		{Name: "service_credential_names", Value: "{\"es_writer\": \"Writer\", \"es_reader\": \"Reader\"}", DataType: "map(string)"},
 	}
 	return options
 }

@@ -101,10 +101,14 @@ variable "cbr_rules" {
   # Validation happens in the rule module
 }
 
-variable "service_credential_names" {
-  description = "The mapping of names and roles for service credentials that you want to create for the Event streams."
-  type        = map(string)
-  default     = {}
+variable "resource_keys" {
+  description = "The definition of any resource keys to generate."
+  type = list(object({
+    name     = string
+    role     = optional(string, "Reader")
+    endpoint = optional(string, "private")
+  }))
+  default = []
 }
 
 variable "metrics" {

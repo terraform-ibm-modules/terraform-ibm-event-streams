@@ -150,7 +150,6 @@ func setupSecurityEnforcedOptions(t *testing.T, prefix string) *testschematic.Te
 		{Name: "create_timeout", Value: "6h", DataType: "string"},
 		{Name: "existing_secrets_manager_instance_crn", Value: permanentResources["secretsManagerCRN"], DataType: "string"},
 		{Name: "service_credential_secrets", Value: serviceCredentialSecrets, DataType: "list(object)"},
-		{Name: "service_credential_names", Value: "{\"es_writer\": \"Writer\", \"es_reader\": \"Reader\"}", DataType: "map(string)"},
 		{Name: "metrics", Value: []string{"topic", "partition", "consumers"}, DataType: "list(string)"},
 		{Name: "quotas", Value: quotas, DataType: "list(object)"},
 		{Name: "schema_global_rule", Value: "FORWARD", DataType: "string"},

@@ -96,10 +96,14 @@ variable "topics" {
 }
 
 
-variable "service_credential_names" {
-  description = "The mapping of names and roles for service credentials that you want to create for the Event streams.[Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/security-enforced/DA-types.md#svc-credential-name)"
-  type        = map(string)
-  default     = {}
+variable "resource_keys" {
+  description = "The definition of the resource keys to generate. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/quickstart/DA-types.md#resource-keys)."
+  type = list(object({
+    name     = string
+    role     = optional(string, "Reader")
+    endpoint = optional(string, "public")
+  }))
+  default = []
 }
 
 variable "create_timeout" {
@@ -178,10 +182,4 @@ variable "skip_event_streams_secrets_manager_auth_policy" {
   default     = false
   nullable    = false
   description = "Whether an IAM authorization policy is created for Secrets Manager instance to create a service credential secrets for Event Streams.If set to false, the Secrets Manager instance passed by the user is granted the Key Manager access to the Event Streams instance created by the Deployable Architecture. Set to `true` to use an existing policy. The value of this is ignored if any value for 'existing_secrets_manager_instance_crn' is not passed."
-}
-
-variable "service_credential_endpoint" {
-  description = "Service credential endpoint type (public or private). If not specified, defaults to public."
-  type        = string
-  default     = "public"
 }

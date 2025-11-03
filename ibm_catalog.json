@@ -245,20 +245,7 @@
               "key": "skip_event_streams_secrets_manager_auth_policy"
             },
             {
-              "key": "service_credential_names"
-            },
-            {
-              "key": "service_credential_endpoint",
-              "options": [
-                {
-                  "displayname": "Private",
-                  "value": "private"
-                },
-                {
-                  "displayname": "Public",
-                  "value": "public"
-                }
-              ]
+              "key": "resource_keys"
             },
             {
               "key": "existing_secrets_manager_endpoint_type",
@@ -752,7 +739,7 @@
               "key": "skip_event_streams_secrets_manager_auth_policy"
             },
             {
-              "key": "service_credential_names"
+              "key": "resource_keys"
             },
             {
               "key": "existing_secrets_manager_endpoint_type",

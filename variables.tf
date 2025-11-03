@@ -249,14 +249,27 @@ variable "cbr_rules" {
   }
 }
 
-variable "service_credential_names" {
+variable "resource_keys" {
   description = "The mapping of names and roles for service credentials that you want to create for the Event streams."
-  type        = map(string)
-  default     = {}
-
+  type = list(object({
+    name     = string
+    key_name = optional(string, null)
+    role     = optional(string, "Manager")
+    endpoint = optional(string, "public")
+  }))
+  default = []
   validation {
-    condition     = alltrue([for name, role in var.service_credential_names : contains(["Writer", "Reader", "Manager"], role)])
-    error_message = "The specified service credential role is not valid. The following values are valid for service credential roles: 'Writer', 'Reader', 'Manager'"
+    condition = alltrue([
+      for key in var.resource_keys : contains(["Writer", "Reader", "Manager"], key.role)
+    ])
+    error_message = "`resource_keys` role must be one of the following: `Writer', `Reader` or `Manager`."
+  }
+  validation {
+    condition = !(
+      var.service_endpoints == "private" &&
+      anytrue([for key in var.resource_keys : key.endpoint == "public"])
+    )
+    error_message = "When service_endpoints is set to 'private', resource key endpoints cannot be 'public'."
   }
 }
 
@@ -374,10 +387,4 @@ variable "iam_token_only" {
     condition     = !(var.iam_token_only == true && var.plan != "enterprise-3nodes-2tb")
     error_message = "iam_token_only is only supported for enterprise plan."
   }
-}
-
-variable "service_credential_endpoint" {
-  description = "Service credential endpoint type (public or private). If not specified, defaults to public."
-  type        = string
-  default     = "public"
 }
