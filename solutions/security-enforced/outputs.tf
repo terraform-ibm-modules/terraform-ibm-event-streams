@@ -72,3 +72,28 @@ output "event_streams_mirroring_topic_patterns" {
   description = "Mirroring topic patterns"
   value       = module.event_streams.mirroring_topic_patterns
 }
+
+output "next_steps_text" {
+  value       = "Your Event Streams Instance is ready."
+  description = "Next steps text"
+}
+
+output "next_step_primary_label" {
+  value       = "Go to Event Streams Instance"
+  description = "Primary label"
+}
+
+output "next_step_primary_url" {
+  value       = "https://cloud.ibm.com/services/messagehub/${urlencode(module.event_streams.crn)}?paneId=manage"
+  description = "Primary URL for the IBM Cloud Logs instance"
+}
+
+output "next_step_secondary_label" {
+  value       = "Learn more about Event Streams"
+  description = "Secondary label"
+}
+
+output "next_step_secondary_url" {
+  value       = "https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-getting-started"
+  description = "Secondary URL"
+}
