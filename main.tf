@@ -225,11 +225,6 @@ module "cbr_rule" {
   }]
 }
 
-moved {
-  from = ibm_resource_key.service_credentials
-  to   = ibm_resource_key.resource_keys
-}
-
 resource "ibm_resource_key" "resource_keys" {
   for_each             = { for key in var.resource_keys : key.name => key }
   name                 = each.value.key_name == null ? each.key : each.value.key_name

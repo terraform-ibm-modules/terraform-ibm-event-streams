@@ -118,6 +118,21 @@ module "event_streams" {
   ]
   schema_global_rule = "FORWARD"
 
+  resource_keys = [
+    {
+      name = "${var.prefix}-writer-key"
+      role = "Writer"
+    },
+    {
+      name = "${var.prefix}-reader-key"
+      role = "Reader"
+    },
+    {
+      name = "${var.prefix}-manager-key"
+      role = "Manager"
+    }
+  ]
+
   cbr_rules = [
     {
       description      = "${var.prefix}-event streams access from vpc and schematics"
