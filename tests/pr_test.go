@@ -89,15 +89,15 @@ func setupQuickstartOptions(t *testing.T, prefix string) *testschematic.TestSche
 		},
 	}
 	resourceKeys := []map[string]interface{}{
-	{
-		"name": "es_writer",
-		"role": "Writer",
-	},
-	{
-		"name": "es_reader",
-		"role": "Reader",
-	},
-}
+		{
+			"name": "es_writer",
+			"role": "Writer",
+		},
+		{
+			"name": "es_reader",
+			"role": "Reader",
+		},
+	}
 
 	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
 		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
