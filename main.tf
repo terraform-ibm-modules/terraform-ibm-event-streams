@@ -225,10 +225,15 @@ module "cbr_rule" {
   }]
 }
 
+moved {
+  from = ibm_resource_key.service_credentials
+  to   = ibm_resource_key.resource_keys
+}
+
 resource "ibm_resource_key" "resource_keys" {
   for_each             = { for key in var.resource_keys : key.name => key }
   name                 = each.value.key_name == null ? each.key : each.value.key_name
-  role                 = each.value
+  role                 = each.value.role
   resource_instance_id = ibm_resource_instance.es_instance.id
   parameters = {
     service-endpoints = each.value.endpoint
