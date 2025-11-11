@@ -85,7 +85,7 @@ output "next_step_primary_label" {
 
 output "next_step_primary_url" {
   value       = "https://cloud.ibm.com/services/messagehub/${urlencode(module.event_streams.crn)}?paneId=manage"
-  description = "Primary URL for the IBM Cloud Logs instance"
+  description = "Primary URL"
 }
 
 output "next_step_secondary_label" {
