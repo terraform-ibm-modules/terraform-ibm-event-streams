@@ -69,7 +69,7 @@ output "next_steps_text" {
 }
 
 output "next_step_primary_label" {
-  value       = "Go to Event Streams Instance"
+  value       = "Go to Event Streams instance"
   description = "Primary label"
 }
 
