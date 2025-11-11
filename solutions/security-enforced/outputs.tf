@@ -74,7 +74,7 @@ output "event_streams_mirroring_topic_patterns" {
 }
 
 output "next_steps_text" {
-  value       = "Your Event Streams Instance is ready."
+  value       = "Your Event Streams instance is ready."
   description = "Next steps text"
 }
 
