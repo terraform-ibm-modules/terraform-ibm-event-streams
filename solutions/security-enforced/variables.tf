@@ -124,7 +124,7 @@ variable "quotas" {
 }
 
 variable "resource_keys" {
-  description = "The definition of the resource keys to generate. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/security-enforced/DA-types.md#resource-keys)."
+  description = "The mapping of names and roles for service credentials that you want to create for the Event streams. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/security-enforced/DA-types.md#resource-keys)."
   type = list(object({
     name     = string
     role     = optional(string, "Reader")

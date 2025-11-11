@@ -269,7 +269,15 @@ variable "resource_keys" {
       var.service_endpoints == "private" &&
       anytrue([for key in var.resource_keys : key.endpoint == "public"])
     )
-    error_message = "When `service_endpoints` variable is set to `private`, `resource_key.endpoint` value cannot be set as `public`."
+    error_message = "When `service_endpoints` is set to `private`, `resource_key.endpoint` value cannot be `public`."
+  }
+
+  validation {
+    condition = !(
+      var.service_endpoints == "public" &&
+      anytrue([for key in var.resource_keys : key.endpoint == "private"])
+    )
+    error_message = "When `service_endpoints` is set to `public`, `resource_key.endpoint` value cannot be `private`."
   }
 }
 
