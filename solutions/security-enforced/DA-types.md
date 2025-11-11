@@ -1,14 +1,14 @@
 # Configuring complex inputs in Event Streams
 
-Several optional input variables in the IBM Cloud Event Streams deployable architecture use complex object types. You specify these inputs when you configure you deployable architecture.
+Several optional input variables in the IBM Cloud Event Streams deployable architecture use complex object types. You specify these inputs when you configure your deployable architecture.
 
 - [Resource keys](#resource-keys) (`resource_keys`)
 - [Service credential secrets](#service-credential-secrets) (`service_credential_secrets`)
 - [Quotas](#quotas) (`quotas`)
-- [Mirroring](#mirroring) (`quotas`)
+- [Mirroring](#mirroring) (`mirroring`)
 
 ## Resource keys <a name="resource-keys"></a>
-When you add an IBM Cloud Object Storage service from the IBM Cloud catalog to an IBM Cloud Projects service, you can configure resource keys. In the edit mode for the projects configuration, select the Configure panel and then click the optional tab.
+When you add an IBM Event Streams deployable architecture from the IBM Cloud catalog to an IBM Cloud Projects service, you can configure resource keys. In the edit mode for the projects configuration, select the Configure panel and then click the optional tab.
 
 In the configuration, specify the name of the resource key, , the Role of the key and an optional endpoint.
 
@@ -37,6 +37,7 @@ The following example includes all the configuration options for two resource ke
   {
     "name": "cos-writer-resource-key",
     "role": "Writer"
+    "endpoint": "public"
   }
 ]
 ```

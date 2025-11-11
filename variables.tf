@@ -250,7 +250,7 @@ variable "cbr_rules" {
 }
 
 variable "resource_keys" {
-  description = "The mapping of names and roles for service credentials that you want to create for the Event streams."
+  description = "A list of service credential resource keys to be created for the Event Streams instance."
   type = list(object({
     name     = string
     key_name = optional(string, null)
@@ -260,9 +260,9 @@ variable "resource_keys" {
   default = []
   validation {
     condition = alltrue([
-      for key in var.resource_keys : contains(["Writer", "Reader", "Manager"], key.role)
+      for key in var.resource_keys : contains(["Writer", "Reader", "Manager", "NONE"], key.role)
     ])
-    error_message = "`resource_keys` role must be one of the following: `Writer', `Reader` or `Manager`."
+    error_message = "`resource_keys` role must be one of the following: `Writer', `Reader`, `Manager` or `NONE`."
   }
   validation {
     condition = !(

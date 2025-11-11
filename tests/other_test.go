@@ -141,12 +141,14 @@ func setupSecurityEnforcedOptions(t *testing.T, prefix string) *testschematic.Te
 
 	resourceKeys := []map[string]interface{}{
 		{
-			"name": "es_writer",
-			"role": "Writer",
+			"name":     "es_writer",
+			"role":     "Writer",
+			"endpoint": "private",
 		},
 		{
-			"name": "es_reader",
-			"role": "Reader",
+			"name":     "es_reader",
+			"role":     "Reader",
+			"endpoint": "private",
 		},
 	}
 

@@ -120,16 +120,19 @@ module "event_streams" {
 
   resource_keys = [
     {
-      name = "${var.prefix}-writer-key"
-      role = "Writer"
+      name     = "${var.prefix}-writer-key"
+      role     = "Writer"
+      endpoint = "private"
     },
     {
-      name = "${var.prefix}-reader-key"
-      role = "Reader"
+      name     = "${var.prefix}-reader-key"
+      role     = "Reader"
+      endpoint = "private"
     },
     {
-      name = "${var.prefix}-manager-key"
-      role = "Manager"
+      name     = "${var.prefix}-manager-key"
+      role     = "Manager"
+      endpoint = "private"
     }
   ]
 
