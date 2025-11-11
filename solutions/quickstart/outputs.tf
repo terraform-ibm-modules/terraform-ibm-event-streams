@@ -64,7 +64,7 @@ output "service_credential_secret_groups" {
 }
 
 output "next_steps_text" {
-  value       = "Your Event Streams Instance is ready."
+  value       = "Your Event Streams instance is ready."
   description = "Next steps text"
 }
 
