@@ -225,7 +225,7 @@ module "cbr_rule" {
   }]
 }
 
-resource "ibm_resource_key" "resource_keys" {
+resource "ibm_resource_key" "service_credentials" {
   for_each             = { for key in var.resource_keys : key.name => key }
   name                 = each.value.key_name == null ? each.key : each.value.key_name
   role                 = each.value.role

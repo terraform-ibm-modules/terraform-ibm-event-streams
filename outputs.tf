@@ -37,7 +37,7 @@ output "kafka_broker_version" {
 
 output "resource_keys" {
   description = "List of resource keys"
-  value       = ibm_resource_key.resource_keys
+  value       = ibm_resource_key.service_credentials
   sensitive   = true
 }
 
