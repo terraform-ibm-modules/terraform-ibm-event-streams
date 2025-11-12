@@ -102,7 +102,7 @@ variable "cbr_rules" {
 }
 
 variable "resource_keys" {
-  description = "The definition of any resource keys to generate."
+  description = "A list of service credential resource keys to be created for the Event Streams instance."
   type = list(object({
     name     = string
     role     = optional(string, "Reader")
