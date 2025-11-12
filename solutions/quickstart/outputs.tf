@@ -56,3 +56,28 @@ output "service_credential_secret_groups" {
   description = "Service credential secret groups"
   value       = length(local.service_credential_secrets) > 0 ? module.secrets_manager_service_credentials[0].secret_groups : null
 }
+
+output "next_steps_text" {
+  value       = "Your Event Streams instance is ready."
+  description = "Next steps text"
+}
+
+output "next_step_primary_label" {
+  value       = "Go to Event Streams instance"
+  description = "Primary label"
+}
+
+output "next_step_primary_url" {
+  value       = "https://cloud.ibm.com/services/messagehub/${urlencode(module.event_streams.crn)}?paneId=manage"
+  description = "Primary URL"
+}
+
+output "next_step_secondary_label" {
+  value       = "Learn more about Event Streams"
+  description = "Secondary label"
+}
+
+output "next_step_secondary_url" {
+  value       = "https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-getting-started"
+  description = "Secondary URL"
+}
