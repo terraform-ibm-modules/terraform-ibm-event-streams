@@ -96,10 +96,14 @@ variable "topics" {
 }
 
 
-variable "service_credential_names" {
-  description = "The mapping of names and roles for service credentials that you want to create for the Event streams.[Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/security-enforced/DA-types.md#svc-credential-name)"
-  type        = map(string)
-  default     = {}
+variable "resource_keys" {
+  description = "A list of service credential resource keys to be created for the Event Streams instance. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/security-enforced/DA-types.md#resource-keys)."
+  type = list(object({
+    name     = string
+    role     = optional(string, "Reader")
+    endpoint = optional(string, "public")
+  }))
+  default = []
 }
 
 variable "create_timeout" {

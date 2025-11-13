@@ -249,14 +249,35 @@ variable "cbr_rules" {
   }
 }
 
-variable "service_credential_names" {
-  description = "The mapping of names and roles for service credentials that you want to create for the Event streams."
-  type        = map(string)
-  default     = {}
+variable "resource_keys" {
+  description = "A list of service credential resource keys to be created for the Event Streams instance."
+  type = list(object({
+    name     = string
+    key_name = optional(string, null)
+    role     = optional(string, "Manager")
+    endpoint = optional(string, "public")
+  }))
+  default = []
+  validation {
+    condition = alltrue([
+      for key in var.resource_keys : contains(["Writer", "Reader", "Manager", "NONE"], key.role)
+    ])
+    error_message = "`resource_keys` role must be one of the following: `Writer', `Reader`, `Manager` or `NONE`."
+  }
+  validation {
+    condition = !(
+      var.service_endpoints == "private" &&
+      anytrue([for key in var.resource_keys : key.endpoint == "public"])
+    )
+    error_message = "When `service_endpoints` is set to `private`, `resource_key.endpoint` value cannot be `public`."
+  }
 
   validation {
-    condition     = alltrue([for name, role in var.service_credential_names : contains(["Writer", "Reader", "Manager"], role)])
-    error_message = "The specified service credential role is not valid. The following values are valid for service credential roles: 'Writer', 'Reader', 'Manager'"
+    condition = !(
+      var.service_endpoints == "public" &&
+      anytrue([for key in var.resource_keys : key.endpoint == "private"])
+    )
+    error_message = "When `service_endpoints` is set to `public`, `resource_key.endpoint` value cannot be `private`."
   }
 }
 

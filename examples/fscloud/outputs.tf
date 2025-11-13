@@ -32,18 +32,11 @@ output "kafka_http_url" {
   value       = module.event_streams.kafka_http_url
 }
 
-output "service_credentials_json" {
-  description = "Service credentials json map"
-  value       = module.event_streams.service_credentials_json
+output "resource_keys" {
+  description = "List of resource keys"
+  value       = module.event_streams.resource_keys
   sensitive   = true
 }
-
-output "service_credentials_object" {
-  description = "Service credentials object"
-  value       = module.event_streams.service_credentials_object
-  sensitive   = true
-}
-
 output "mirroring_config_id" {
   description = "The ID of the mirroring config in CRN format"
   value       = module.event_streams.mirroring_config_id

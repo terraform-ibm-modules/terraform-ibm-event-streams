@@ -16,18 +16,18 @@ module "resource_group" {
 #######################################################################################################################
 
 module "event_streams" {
-  source                   = "../../"
-  resource_group_id        = module.resource_group.resource_group_id
-  es_name                  = "${local.prefix}${var.event_streams_name}"
-  plan                     = var.plan
-  region                   = var.region
-  topics                   = var.topics
-  tags                     = var.resource_tags
-  access_tags              = var.access_tags
-  service_credential_names = var.service_credential_names
-  create_timeout           = var.create_timeout
-  update_timeout           = var.update_timeout
-  delete_timeout           = var.delete_timeout
+  source            = "../../"
+  resource_group_id = module.resource_group.resource_group_id
+  es_name           = "${local.prefix}${var.event_streams_name}"
+  plan              = var.plan
+  region            = var.region
+  topics            = var.topics
+  tags              = var.resource_tags
+  access_tags       = var.access_tags
+  resource_keys     = var.resource_keys
+  create_timeout    = var.create_timeout
+  update_timeout    = var.update_timeout
+  delete_timeout    = var.delete_timeout
 }
 
 ########################################################################################################################

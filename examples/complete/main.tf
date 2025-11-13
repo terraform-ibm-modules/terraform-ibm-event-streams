@@ -60,9 +60,19 @@ module "event_streams" {
   ]
   metrics = []
   quotas  = []
-  service_credential_names = {
-    "es_writer" : "Writer",
-    "es_reader" : "Reader",
-    "es_manager" : "Manager"
-  }
+
+  resource_keys = [
+    {
+      name = "${var.prefix}-writer-key"
+      role = "Writer"
+    },
+    {
+      name = "${var.prefix}-reader-key"
+      role = "Reader"
+    },
+    {
+      name = "${var.prefix}-manager-key"
+      role = "Manager"
+    }
+  ]
 }

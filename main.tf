@@ -226,24 +226,13 @@ module "cbr_rule" {
 }
 
 resource "ibm_resource_key" "service_credentials" {
-  for_each             = var.service_credential_names
-  name                 = each.key
-  role                 = each.value
+  for_each             = { for key in var.resource_keys : key.name => key }
+  name                 = each.value.key_name == null ? each.key : each.value.key_name
+  role                 = each.value.role
   resource_instance_id = ibm_resource_instance.es_instance.id
-}
-
-locals {
-  service_credentials_json = length(var.service_credential_names) > 0 ? {
-    for service_credential in ibm_resource_key.service_credentials :
-    service_credential["name"] => service_credential["credentials_json"]
-  } : null
-
-  service_credentials_object = length(var.service_credential_names) > 0 ? {
-    credentials = {
-      for service_credential in ibm_resource_key.service_credentials :
-      service_credential["name"] => service_credential["credentials"]
-    }
-  } : null
+  parameters = {
+    service-endpoints = each.value.endpoint
+  }
 }
 
 resource "ibm_event_streams_mirroring_config" "es_mirroring_config" {

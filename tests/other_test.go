@@ -139,6 +139,19 @@ func setupSecurityEnforcedOptions(t *testing.T, prefix string) *testschematic.Te
 		},
 	}
 
+	resourceKeys := []map[string]interface{}{
+		{
+			"name":     "es_writer",
+			"role":     "Writer",
+			"endpoint": "private",
+		},
+		{
+			"name":     "es_reader",
+			"role":     "Reader",
+			"endpoint": "private",
+		},
+	}
+
 	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
 		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
 		{Name: "prefix", Value: options.Prefix, DataType: "string"},
@@ -150,7 +163,7 @@ func setupSecurityEnforcedOptions(t *testing.T, prefix string) *testschematic.Te
 		{Name: "create_timeout", Value: "6h", DataType: "string"},
 		{Name: "existing_secrets_manager_instance_crn", Value: permanentResources["secretsManagerCRN"], DataType: "string"},
 		{Name: "service_credential_secrets", Value: serviceCredentialSecrets, DataType: "list(object)"},
-		{Name: "service_credential_names", Value: "{\"es_writer\": \"Writer\", \"es_reader\": \"Reader\"}", DataType: "map(string)"},
+		{Name: "resource_keys", Value: resourceKeys, DataType: "list(object)"},
 		{Name: "metrics", Value: []string{"topic", "partition", "consumers"}, DataType: "list(string)"},
 		{Name: "quotas", Value: quotas, DataType: "list(object)"},
 		{Name: "schema_global_rule", Value: "FORWARD", DataType: "string"},

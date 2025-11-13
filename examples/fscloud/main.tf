@@ -117,11 +117,25 @@ module "event_streams" {
     }
   ]
   schema_global_rule = "FORWARD"
-  service_credential_names = {
-    "es_writer" : "Writer",
-    "es_reader" : "Reader",
-    "es_manager" : "Manager"
-  }
+
+  resource_keys = [
+    {
+      name     = "${var.prefix}-writer-key"
+      role     = "Writer"
+      endpoint = "private"
+    },
+    {
+      name     = "${var.prefix}-reader-key"
+      role     = "Reader"
+      endpoint = "private"
+    },
+    {
+      name     = "${var.prefix}-manager-key"
+      role     = "Manager"
+      endpoint = "private"
+    }
+  ]
+
   cbr_rules = [
     {
       description      = "${var.prefix}-event streams access from vpc and schematics"

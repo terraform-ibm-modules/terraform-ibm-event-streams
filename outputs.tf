@@ -35,15 +35,9 @@ output "kafka_broker_version" {
   value       = ibm_resource_instance.es_instance.extensions.kafka_broker_version
 }
 
-output "service_credentials_json" {
-  description = "The service credentials JSON map."
-  value       = local.service_credentials_json
-  sensitive   = true
-}
-
-output "service_credentials_object" {
-  description = "The service credentials object."
-  value       = local.service_credentials_object
+output "resource_keys" {
+  description = "List of resource keys"
+  value       = ibm_resource_key.service_credentials
   sensitive   = true
 }
 
