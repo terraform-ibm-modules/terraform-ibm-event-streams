@@ -251,6 +251,11 @@
                 "type": "code_editor",
                 "grouping": "deployment",
                 "original_grouping": "deployment"
+              },
+              "config_constraints": {
+                "supportedLanguages": [
+                  "hcl"
+                ]
               }
             },
             {
@@ -751,6 +756,11 @@
                 "type": "code_editor",
                 "grouping": "deployment",
                 "original_grouping": "deployment"
+              },
+              "config_constraints": {
+                "supportedLanguages": [
+                  "hcl"
+                ]
               }
             },
             {
