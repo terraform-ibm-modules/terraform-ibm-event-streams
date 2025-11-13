@@ -245,7 +245,13 @@
               "key": "skip_event_streams_secrets_manager_auth_policy"
             },
             {
-              "key": "resource_keys"
+              "key": "resource_keys",
+              "type": "array",
+              "custom_config": {
+                "type": "code_editor",
+                "grouping": "deployment",
+                "original_grouping": "deployment"
+              }
             },
             {
               "key": "existing_secrets_manager_endpoint_type",
@@ -739,7 +745,13 @@
               "key": "skip_event_streams_secrets_manager_auth_policy"
             },
             {
-              "key": "resource_keys"
+              "key": "resource_keys",
+              "type": "array",
+              "custom_config": {
+                "type": "code_editor",
+                "grouping": "deployment",
+                "original_grouping": "deployment"
+              }
             },
             {
               "key": "existing_secrets_manager_endpoint_type",

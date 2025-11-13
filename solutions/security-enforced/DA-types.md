@@ -23,21 +23,21 @@ To enter a custom value, use the edit action to open the "Edit Array" panel. Add
 ### Options for resource_key
 
 - `name` (required): A unique human-readable name that identifies this resource key.
-- `role` (optional, default = `Reader`): The name of the user role.
-- `endpoint` (optional, default = `public`): The endpoint of resource key.
+- `role` (optional, default = `Reader`): The name of the user role. These are the supported roles : `Writer`, `Reader`, `Manager`, `NONE` .
+- `endpoint` (optional, default = `private`): The endpoint of resource key.
 
 The following example includes all the configuration options for two resource keys. One is with a `Reader` role with `Private` endpoint, the other with an IAM key with `Writer` role.
 ```hcl
 [
   {
-    "name": "cos-reader-resource-key",
+    "name": "es-reader-resource-key",
     "role": "Reader",
     "endpoint": "private"
   },
   {
-    "name": "cos-writer-resource-key",
+    "name": "es-writer-resource-key",
     "role": "Writer"
-    "endpoint": "public"
+    "endpoint": "private"
   }
 ]
 ```
