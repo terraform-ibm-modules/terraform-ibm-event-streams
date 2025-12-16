@@ -74,6 +74,7 @@
           "index": 1,
           "install_type": "fullstack",
           "working_directory": "solutions/quickstart",
+          "short_description": "Ideal for users who want to get started without configuring underlying infrastructure.",
           "architecture": {
             "descriptions": "This architecture supports provisioning and configuring quickstart Event Streams.",
             "features": [
@@ -243,7 +244,17 @@
               "key": "update_timeout"
             },
             {
-              "key": "topics"
+              "key": "topics",
+              "custom_config": {
+                "type": "code_editor",
+                "grouping": "deployment",
+                "original_grouping": "deployment",
+                "config_constraints": {
+                  "supportedLanguages": [
+                    "hcl"
+                  ]
+                }
+              }
             },
             {
               "key": "skip_event_streams_secrets_manager_auth_policy"
@@ -282,7 +293,12 @@
               "custom_config": {
                 "type": "code_editor",
                 "grouping": "deployment",
-                "original_grouping": "deployment"
+                "original_grouping": "deployment",
+                "config_constraints": {
+                  "supportedLanguages": [
+                    "hcl"
+                  ]
+                }
               }
             },
             {
@@ -531,6 +547,7 @@
           "index": 2,
           "install_type": "fullstack",
           "working_directory": "solutions/security-enforced",
+          "short_description": "Ideal for users who want locked down enforced security.",
           "architecture": {
             "descriptions": "This architecture supports provisioning and configuring security enforced Event Streams instance.",
             "features": [
@@ -692,7 +709,17 @@
               "key": "update_timeout"
             },
             {
-              "key": "topics"
+              "key": "topics",
+              "custom_config": {
+                "type": "code_editor",
+                "grouping": "deployment",
+                "original_grouping": "deployment",
+                "config_constraints": {
+                  "supportedLanguages": [
+                    "hcl"
+                  ]
+                }
+              }
             },
             {
               "key": "skip_event_streams_kms_auth_policy"
@@ -736,13 +763,33 @@
               "key": "mirroring_topic_patterns"
             },
             {
-              "key": "quotas"
+              "key": "quotas",
+              "custom_config": {
+                "type": "code_editor",
+                "grouping": "deployment",
+                "original_grouping": "deployment",
+                "config_constraints": {
+                  "supportedLanguages": [
+                    "hcl"
+                  ]
+                }
+              }
             },
             {
               "key": "schema_global_rule"
             },
             {
-              "key": "schemas"
+              "key": "schemas",
+              "custom_config": {
+                "type": "code_editor",
+                "grouping": "deployment",
+                "original_grouping": "deployment",
+                "config_constraints": {
+                  "supportedLanguages": [
+                    "hcl"
+                  ]
+                }
+              }
             },
             {
               "key": "iam_token_only"
@@ -787,7 +834,12 @@
               "custom_config": {
                 "type": "code_editor",
                 "grouping": "deployment",
-                "original_grouping": "deployment"
+                "original_grouping": "deployment",
+                "config_constraints": {
+                  "supportedLanguages": [
+                    "hcl"
+                  ]
+                }
               }
             },
             {
@@ -796,7 +848,12 @@
               "custom_config": {
                 "type": "code_editor",
                 "grouping": "deployment",
-                "original_grouping": "deployment"
+                "original_grouping": "deployment",
+                "config_constraints": {
+                  "supportedLanguages": [
+                    "hcl"
+                  ]
+                }
               }
             },
             {
