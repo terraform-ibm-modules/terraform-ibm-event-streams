@@ -40,14 +40,14 @@ data "ibm_iam_account_settings" "iam_account_settings" {
 module "kms_instance_crn_parser" {
   count   = var.existing_kms_instance_crn != null ? 1 : 0
   source  = "terraform-ibm-modules/common-utilities/ibm//modules/crn-parser"
-  version = "1.3.7"
+  version = "1.4.1"
   crn     = var.existing_kms_instance_crn
 }
 
 module "kms_key_crn_parser" {
   count   = var.existing_kms_key_crn != null ? 1 : 0
   source  = "terraform-ibm-modules/common-utilities/ibm//modules/crn-parser"
-  version = "1.3.7"
+  version = "1.4.1"
   crn     = var.existing_kms_key_crn
 }
 
@@ -105,7 +105,7 @@ module "kms" {
   }
   count                       = var.existing_kms_key_crn == null ? 1 : 0 # no need to create any KMS resources if passing an existing key
   source                      = "terraform-ibm-modules/kms-all-inclusive/ibm"
-  version                     = "5.5.21"
+  version                     = "5.5.22"
   create_key_protect_instance = false
   region                      = local.kms_region
   existing_kms_instance_crn   = var.existing_kms_instance_crn
@@ -170,7 +170,7 @@ module "event_streams" {
 module "existing_sm_crn_parser" {
   count   = var.existing_secrets_manager_instance_crn != null ? 1 : 0
   source  = "terraform-ibm-modules/common-utilities/ibm//modules/crn-parser"
-  version = "1.3.7"
+  version = "1.4.1"
   crn     = var.existing_secrets_manager_instance_crn
 }
 
@@ -224,7 +224,7 @@ module "secrets_manager_service_credentials" {
   count                       = length(local.service_credential_secrets) > 0 ? 1 : 0
   depends_on                  = [time_sleep.wait_for_en_authorization_policy]
   source                      = "terraform-ibm-modules/secrets-manager/ibm//modules/secrets"
-  version                     = "2.12.18"
+  version                     = "2.12.21"
   existing_sm_instance_guid   = local.existing_secrets_manager_instance_guid
   existing_sm_instance_region = local.existing_secrets_manager_instance_region
   endpoint_type               = var.existing_secrets_manager_endpoint_type
