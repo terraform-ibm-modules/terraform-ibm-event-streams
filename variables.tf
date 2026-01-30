@@ -128,20 +128,11 @@ variable "skip_es_s2s_iam_authorization_policy" {
 }
 
 variable "schemas" {
-  type = list(object(
-    {
-      schema_id = string
-      schema = object({
-        type = string
-        name = string
-        fields = optional(list(object({
-          name = string
-          type = string
-        })))
-      })
-    }
-  ))
-  description = "The list of schema objects. Include the `schema_id` and the `type` and `name` of the schema in the `schema` object."
+  type = list(object({
+    schema_id = string
+    schema    = any
+  }))
+  description = "The list of schema objects. Include the `schema_id` and the schema definition."
   default     = []
 }
 

@@ -29,16 +29,11 @@ variable "resource_tags" {
 }
 
 variable "schemas" {
-  type = list(object(
-    {
-      schema_id = string
-      schema = object({
-        type = string
-        name = string
-      })
-    }
-  ))
-  description = "The list of schema object which contains schema id and format of the schema"
+  type = list(object({
+    schema_id = string
+    schema    = any
+  }))
+  description = "The list of schema objects. Include the `schema_id` and the schema definition."
   default     = []
 }
 

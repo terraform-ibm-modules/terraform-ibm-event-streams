@@ -65,19 +65,11 @@ variable "access_tags" {
 variable "schemas" {
   type = list(object({
     schema_id = string
-    schema = object({
-      type = string
-      name = string
-      fields = optional(list(object({
-        name = string
-        type = string
-      })))
-    })
+    schema    = any
   }))
-  description = "The list of schema objects. Include the `schema_id`, `type` and `name` of the schema in the `schema` object. Learn more: https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/security-enforced/DA-schemas-topics-cbr.md#options-with-schemas."
+  description = "The list of schema objects. Include the `schema_id` and the schema definition. Learn more: https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/security-enforced/DA-schemas-topics-cbr.md#options-with-schemas."
   default     = []
 }
-
 
 variable "schema_global_rule" {
   type        = string
