@@ -40,7 +40,7 @@ The following example includes all the configuration options for topics.
 ## Options with schemas <a name="options-with-schemas"></a>
 
 - `schema_id` (required): The unique ID to be assigned to schema. If this value is not specified, a generated UUID is assigned.
-- `schema` (required): The schema in JSON format. Supported parameters are: `type`, `name` and `fields` (optional).
+- `schema` (required): The schema definition in JSON format. Supports all Apache Avro types including nested structures.
 
 The following example includes all the configuration options for schemas.
 
