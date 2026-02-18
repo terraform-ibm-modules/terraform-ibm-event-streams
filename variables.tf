@@ -128,12 +128,16 @@ variable "skip_es_s2s_iam_authorization_policy" {
 }
 
 variable "schemas" {
-  type = list(object({
-    schema_id = string
-    schema    = any
-  }))
-  description = "The list of schema objects. Include the `schema_id` and the schema definition."
+  type        = any
+  description = "List of schema objects. Each schema must include `schema_id` and `schema` definition. Supports full Apache Avro specification with nested structures."
   default     = []
+
+  validation {
+    condition = alltrue([
+      for s in var.schemas : s.schema_id != "" && s.schema != null
+    ])
+    error_message = "Each schema must have a non-empty 'schema_id' and a 'schema' definition."
+  }
 }
 
 variable "schema_global_rule" {

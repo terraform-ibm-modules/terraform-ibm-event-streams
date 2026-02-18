@@ -70,15 +70,81 @@ module "cbr_zone_schematics" {
 # #############################################################################
 
 module "event_streams" {
-  source                   = "../../modules/fscloud"
-  resource_group_id        = module.resource_group.resource_group_id
-  es_name                  = "${var.prefix}-es-fs"
-  kms_key_crn              = var.kms_key_crn
-  schemas                  = var.schemas
-  tags                     = var.resource_tags
-  topics                   = var.topics
-  create_timeout           = "6h"
-  metrics                  = ["topic", "partition", "consumers"]
+  source            = "../../modules/fscloud"
+  resource_group_id = module.resource_group.resource_group_id
+  es_name           = "${var.prefix}-es-fs"
+  kms_key_crn       = var.kms_key_crn
+  tags              = var.resource_tags
+  create_timeout    = "6h"
+  metrics           = ["topic", "partition", "consumers"]
+  schemas = [
+    {
+      schema_id = "job_events_cloud_sync_value_v1"
+      schema = {
+        type      = "record"
+        name      = "job_events_cloud_sync_value_v1"
+        namespace = "envelope"
+        fields = [
+          { name = "source", type = "string" },
+          { name = "subject", type = "string" },
+          { name = "time", type = "string" },
+          { name = "datacontenttype", type = "string", default = "application/json" },
+          { name = "producer", type = "string" },
+          {
+            name = "data"
+            type = {
+              type      = "record"
+              name      = "payload"
+              namespace = "payload"
+              fields = [
+                { name = "event_type", type = "string" },
+                { name = "job_id", type = "string" },
+                { name = "metadata", type = ["null", "string"], default = null },
+                { name = "monotonic_ns", type = "long" },
+                { name = "source_instance_id", type = "string" },
+                { name = "source_type_id", type = "string" },
+                { name = "sub_job_id", type = ["null", "string"], default = null }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      schema_id = "my-es-schema_1"
+      schema = {
+        type = "record"
+        name = "book"
+        fields = [
+          {
+            name = "title"
+            type = "string"
+          },
+          {
+            name = "author"
+            type = "string"
+          }
+        ]
+      }
+    },
+    {
+      schema_id = "my-es-schema_2"
+      schema = {
+        type = "record"
+        name = "book"
+        fields = [
+          {
+            name = "author"
+            type = "string"
+          },
+          {
+            name = "title"
+            type = "string"
+          }
+        ]
+      }
+    }
+  ]
   mirroring_topic_patterns = ["topic-1", "topic-2"]
   mirroring = {
     source_crn   = var.event_streams_source_crn # Required for mirroring

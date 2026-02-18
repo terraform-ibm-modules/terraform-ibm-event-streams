@@ -63,11 +63,8 @@ variable "access_tags" {
 }
 
 variable "schemas" {
-  type = list(object({
-    schema_id = string
-    schema    = any
-  }))
-  description = "The list of schema objects. Include the `schema_id` and the schema definition. Learn more: https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/security-enforced/DA-schemas-topics-cbr.md#options-with-schemas."
+  type        = any
+  description = "List of schema objects. Each schema must include `schema_id` and `schema` definition. Supports full Apache Avro specification with nested structures. Learn more: https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/security-enforced/DA-schemas-topics-cbr.md#options-with-schemas."
   default     = []
 }
 
