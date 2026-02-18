@@ -136,7 +136,7 @@ variable "schemas" {
     condition = alltrue([
       for s in var.schemas : s.schema_id != "" && s.schema != null
     ])
-    error_message = "Each schema must have a non-empty 'schema_id' and a 'schema' definition."
+    error_message = "Each schema must have a 'schema_id' and a 'schema' definition."
   }
 }
 
