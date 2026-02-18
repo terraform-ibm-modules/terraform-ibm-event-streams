@@ -40,7 +40,7 @@ The following example includes all the configuration options for topics.
 ## Options with schemas <a name="options-with-schemas"></a>
 
 - `schema_id` (required): The unique ID to be assigned to schema. If this value is not specified, a generated UUID is assigned.
-- `schema` (required): The schema definition as a JSON-compatible Terraform object. Supports nested structures, arrays, maps, and other complex objects.
+- `schema` (required): The schema definition as a JSON-compatible Terraform object. Supports all [Apache Avro](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-ES_schema_registry#ES_apache_avro_data_format) types including nested structures.
 
 The following example includes all the configuration options for schemas.
 

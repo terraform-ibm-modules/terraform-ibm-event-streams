@@ -64,7 +64,7 @@ variable "access_tags" {
 
 variable "schemas" {
   type        = any
-  description = "List of schema objects. Each schema must include `schema_id` and `schema` definition. Supports full Apache Avro specification with nested structures. Learn more: https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/security-enforced/DA-schemas-topics-cbr.md#options-with-schemas."
+  description = "List of schema objects. Each schema must include `schema_id` and `schema` definition. Supports full Apache Avro specification with nested structures. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/security-enforced/DA-schemas-topics-cbr.md#options-with-schemas)."
   default     = []
 }
 

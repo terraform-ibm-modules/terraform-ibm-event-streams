@@ -129,7 +129,7 @@ variable "skip_es_s2s_iam_authorization_policy" {
 
 variable "schemas" {
   type        = any
-  description = "List of schema objects. Each schema must include `schema_id` and `schema` definition. Supports full Apache Avro specification with nested structures."
+  description = "List of schema objects. Each schema must include `schema_id` and `schema` definition. Supports full Apache Avro specification with nested structures. [Learn more](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-ES_schema_registry#ES_apache_avro_data_format)."
   default     = []
 
   validation {
