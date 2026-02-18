@@ -23,6 +23,9 @@ The Event Streams service supports payload data encryption that uses a root key 
     * <a href="./examples/basic">Basic example</a> <a href="https://cloud.ibm.com/schematics/workspaces/create?workspace_name=event-streams-basic-example&repository=https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/examples/basic"><img src="https://img.shields.io/badge/Deploy%20with IBM%20Cloud%20Schematics-0f62fe?logo=ibm&logoColor=white&labelColor=0f62fe" alt="Deploy with IBM Cloud Schematics" style="height: 16px; vertical-align: text-bottom; margin-left: 5px;"></a>
     * <a href="./examples/complete">Complete example with topics and schema creation.</a> <a href="https://cloud.ibm.com/schematics/workspaces/create?workspace_name=event-streams-complete-example&repository=https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/examples/complete"><img src="https://img.shields.io/badge/Deploy%20with IBM%20Cloud%20Schematics-0f62fe?logo=ibm&logoColor=white&labelColor=0f62fe" alt="Deploy with IBM Cloud Schematics" style="height: 16px; vertical-align: text-bottom; margin-left: 5px;"></a>
     * <a href="./examples/fscloud">Financial Services Cloud profile example</a> <a href="https://cloud.ibm.com/schematics/workspaces/create?workspace_name=event-streams-fscloud-example&repository=https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/examples/fscloud"><img src="https://img.shields.io/badge/Deploy%20with IBM%20Cloud%20Schematics-0f62fe?logo=ibm&logoColor=white&labelColor=0f62fe" alt="Deploy with IBM Cloud Schematics" style="height: 16px; vertical-align: text-bottom; margin-left: 5px;"></a>
+* [Deployable Architectures](./solutions)
+    * <a href="./solutions/quickstart"> Cloud automation for Event Streams (quickstart)</a>
+    * <a href="./solutions/security-enforced"> Cloud automation for Event Streams (Security-enforced)</a>
 * [Contributing](#contributing)
 <!-- END OVERVIEW HOOK -->
 
