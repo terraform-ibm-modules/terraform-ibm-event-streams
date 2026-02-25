@@ -29,23 +29,10 @@ variable "region" {
 }
 
 variable "schemas" {
-  type = list(object(
-    {
-      schema_id = string
-      schema = object({
-        type = string
-        name = string
-        fields = optional(list(object({
-          name = string
-          type = string
-        })))
-      })
-    }
-  ))
-  description = "The list of schema objects. Include the `schema_id` and the `type` and `name` of the schema in the `schema` object."
+  type        = any
+  description = "List of schema objects. Each schema must include `schema_id` and `schema` definition. Supports full Apache Avro specification with nested structures. [Learn more](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-ES_schema_registry#ES_apache_avro_data_format)."
   default     = []
 }
-
 variable "schema_global_rule" {
   type        = string
   description = "Schema global compatibility rule. Allowed values are 'NONE', 'FULL', 'FULL_TRANSITIVE', 'FORWARD', 'FORWARD_TRANSITIVE', 'BACKWARD', 'BACKWARD_TRANSITIVE'."

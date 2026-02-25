@@ -128,21 +128,16 @@ variable "skip_es_s2s_iam_authorization_policy" {
 }
 
 variable "schemas" {
-  type = list(object(
-    {
-      schema_id = string
-      schema = object({
-        type = string
-        name = string
-        fields = optional(list(object({
-          name = string
-          type = string
-        })))
-      })
-    }
-  ))
-  description = "The list of schema objects. Include the `schema_id` and the `type` and `name` of the schema in the `schema` object."
+  type        = any
+  description = "List of schema objects. Each schema must include `schema_id` and `schema` definition. Supports full Apache Avro specification with nested structures. [Learn more](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-ES_schema_registry#ES_apache_avro_data_format)."
   default     = []
+
+  validation {
+    condition = alltrue([
+      for s in var.schemas : s.schema_id != "" && s.schema != null
+    ])
+    error_message = "Each schema must have a 'schema_id' and a 'schema' definition."
+  }
 }
 
 variable "schema_global_rule" {

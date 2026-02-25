@@ -40,29 +40,77 @@ The following example includes all the configuration options for topics.
 ## Options with schemas <a name="options-with-schemas"></a>
 
 - `schema_id` (required): The unique ID to be assigned to schema. If this value is not specified, a generated UUID is assigned.
-- `schema` (required): The schema in JSON format. Supported parameters are: `type`, `name` and `fields` (optional).
+- `schema` (required): The schema definition as a JSON-compatible Terraform object. Supports all [Apache Avro](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-ES_schema_registry#ES_apache_avro_data_format) types including nested structures.
 
 The following example includes all the configuration options for schemas.
 
 ```hcl
 [
     {
-        schema_id = "my-es-schema_1"
-        schema = {
-            type = "string"
-            name = "name_1"
-            fields = [{
-                name = "field_name"
-                type = "string"
-            }]
-        }
+      schema_id = "job_events_cloud_sync_value_v1"
+      schema = {
+        type      = "record"
+        name      = "job_events_cloud_sync_value_v1"
+        namespace = "envelope"
+        fields = [
+          { name = "source", type = "string" },
+          { name = "subject", type = "string" },
+          { name = "time", type = "string" },
+          { name = "datacontenttype", type = "string", default = "application/json" },
+          { name = "producer", type = "string" },
+          {
+            name = "data"
+            type = {
+              type      = "record"
+              name      = "payload"
+              namespace = "payload"
+              fields = [
+                { name = "event_type", type = "string" },
+                { name = "job_id", type = "string" },
+                { name = "metadata", type = ["null", "string"], default = null },
+                { name = "monotonic_ns", type = "long" },
+                { name = "source_instance_id", type = "string" },
+                { name = "source_type_id", type = "string" },
+                { name = "sub_job_id", type = ["null", "string"], default = null }
+              ]
+            }
+          }
+        ]
+      }
     },
     {
-        schema_id = "my-es-schema_2"
-        schema = {
+      schema_id = "my-es-schema_1"
+      schema = {
+        type = "record"
+        name = "book"
+        fields = [
+          {
+            name = "title"
             type = "string"
-            name = "name_2"
-        }
+          },
+          {
+            name = "author"
+            type = "string"
+          }
+        ]
+      }
+    },
+    {
+      schema_id = "my-es-schema_2"
+      schema = {
+        type = "record"
+        name = "book"
+        fields = [
+          {
+            name = "author"
+            type = "string"
+          },
+          {
+            name = "title"
+            type = "string"
+          }
+        ]
+      }
     }
 ]
 ```
