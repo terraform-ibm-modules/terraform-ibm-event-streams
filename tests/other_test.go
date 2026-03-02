@@ -8,6 +8,7 @@ import (
 
 	/*	"encoding/json" */
 
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/testschematic"
 )
@@ -71,7 +72,13 @@ func TestFSCloudInSchematics(t *testing.T) {
 	assert.Nil(t, err, "This should not have errored")
 }
 
+func generateUniqueResourceGroupName(baseName string) string {
+	id := uuid.New().String()[:8] // Shorten UUID for readability
+	return fmt.Sprintf("%s-%s", baseName, id)
+}
+
 func setupSecurityEnforcedOptions(t *testing.T, prefix string) *testschematic.TestSchematicOptions {
+
 	options := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
 		Testing:            t,
 		Prefix:             prefix,
@@ -85,6 +92,8 @@ func setupSecurityEnforcedOptions(t *testing.T, prefix string) *testschematic.Te
 		DeleteWorkspaceOnFail:  false,
 		WaitJobCompleteMinutes: 360,
 	})
+
+	uniqueResourceGroup := generateUniqueResourceGroupName(options.Prefix)
 
 	serviceCredentialSecrets := []map[string]interface{}{
 		{
@@ -156,7 +165,7 @@ func setupSecurityEnforcedOptions(t *testing.T, prefix string) *testschematic.Te
 		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
 		{Name: "prefix", Value: options.Prefix, DataType: "string"},
 		{Name: "region", Value: "us-south", DataType: "string"},
-		{Name: "existing_resource_group_name", Value: resourceGroup, DataType: "string"},
+		{Name: "existing_resource_group_name", Value: uniqueResourceGroup, DataType: "string"},
 		{Name: "existing_kms_instance_crn", Value: permanentResources["hpcs_south_crn"], DataType: "string"},
 		{Name: "access_tags", Value: permanentResources["accessTags"], DataType: "list(string)"},
 		{Name: "resource_tags", Value: options.Tags, DataType: "list(string)"},
