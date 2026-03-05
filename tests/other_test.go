@@ -93,7 +93,9 @@ func setupSecurityEnforcedOptions(t *testing.T, prefix string) *testschematic.Te
 		WaitJobCompleteMinutes: 360,
 	})
 
-	uniqueResourceGroup := generateUniqueResourceGroupName(options.Prefix)
+	uniqueResourceGroupName := generateUniqueResourceGroupName(options.Prefix)
+	_, _, err := sharedInfoSvc.CreateResourceGroup(uniqueResourceGroupName)
+	assert.Nil(t, err, "Resource group creation should not have errored")
 
 	serviceCredentialSecrets := []map[string]interface{}{
 		{
@@ -165,7 +167,7 @@ func setupSecurityEnforcedOptions(t *testing.T, prefix string) *testschematic.Te
 		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
 		{Name: "prefix", Value: options.Prefix, DataType: "string"},
 		{Name: "region", Value: "us-south", DataType: "string"},
-		{Name: "existing_resource_group_name", Value: uniqueResourceGroup, DataType: "string"},
+		{Name: "existing_resource_group_name", Value: uniqueResourceGroupName, DataType: "string"},
 		{Name: "existing_kms_instance_crn", Value: permanentResources["hpcs_south_crn"], DataType: "string"},
 		{Name: "access_tags", Value: permanentResources["accessTags"], DataType: "list(string)"},
 		{Name: "resource_tags", Value: options.Tags, DataType: "list(string)"},
