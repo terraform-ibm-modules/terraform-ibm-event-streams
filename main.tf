@@ -24,7 +24,7 @@ resource "ibm_resource_instance" "es_instance" {
   plan              = var.plan
   location          = var.region
   resource_group_id = var.resource_group_id
-  tags              = var.tags
+  tags              = var.resource_tags
   timeouts {
     create = var.create_timeout
     update = var.update_timeout
@@ -103,7 +103,7 @@ data "ibm_iam_access_tag" "access_tag" {
 }
 
 resource "ibm_resource_tag" "es_access_tag" {
-  depends_on  = [data.ibm_iam_access_tag.access_tag]
+  depends_on  = [data.ibm_iam_access_tag.access_tag] # Force dependency on data source validation to ensure access_tags exist and are valid before use.
   count       = length(var.access_tags) > 0 ? 1 : 0
   resource_id = ibm_resource_instance.es_instance.id
   tags        = var.access_tags

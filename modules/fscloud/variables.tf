@@ -5,7 +5,7 @@ variable "resource_group_id" {
   type        = string
 }
 
-variable "tags" {
+variable "resource_tags" {
   type        = list(string)
   description = "Add user resource tags to the Event Streams instance to organize, track, and manage costs. [Learn more](https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#tag-types)."
   default     = []
@@ -13,7 +13,7 @@ variable "tags" {
 
 variable "access_tags" {
   type        = list(string)
-  description = "Add access management tags to the Event Streams instance to control access. [Learn more](https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#create-access-console)."
+  description = "The list of access tags associated with the Event Streams instance."
   default     = []
 }
 

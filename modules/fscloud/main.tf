@@ -9,7 +9,7 @@ module "event_streams" {
   skip_es_s2s_iam_authorization_policy = var.skip_es_s2s_iam_authorization_policy
   schemas                              = var.schemas
   schema_global_rule                   = var.schema_global_rule
-  tags                                 = var.tags
+  resource_tags                                 = var.resource_tags
   access_tags                          = var.access_tags
   topics                               = var.topics
   service_endpoints                    = "private"
