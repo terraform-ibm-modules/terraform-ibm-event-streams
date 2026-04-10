@@ -150,7 +150,7 @@ module "event_streams" {
   mirroring_topic_patterns             = var.mirroring_topic_patterns
   mirroring                            = var.mirroring
   schemas                              = var.schemas
-  tags                                 = var.resource_tags
+  resource_tags                        = var.resource_tags
   access_tags                          = var.access_tags
   service_endpoints                    = "private"
   resource_keys                        = var.resource_keys

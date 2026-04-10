@@ -22,7 +22,7 @@ module "event_streams" {
   plan              = var.plan
   region            = var.region
   topics            = var.topics
-  tags              = var.resource_tags
+  resource_tags     = var.resource_tags
   access_tags       = var.access_tags
   resource_keys     = var.resource_keys
   create_timeout    = var.create_timeout

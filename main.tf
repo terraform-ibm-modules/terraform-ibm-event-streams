@@ -24,7 +24,7 @@ resource "ibm_resource_instance" "es_instance" {
   plan              = var.plan
   location          = var.region
   resource_group_id = var.resource_group_id
-  tags              = var.tags
+  tags              = var.resource_tags
   timeouts {
     create = var.create_timeout
     update = var.update_timeout
@@ -97,7 +97,13 @@ resource "ibm_event_streams_topic" "es_topic" {
 ##############################################################################
 # ACCESS TAGS - attaching existing access tags to the resource instance
 ##############################################################################
+data "ibm_iam_access_tag" "access_tag" {
+  for_each = length(var.access_tags) != 0 ? toset(var.access_tags) : []
+  name     = each.value
+}
+
 resource "ibm_resource_tag" "es_access_tag" {
+  depends_on  = [data.ibm_iam_access_tag.access_tag] # Force dependency on data source validation to ensure access_tags exist and are valid before use.
   count       = length(var.access_tags) > 0 ? 1 : 0
   resource_id = ibm_resource_instance.es_instance.id
   tags        = var.access_tags
