@@ -704,6 +704,12 @@
               "key": "metrics"
             },
             {
+              "key": "storage_size"
+            },
+            {
+              "key": "throughput"
+            },
+            {
               "key": "mirroring"
             },
             {
