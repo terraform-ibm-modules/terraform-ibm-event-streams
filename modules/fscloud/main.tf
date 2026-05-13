@@ -24,4 +24,6 @@ module "event_streams" {
   create_timeout                       = var.create_timeout
   update_timeout                       = var.update_timeout
   delete_timeout                       = var.delete_timeout
+  storage_size                         = var.storage_size
+  throughput                           = var.throughput
 }
