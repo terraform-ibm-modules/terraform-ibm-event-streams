@@ -148,13 +148,13 @@ variable "delete_timeout" {
 
 variable "storage_size" {
   type        = number
-  description = "Storage size of the Event Streams in GB. Applies only to Enterprise plan instances. Possible values: `2048`, `4096`, `6144`, `8192`, `10240`, `12288`. Storage capacity cannot be reduced after the instance is created. When the `throughput` input variable is set to `300`, storage size starts at 4096. When `throughput` is `450`, storage size starts starts at `6144`."
+  description = "Storage size of the Event Streams in GB. Possible values: `2048`, `4096`, `6144`, `8192`, `10240`, `12288`. Storage capacity cannot be reduced after the instance is created. When the `throughput` input variable is set to `300`, storage size starts at 4096. When `throughput` is `450`, storage size starts starts at `6144`."
   default     = "2048"
 }
 
 variable "throughput" {
   type        = number
-  description = "Throughput capacity in MB per second. Applies only to Enterprise plan instances. Possible values: `150`, `300`, `450`."
+  description = "Throughput capacity in MB per second. Possible values: `150`, `300`, `450`."
   default     = "150"
 }
 
