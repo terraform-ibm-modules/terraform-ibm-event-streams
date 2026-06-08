@@ -14,7 +14,6 @@ import (
 )
 
 const basicExampleTerraformDir = "examples/basic"
-const securityEnforcedTerraformDir = "solutions/security-enforced"
 
 func TestRunBasicExample(t *testing.T) {
 	t.Parallel()
@@ -77,7 +76,7 @@ func generateUniqueResourceGroupName(baseName string) string {
 	return fmt.Sprintf("%s-%s", baseName, id)
 }
 
-func setupSecurityEnforcedOptions(t *testing.T, prefix string) *testschematic.TestSchematicOptions {
+func setupQuickstartWithPrivateEndpointsOptions(t *testing.T, prefix string) *testschematic.TestSchematicOptions {
 
 	options := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
 		Testing:            t,
@@ -85,12 +84,13 @@ func setupSecurityEnforcedOptions(t *testing.T, prefix string) *testschematic.Te
 		BestRegionYAMLPath: regionSelectionPath,
 		TarIncludePatterns: []string{
 			"*.tf",
-			securityEnforcedTerraformDir + "/*.tf",
+			quickstartTerraformDir + "/*.tf",
 		},
-		TemplateFolder:         securityEnforcedTerraformDir,
+		TemplateFolder:         quickstartTerraformDir,
 		Tags:                   []string{"test-schematic"},
 		DeleteWorkspaceOnFail:  false,
 		WaitJobCompleteMinutes: 360,
+		TerraformVersion:       terraformVersion,
 	})
 
 	uniqueResourceGroupName := generateUniqueResourceGroupName(options.Prefix)
@@ -180,13 +180,17 @@ func setupSecurityEnforcedOptions(t *testing.T, prefix string) *testschematic.Te
 		{Name: "schema_global_rule", Value: "FORWARD", DataType: "string"},
 		{Name: "mirroring_topic_patterns", Value: []string{"topic-1", "topic-2"}, DataType: "list(string)"},
 		{Name: "mirroring", Value: mirroring, DataType: "object"},
+		{Name: "plan", Value: "enterprise-3nodes-2tb", DataType: "string"},
+		{Name: "kms_encryption_enabled", Value: true, DataType: "bool"},
+		{Name: "service_endpoints", Value: "private", DataType: "string"},
+		{Name: "provider_visibility", Value: "private", DataType: "string"},
 	}
 	return options
 }
 
-// Test for the SecurityEnforced DA
-func TestSecurityEnforcedSolutionInSchematics(t *testing.T) {
-	options := setupSecurityEnforcedOptions(t, "es-sen")
+// Test for the Quickstart DA with private endpoints and KMS encryption
+func TestQuickstartWithPrivateEndpointsSolutionInSchematics(t *testing.T) {
+	options := setupQuickstartWithPrivateEndpointsOptions(t, "es-sen")
 	err := options.RunSchematicTest()
 	assert.Nil(t, err, "This should not have errored")
 }
