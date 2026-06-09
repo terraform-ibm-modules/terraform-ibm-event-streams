@@ -145,6 +145,158 @@ func TestRunQuickstartUpgradeSchematics(t *testing.T) {
 	}
 }
 
+func setupSecurityEnforcedUpgradeOptions(t *testing.T, prefix string) *testschematic.TestSchematicOptions {
+
+	options := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
+		Testing:            t,
+		Prefix:             prefix,
+		BestRegionYAMLPath: regionSelectionPath,
+		TarIncludePatterns: []string{
+			"*.tf",
+			securityEnforcedTerraformDir + "/*.tf",
+		},
+		TemplateFolder:         securityEnforcedTerraformDir,
+		Tags:                   []string{"test-schematic"},
+		DeleteWorkspaceOnFail:  false,
+		WaitJobCompleteMinutes: 360,
+		TerraformVersion:       terraformVersion,
+	})
+
+	uniqueResourceGroupName := generateUniqueResourceGroupName(options.Prefix)
+	_, _, err := sharedInfoSvc.CreateResourceGroup(uniqueResourceGroupName)
+	assert.Nil(t, err, "Resource group creation should not have errored")
+
+	serviceCredentialSecrets := []map[string]interface{}{
+		{
+			"secret_group_name": fmt.Sprintf("%s-secret-group", options.Prefix),
+			"service_credentials": []map[string]string{
+				{
+					"secret_name": fmt.Sprintf("%s-cred-config-reader", options.Prefix),
+					"service_credentials_source_service_role_crn": "crn:v1:bluemix:public:iam::::role:ConfigReader",
+				},
+				{
+					"secret_name": fmt.Sprintf("%s-cred-reader", options.Prefix),
+					"service_credentials_source_service_role_crn": "crn:v1:bluemix:public:iam::::serviceRole:Reader",
+				},
+				{
+					"secret_name": fmt.Sprintf("%s-cred-key-manager", options.Prefix),
+					"service_credentials_source_service_role_crn": "crn:v1:bluemix:public:resource-controller::::role:KeyManager",
+				},
+			},
+		},
+	}
+
+	quotas := []map[string]interface{}{
+		{
+			"entity":             "iam-ServiceId-00000000-0000-0000-0000-000000000000",
+			"producer_byte_rate": 100000,
+			"consumer_byte_rate": 200000,
+		},
+	}
+
+	mirroring := map[string]interface{}{
+		"source_crn":   permanentResources["event_streams_us_south_crn"].(string),
+		"source_alias": "source-alias",
+		"target_alias": "target-alias",
+		"options": map[string]interface{}{
+			"topic_name_transform": map[string]interface{}{
+				"type": "rename",
+				"rename": map[string]interface{}{
+					"add_prefix":    "add_prefix",
+					"add_suffix":    "add_suffix",
+					"remove_prefix": "remove_prefix",
+					"remove_suffix": "remove_suffix",
+				},
+			},
+			"group_id_transform": map[string]interface{}{
+				"type": "rename",
+				"rename": map[string]interface{}{
+					"add_prefix":    "add_prefix",
+					"add_suffix":    "add_suffix",
+					"remove_prefix": "remove_prefix",
+					"remove_suffix": "remove_suffix",
+				},
+			},
+		},
+	}
+
+	resourceKeys := []map[string]interface{}{
+		{
+			"name":     "es_writer",
+			"role":     "Writer",
+			"endpoint": "private",
+		},
+		{
+			"name":     "es_reader",
+			"role":     "Reader",
+			"endpoint": "private",
+		},
+	}
+
+	schemas := []map[string]interface{}{
+		{
+			"schema_id": "order-created",
+			"schema": map[string]interface{}{
+				"type": "record",
+				"name": "OrderCreated",
+				"fields": []map[string]interface{}{
+					{
+						"name": "orderId",
+						"type": "string",
+					},
+				},
+			},
+		},
+		{
+			"schema_id": "customer-created",
+			"schema": map[string]interface{}{
+				"type": "record",
+				"name": "CustomerCreated",
+				"fields": []map[string]interface{}{
+					{
+						"name": "customerId",
+						"type": "string",
+					},
+				},
+			},
+		},
+	}
+
+	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
+		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
+		{Name: "prefix", Value: options.Prefix, DataType: "string"},
+		{Name: "region", Value: "us-south", DataType: "string"},
+		{Name: "existing_resource_group_name", Value: uniqueResourceGroupName, DataType: "string"},
+		{Name: "existing_kms_instance_crn", Value: permanentResources["hpcs_south_crn"], DataType: "string"},
+		{Name: "access_tags", Value: permanentResources["accessTags"], DataType: "list(string)"},
+		{Name: "resource_tags", Value: options.Tags, DataType: "list(string)"},
+		{Name: "create_timeout", Value: "6h", DataType: "string"},
+		{Name: "existing_secrets_manager_instance_crn", Value: permanentResources["secretsManagerCRN"], DataType: "string"},
+		{Name: "service_credential_secrets", Value: serviceCredentialSecrets, DataType: "list(object)"},
+		{Name: "resource_keys", Value: resourceKeys, DataType: "list(object)"},
+		{Name: "metrics", Value: []string{"topic", "partition", "consumers"}, DataType: "list(string)"},
+		{Name: "quotas", Value: quotas, DataType: "list(object)"},
+		{Name: "schema_global_rule", Value: "FORWARD", DataType: "string"},
+		{Name: "mirroring_topic_patterns", Value: []string{"topic-1", "topic-2"}, DataType: "list(string)"},
+		{Name: "mirroring", Value: mirroring, DataType: "object"},
+		{Name: "schemas", Value: schemas, DataType: "list(object)"},
+	}
+	return options
+}
+
+// Upgrade test for the SecurityEnforced DA
+func TestSecurityEnforcedUpgradeSchematics(t *testing.T) {
+	t.Parallel()
+
+	options := setupSecurityEnforcedUpgradeOptions(t, "es-sen-upg")
+	options.CheckApplyResultForUpgrade = true
+
+	err := options.RunSchematicUpgradeTest()
+	if !options.UpgradeTestSkipped {
+		assert.Nil(t, err, "This should not have errored")
+	}
+}
+
 func TestEventStreamsDefaultConfiguration(t *testing.T) {
 	t.Parallel()
 
