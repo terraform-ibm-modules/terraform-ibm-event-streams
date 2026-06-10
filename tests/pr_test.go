@@ -20,6 +20,7 @@ import (
 const completeExampleTerraformDir = "examples/complete"
 const quickstartTerraformDir = "solutions/quickstart"
 const fsCloudTerraformDir = "examples/fscloud"
+const securityEnforcedDir = "solutions/security-enforced"
 const terraformVersion = "terraform_v1.12.2" // This should match the version in the ibm_catalog.json
 
 // Use existing group for tests
@@ -153,9 +154,9 @@ func setupSecurityEnforcedUpgradeOptions(t *testing.T, prefix string) *testschem
 		BestRegionYAMLPath: regionSelectionPath,
 		TarIncludePatterns: []string{
 			"*.tf",
-			securityEnforcedTerraformDir + "/*.tf",
+			securityEnforcedDir + "/*.tf",
 		},
-		TemplateFolder:         securityEnforcedTerraformDir,
+		TemplateFolder:         securityEnforcedDir,
 		Tags:                   []string{"test-schematic"},
 		DeleteWorkspaceOnFail:  false,
 		WaitJobCompleteMinutes: 360,
