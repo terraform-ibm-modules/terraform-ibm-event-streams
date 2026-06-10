@@ -163,10 +163,6 @@ func setupSecurityEnforcedUpgradeOptions(t *testing.T, prefix string) *testschem
 		TerraformVersion:       terraformVersion,
 	})
 
-	uniqueResourceGroupName := generateUniqueResourceGroupName(options.Prefix)
-	_, _, err := sharedInfoSvc.CreateResourceGroup(uniqueResourceGroupName)
-	assert.Nil(t, err, "Resource group creation should not have errored")
-
 	serviceCredentialSecrets := []map[string]interface{}{
 		{
 			"secret_group_name": fmt.Sprintf("%s-secret-group", options.Prefix),
@@ -184,14 +180,6 @@ func setupSecurityEnforcedUpgradeOptions(t *testing.T, prefix string) *testschem
 					"service_credentials_source_service_role_crn": "crn:v1:bluemix:public:resource-controller::::role:KeyManager",
 				},
 			},
-		},
-	}
-
-	quotas := []map[string]interface{}{
-		{
-			"entity":             "iam-ServiceId-00000000-0000-0000-0000-000000000000",
-			"producer_byte_rate": 100000,
-			"consumer_byte_rate": 200000,
 		},
 	}
 
@@ -267,7 +255,7 @@ func setupSecurityEnforcedUpgradeOptions(t *testing.T, prefix string) *testschem
 		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
 		{Name: "prefix", Value: options.Prefix, DataType: "string"},
 		{Name: "region", Value: "us-south", DataType: "string"},
-		{Name: "existing_resource_group_name", Value: uniqueResourceGroupName, DataType: "string"},
+		{Name: "existing_resource_group_name", Value: "Default", DataType: "string"},
 		{Name: "existing_kms_instance_crn", Value: permanentResources["hpcs_south_crn"], DataType: "string"},
 		{Name: "access_tags", Value: permanentResources["accessTags"], DataType: "list(string)"},
 		{Name: "resource_tags", Value: options.Tags, DataType: "list(string)"},
@@ -276,7 +264,6 @@ func setupSecurityEnforcedUpgradeOptions(t *testing.T, prefix string) *testschem
 		{Name: "service_credential_secrets", Value: serviceCredentialSecrets, DataType: "list(object)"},
 		{Name: "resource_keys", Value: resourceKeys, DataType: "list(object)"},
 		{Name: "metrics", Value: []string{"topic", "partition", "consumers"}, DataType: "list(string)"},
-		{Name: "quotas", Value: quotas, DataType: "list(object)"},
 		{Name: "schema_global_rule", Value: "FORWARD", DataType: "string"},
 		{Name: "mirroring_topic_patterns", Value: []string{"topic-1", "topic-2"}, DataType: "list(string)"},
 		{Name: "mirroring", Value: mirroring, DataType: "object"},
