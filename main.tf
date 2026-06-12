@@ -70,10 +70,13 @@ locals {
 ##############################################################################
 
 resource "ibm_event_streams_schema" "es_schema" {
-  count                = length(var.schemas) * (var.plan == "enterprise-3nodes-2tb" ? 1 : 0)
+  for_each = var.plan == "enterprise-3nodes-2tb" ? {
+    for schema in var.schemas : schema.schema_id => schema
+  } : {}
+
   resource_instance_id = ibm_resource_instance.es_instance.id
-  schema_id            = var.schemas[count.index].schema_id
-  schema               = jsonencode(var.schemas[count.index].schema)
+  schema_id            = each.value.schema_id
+  schema               = jsonencode(each.value.schema)
 }
 
 resource "ibm_event_streams_schema_global_rule" "es_globalrule" {
