@@ -16,18 +16,38 @@ The Event Streams service supports payload data encryption that uses a root key 
 <!-- Below content is automatically populated via pre-commit hook -->
 <!-- BEGIN OVERVIEW HOOK -->
 ## Overview
-* [terraform-ibm-event-streams](#terraform-ibm-event-streams)
-* [Submodules](./modules)
-    * [fscloud](./modules/fscloud)
-* [Examples](./examples)
-:information_source: Ctrl/Cmd+Click or right-click on the Schematics deploy button to open in a new tab
-    * <a href="./examples/basic">Basic example</a> <a href="https://cloud.ibm.com/schematics/workspaces/create?workspace_name=event-streams-basic-example&repository=https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/examples/basic"><img src="https://img.shields.io/badge/Deploy%20with IBM%20Cloud%20Schematics-0f62fe?logo=ibm&logoColor=white&labelColor=0f62fe" alt="Deploy with IBM Cloud Schematics" style="height: 16px; vertical-align: text-bottom; margin-left: 5px;"></a>
-    * <a href="./examples/complete">Complete example with topics and schema creation.</a> <a href="https://cloud.ibm.com/schematics/workspaces/create?workspace_name=event-streams-complete-example&repository=https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/examples/complete"><img src="https://img.shields.io/badge/Deploy%20with IBM%20Cloud%20Schematics-0f62fe?logo=ibm&logoColor=white&labelColor=0f62fe" alt="Deploy with IBM Cloud Schematics" style="height: 16px; vertical-align: text-bottom; margin-left: 5px;"></a>
-    * <a href="./examples/fscloud">Financial Services Cloud profile example</a> <a href="https://cloud.ibm.com/schematics/workspaces/create?workspace_name=event-streams-fscloud-example&repository=https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/examples/fscloud"><img src="https://img.shields.io/badge/Deploy%20with IBM%20Cloud%20Schematics-0f62fe?logo=ibm&logoColor=white&labelColor=0f62fe" alt="Deploy with IBM Cloud Schematics" style="height: 16px; vertical-align: text-bottom; margin-left: 5px;"></a>
-* [Deployable Architectures](./solutions)
-    * <a href="./solutions/quickstart"> Cloud automation for Event Streams (quickstart)</a>
-    * <a href="./solutions/security-enforced"> Cloud automation for Event Streams (Security-enforced)</a>
-* [Contributing](#contributing)
+<ul>
+  <li><a href="#terraform-ibm-event-streams">terraform-ibm-event-streams</a></li>
+  <li><a href="https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/modules">Submodules</a>
+    <ul>
+      <li><a href="https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/modules/fscloud">fscloud</a></li>
+    </ul>
+  </li>
+  <li><a href="https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/examples">Examples</a>
+    <ul>
+      <li>
+        <a href="https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/examples/basic">Basic example</a>
+        <a href="https://cloud.ibm.com/schematics/workspaces/create?workspace_name=event-streams-basic-example&repository=https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/examples/basic"><img src="https://img.shields.io/badge/Deploy%20with%20IBM%20Cloud%20Schematics-0f62fe?style=flat&logo=ibm&logoColor=white&labelColor=0f62fe" alt="Deploy with IBM Cloud Schematics" style="height: 16px; vertical-align: text-bottom; margin-left: 5px;"></a>
+      </li>
+      <li>
+        <a href="https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/examples/complete">Complete example with topics and schema creation.</a>
+        <a href="https://cloud.ibm.com/schematics/workspaces/create?workspace_name=event-streams-complete-example&repository=https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/examples/complete"><img src="https://img.shields.io/badge/Deploy%20with%20IBM%20Cloud%20Schematics-0f62fe?style=flat&logo=ibm&logoColor=white&labelColor=0f62fe" alt="Deploy with IBM Cloud Schematics" style="height: 16px; vertical-align: text-bottom; margin-left: 5px;"></a>
+      </li>
+      <li>
+        <a href="https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/examples/fscloud">Financial Services Cloud profile example</a>
+        <a href="https://cloud.ibm.com/schematics/workspaces/create?workspace_name=event-streams-fscloud-example&repository=https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/examples/fscloud"><img src="https://img.shields.io/badge/Deploy%20with%20IBM%20Cloud%20Schematics-0f62fe?style=flat&logo=ibm&logoColor=white&labelColor=0f62fe" alt="Deploy with IBM Cloud Schematics" style="height: 16px; vertical-align: text-bottom; margin-left: 5px;"></a>
+      </li>
+    </ul>
+    ℹ️ Ctrl/Cmd+Click or right-click on the Schematics deploy button to open in a new tab.
+  </li>
+  <li><a href="https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions">Deployable Architectures</a>
+    <ul>
+      <li><a href="https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/quickstart"> Cloud automation for Event Streams (quickstart)</a></li>
+      <li><a href="https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/security-enforced"> Cloud automation for Event Streams (Security-enforced)</a></li>
+    </ul>
+  </li>
+  <li><a href="#contributing">Contributing</a></li>
+</ul>
 <!-- END OVERVIEW HOOK -->
 
 ## terraform-ibm-event-streams
@@ -156,7 +176,7 @@ You need the following permissions to run this module.
 | <a name="input_metrics"></a> [metrics](#input\_metrics) | Enhanced metrics to activate, as list of strings. Only allowed for enterprise plans. Allowed values: 'topic', 'partition', 'consumers'. | `list(string)` | `[]` | no |
 | <a name="input_mirroring"></a> [mirroring](#input\_mirroring) | Event Streams mirroring configuration. Required only if creating mirroring instance. For more information on mirroring, see https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-mirroring. | <pre>object({<br/>    source_crn   = string<br/>    source_alias = string<br/>    target_alias = string<br/>    options = optional(object({<br/>      topic_name_transform = object({<br/>        type = string<br/>        rename = optional(object({<br/>          add_prefix    = optional(string)<br/>          add_suffix    = optional(string)<br/>          remove_prefix = optional(string)<br/>          remove_suffix = optional(string)<br/>        }))<br/>      })<br/>      group_id_transform = object({<br/>        type = string<br/>        rename = optional(object({<br/>          add_prefix    = optional(string)<br/>          add_suffix    = optional(string)<br/>          remove_prefix = optional(string)<br/>          remove_suffix = optional(string)<br/>        }))<br/>      })<br/>    }))<br/>    schemas = optional(string)<br/>  })</pre> | `null` | no |
 | <a name="input_mirroring_topic_patterns"></a> [mirroring\_topic\_patterns](#input\_mirroring\_topic\_patterns) | The list of the topics to set in instance. Required only if creating mirroring instance. | `list(string)` | `null` | no |
-| <a name="input_plan"></a> [plan](#input\_plan) | The plan for the Event Streams instance. Possible values: `lite`, `standard`, `enterprise-3nodes-2tb`. | `string` | `"standard"` | no |
+| <a name="input_plan"></a> [plan](#input\_plan) | The plan for the Event Streams instance. Possible values: `lite`, `standard`, `enterprise-3nodes-2tb`, `enterprise-3nodes-2tb-gen2`. | `string` | `"standard"` | no |
 | <a name="input_quotas"></a> [quotas](#input\_quotas) | Quotas to be applied to the Event Streams instance. Entity may be 'default' to apply to all users, or an IAM ServiceID for a specific user. Rates are bytes/second, with -1 meaning no quota. | <pre>list(object({<br/>    entity             = string<br/>    producer_byte_rate = optional(number, -1)<br/>    consumer_byte_rate = optional(number, -1)<br/>  }))</pre> | `[]` | no |
 | <a name="input_region"></a> [region](#input\_region) | The region where the Event Streams instance is created. | `string` | `"us-south"` | no |
 | <a name="input_resource_group_id"></a> [resource\_group\_id](#input\_resource\_group\_id) | The resource group ID where the Event Streams instance is created. | `string` | n/a | yes |

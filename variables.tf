@@ -14,11 +14,11 @@ variable "es_name" {
 
 variable "plan" {
   type        = string
-  description = "The plan for the Event Streams instance. Possible values: `lite`, `standard`, `enterprise-3nodes-2tb`."
+  description = "The plan for the Event Streams instance. Possible values: `lite`, `standard`, `enterprise-3nodes-2tb`, `enterprise-3nodes-2tb-gen2`."
   default     = "standard"
   validation {
-    condition     = contains(["lite", "standard", "enterprise-3nodes-2tb"], var.plan)
-    error_message = "The specified plan is not a valid selection! Supported plans are: lite, standard or enterprise-3nodes-2tb."
+    condition     = contains(["lite", "standard", "enterprise-3nodes-2tb", "enterprise-3nodes-2tb-gen2"], var.plan)
+    error_message = "The specified plan is not a valid selection! Supported plans are: lite, standard, enterprise-3nodes-2tb, or enterprise-3nodes-2tb-gen2."
   }
 }
 
@@ -62,6 +62,11 @@ variable "region" {
       "eu-de", "eu-fr2", "eu-gb", "eu-es", "jp-osa", "au-syd", "jp-tok", "che01"
     ], var.region))
     error_message = "The 'enterprise-3nodes-2tb' plan is only supported in the following regions: us-south, br-sao, ca-tor, us-east, eu-de, eu-fr2, eu-gb, eu-es, jp-osa, au-syd, jp-tok, che01."
+  }
+
+  validation {
+    condition     = !(var.plan == "enterprise-3nodes-2tb-gen2" && var.region != "eu-de")
+    error_message = "The 'enterprise-3nodes-2tb-gen2' plan is currently only supported in the 'eu-de' region."
   }
 }
 

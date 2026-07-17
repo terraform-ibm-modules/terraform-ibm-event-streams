@@ -138,7 +138,7 @@ module "event_streams" {
   source                               = "../../"
   resource_group_id                    = module.resource_group.resource_group_id
   es_name                              = "${local.prefix}${var.event_streams_name}"
-  plan                                 = "enterprise-3nodes-2tb"
+  plan                                 = var.plan
   region                               = var.region
   kms_encryption_enabled               = true
   kms_key_crn                          = local.kms_key_crn
