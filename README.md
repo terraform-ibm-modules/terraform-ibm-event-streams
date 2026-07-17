@@ -13,6 +13,17 @@ This module implements IBM Event Streams for IBM Cloud with topics, partitions, 
 
 The Event Streams service supports payload data encryption that uses a root key CRN of a key management service, such as Key Protect or Hyper Protect Crypto Services. You specify the root key CRN with the `kms_key_crn` input. For more information, see [Managing encryption in Event Streams](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-managing_encryption).
 
+## About Gen2 plans
+
+The `enterprise-3nodes-2tb-gen2` plan is a next-generation Enterprise plan for Event Streams. Gen2 plans have the following constraints compared to the classic `enterprise-3nodes-2tb` plan:
+
+- **Region**: Only `eu-de` is supported.
+- **Service endpoints**: Only `private` is supported. The `service_endpoints` input must be set to `"private"`.
+- **Throughput**: Only `100` MB/s is supported.
+- **Storage size**: Supported values are `2048`, `4096`, and `6144` GB.
+
+For more information, see the [IBM Event Streams plans documentation](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-plan_choose).
+
 <!-- Below content is automatically populated via pre-commit hook -->
 <!-- BEGIN OVERVIEW HOOK -->
 ## Overview
