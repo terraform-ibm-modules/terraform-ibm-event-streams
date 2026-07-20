@@ -648,8 +648,8 @@
                   "value": "enterprise-3nodes-2tb"
                 },
                 {
-                  "displayname": "enterprise-3nodes-2tb-gen2",
-                  "value": "enterprise-3nodes-2tb-gen2"
+                  "displayname": "enterprise-gen2",
+                  "value": "enterprise-gen2"
                 }
               ]
             },

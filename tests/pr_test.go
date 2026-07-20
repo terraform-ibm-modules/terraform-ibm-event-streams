@@ -61,6 +61,24 @@ func setupOptions(t *testing.T, prefix string, dir string) *testhelper.TestOptio
 	return options
 }
 
+func setupGen2BasicOptions(t *testing.T, prefix string) *testhelper.TestOptions {
+	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
+		Testing:       t,
+		TerraformDir:  basicExampleTerraformDir,
+		Prefix:        prefix,
+		ResourceGroup: resourceGroup,
+		// No BestRegionYAMLPath — enterprise-gen2 is only available in ca-mon/in-che/in-mum/eu-de, region must be fixed
+		TerraformVars: map[string]interface{}{
+			"plan":              "enterprise-gen2",
+			"region":            "ca-mon",
+			"throughput":        100,
+			"storage_size":      2000,
+			"service_endpoints": "private",
+		},
+	})
+	return options
+}
+
 func setupQuickstartOptions(t *testing.T, prefix string) *testschematic.TestSchematicOptions {
 	options := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
 		Testing:            t,
@@ -144,6 +162,17 @@ func TestRunQuickstartUpgradeSchematics(t *testing.T) {
 	if !options.UpgradeTestSkipped {
 		assert.Nil(t, err, "This should not have errored")
 	}
+}
+
+// Test for the Gen2 basic example
+func TestRunBasicGen2Example(t *testing.T) {
+	t.Parallel()
+
+	options := setupGen2BasicOptions(t, "es-gen2-bsc")
+
+	output, err := options.RunTest()
+	assert.Nil(t, err, "This should not have errored")
+	assert.NotNil(t, output, "Expected some output")
 }
 
 func setupSecurityEnforcedUpgradeOptions(t *testing.T, prefix string) *testschematic.TestSchematicOptions {

@@ -15,14 +15,16 @@ The Event Streams service supports payload data encryption that uses a root key 
 
 ## About Gen2 plans
 
-The `enterprise-3nodes-2tb-gen2` plan is a next-generation Enterprise plan for Event Streams. Gen2 plans have the following constraints compared to the classic `enterprise-3nodes-2tb` plan:
+The `enterprise-gen2` plan is a next-generation Enterprise plan for Event Streams. It uses a different provisioning API from the classic `enterprise-3nodes-2tb` plan. Key differences:
 
-- **Region**: Only `eu-de` is supported.
-- **Service endpoints**: Only `private` is supported. The `service_endpoints` input must be set to `"private"`.
-- **Throughput**: Only `100` MB/s is supported.
-- **Storage size**: Supported values are `2048`, `4096`, and `6144` GB.
+- **Regions**: `ca-mon` (Montreal), `in-che` (Chennai-Airtel), `in-mum` (Mumbai), `eu-de` (Frankfurt).
+- **Networking**: Private (VPE) only. The `service_endpoints` input variable does not apply to this plan.
+- **Throughput**: Only `100` MB/s is supported (`throughput = 100`).
+- **Storage size**: Fixed tiers — `2000` (2TB), `4000` (4TB), or `6000` (6TB) (`storage_size`).
+- **Parameters**: Uses a nested `dataservices` JSON structure internally.
+- **Not supported**: Schema Registry (`schemas`, `schema_global_rule`) and Mirroring (`mirroring`, `mirroring_topic_patterns`) are not yet available on `enterprise-gen2`.
 
-For more information, see the [IBM Event Streams plans documentation](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-plan_choose).
+For more information, see the [IBM Event Streams plan comparison](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-plan_choose) and the [Terraform reference](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-eventstreams_terraform).
 
 <!-- Below content is automatically populated via pre-commit hook -->
 <!-- BEGIN OVERVIEW HOOK -->
@@ -142,7 +144,7 @@ You need the following permissions to run this module.
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.9.0 |
-| <a name="requirement_ibm"></a> [ibm](#requirement\_ibm) | >= 1.79.2, < 3.0.0 |
+| <a name="requirement_ibm"></a> [ibm](#requirement\_ibm) | >= 2.2.0, < 3.0.0 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | >= 0.9.1 |
 
 ### Modules
@@ -187,19 +189,19 @@ You need the following permissions to run this module.
 | <a name="input_metrics"></a> [metrics](#input\_metrics) | Enhanced metrics to activate, as list of strings. Only allowed for enterprise plans. Allowed values: 'topic', 'partition', 'consumers'. | `list(string)` | `[]` | no |
 | <a name="input_mirroring"></a> [mirroring](#input\_mirroring) | Event Streams mirroring configuration. Required only if creating mirroring instance. For more information on mirroring, see https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-mirroring. | <pre>object({<br/>    source_crn   = string<br/>    source_alias = string<br/>    target_alias = string<br/>    options = optional(object({<br/>      topic_name_transform = object({<br/>        type = string<br/>        rename = optional(object({<br/>          add_prefix    = optional(string)<br/>          add_suffix    = optional(string)<br/>          remove_prefix = optional(string)<br/>          remove_suffix = optional(string)<br/>        }))<br/>      })<br/>      group_id_transform = object({<br/>        type = string<br/>        rename = optional(object({<br/>          add_prefix    = optional(string)<br/>          add_suffix    = optional(string)<br/>          remove_prefix = optional(string)<br/>          remove_suffix = optional(string)<br/>        }))<br/>      })<br/>    }))<br/>    schemas = optional(string)<br/>  })</pre> | `null` | no |
 | <a name="input_mirroring_topic_patterns"></a> [mirroring\_topic\_patterns](#input\_mirroring\_topic\_patterns) | The list of the topics to set in instance. Required only if creating mirroring instance. | `list(string)` | `null` | no |
-| <a name="input_plan"></a> [plan](#input\_plan) | The plan for the Event Streams instance. Possible values: `lite`, `standard`, `enterprise-3nodes-2tb`, `enterprise-3nodes-2tb-gen2`. | `string` | `"standard"` | no |
+| <a name="input_plan"></a> [plan](#input\_plan) | The plan for the Event Streams instance. Possible values: `lite`, `standard`, `enterprise-3nodes-2tb`, `enterprise-gen2`. | `string` | `"standard"` | no |
 | <a name="input_quotas"></a> [quotas](#input\_quotas) | Quotas to be applied to the Event Streams instance. Entity may be 'default' to apply to all users, or an IAM ServiceID for a specific user. Rates are bytes/second, with -1 meaning no quota. | <pre>list(object({<br/>    entity             = string<br/>    producer_byte_rate = optional(number, -1)<br/>    consumer_byte_rate = optional(number, -1)<br/>  }))</pre> | `[]` | no |
 | <a name="input_region"></a> [region](#input\_region) | The region where the Event Streams instance is created. | `string` | `"us-south"` | no |
 | <a name="input_resource_group_id"></a> [resource\_group\_id](#input\_resource\_group\_id) | The resource group ID where the Event Streams instance is created. | `string` | n/a | yes |
 | <a name="input_resource_keys"></a> [resource\_keys](#input\_resource\_keys) | A list of service credential resource keys to be created for the Event Streams instance. | <pre>list(object({<br/>    name     = string<br/>    key_name = optional(string, null)<br/>    role     = optional(string, "Manager")<br/>    endpoint = optional(string, "public")<br/>  }))</pre> | `[]` | no |
 | <a name="input_resource_tags"></a> [resource\_tags](#input\_resource\_tags) | Add user resource tags to the Event Streams instance to organize, track, and manage costs. [Learn more](https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#tag-types). | `list(string)` | `[]` | no |
-| <a name="input_schema_global_rule"></a> [schema\_global\_rule](#input\_schema\_global\_rule) | Schema global compatibility rule. Allowed values are 'NONE', 'FULL', 'FULL\_TRANSITIVE', 'FORWARD', 'FORWARD\_TRANSITIVE', 'BACKWARD', 'BACKWARD\_TRANSITIVE'. | `string` | `null` | no |
-| <a name="input_schemas"></a> [schemas](#input\_schemas) | List of schema objects. Each schema must include `schema_id` and `schema` definition. Supports full Apache Avro specification with nested structures. [Learn more](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-ES_schema_registry#ES_apache_avro_data_format). | `any` | `[]` | no |
-| <a name="input_service_endpoints"></a> [service\_endpoints](#input\_service\_endpoints) | The type of service endpoints. Possible values: 'public', 'private', 'public-and-private'. | `string` | `"public"` | no |
+| <a name="input_schema_global_rule"></a> [schema\_global\_rule](#input\_schema\_global\_rule) | Schema global compatibility rule. Allowed values are 'NONE', 'FULL', 'FULL\_TRANSITIVE', 'FORWARD', 'FORWARD\_TRANSITIVE', 'BACKWARD', 'BACKWARD\_TRANSITIVE'. Not supported on the `enterprise-gen2` plan. | `string` | `null` | no |
+| <a name="input_schemas"></a> [schemas](#input\_schemas) | List of schema objects. Each schema must include `schema_id` and `schema` definition. Supports full Apache Avro specification with nested structures. Not supported on the `enterprise-gen2` plan. [Learn more](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-ES_schema_registry#ES_apache_avro_data_format). | `any` | `[]` | no |
+| <a name="input_service_endpoints"></a> [service\_endpoints](#input\_service\_endpoints) | The type of service endpoints. Possible values: 'public', 'private', 'public-and-private'. The `enterprise-gen2` plan supports private endpoints only (enforced by the service); this variable is ignored for gen2 and does not need to be set. | `string` | `"public"` | no |
 | <a name="input_skip_es_s2s_iam_authorization_policy"></a> [skip\_es\_s2s\_iam\_authorization\_policy](#input\_skip\_es\_s2s\_iam\_authorization\_policy) | Set to true to skip the creation of an IAM authorization policy that will allow all Event Streams instances in the given resource group access to read from the mirror source instance. This policy is required when creating a mirroring instance, and will only be created if a value is passed in the mirroring input. | `bool` | `false` | no |
 | <a name="input_skip_kms_iam_authorization_policy"></a> [skip\_kms\_iam\_authorization\_policy](#input\_skip\_kms\_iam\_authorization\_policy) | Set to true to skip the creation of an IAM authorization policy that permits all Event Streams database instances in the resource group to read the encryption key from the KMS instance. If set to false, pass in a value for the KMS instance in the `kms_key_crn` variable. In addition, no policy is created if var.kms\_encryption\_enabled is set to false. | `bool` | `false` | no |
-| <a name="input_storage_size"></a> [storage\_size](#input\_storage\_size) | Storage size of the Event Streams in GB. Applies only to Enterprise plan instances. Possible values: `2048`, `4096`, `6144`, `8192`, `10240`, `12288`. Storage capacity cannot be reduced after the instance is created. When the `throughput` input variable is set to `300`, storage size starts at 4096. When `throughput` is `450`, storage size starts starts at `6144`. | `number` | `"2048"` | no |
-| <a name="input_throughput"></a> [throughput](#input\_throughput) | Throughput capacity in MB per second. Applies only to Enterprise plan instances. Possible values: `150`, `300`, `450`. | `number` | `"150"` | no |
+| <a name="input_storage_size"></a> [storage\_size](#input\_storage\_size) | Storage size of the Event Streams in GB. Applies only to Enterprise plan instances. For `enterprise-3nodes-2tb`, possible values are `2048`, `4096`, `6144`, `8192`, `10240`, `12288`. For `enterprise-gen2`, possible values are `2000` (2TB), `4000` (4TB), `6000` (6TB). Storage capacity cannot be reduced after the instance is created. When the `throughput` input variable is set to `300`, storage size starts at 4096. When `throughput` is `450`, storage size starts at `6144`. | `number` | `2048` | no |
+| <a name="input_throughput"></a> [throughput](#input\_throughput) | Throughput capacity in MB per second. Applies only to Enterprise plan instances. For `enterprise-3nodes-2tb`, possible values are `150`, `300`, `450`. For `enterprise-gen2`, the only supported value is `100`. | `number` | `150` | no |
 | <a name="input_topics"></a> [topics](#input\_topics) | The list of topics to apply to resources. Only one topic is allowed for Lite plan instances. | <pre>list(object(<br/>    {<br/>      name       = string<br/>      partitions = number<br/>      config     = map(string)<br/>    }<br/>  ))</pre> | `[]` | no |
 | <a name="input_update_timeout"></a> [update\_timeout](#input\_update\_timeout) | The timeout value for updating an Event Streams instance. Specify `1h` for an Enterprise plan instance. Add 1 h for each level of non-default throughput. A 30 min for each level of non-default storage size. | `string` | `"1h"` | no |
 
@@ -210,9 +212,9 @@ You need the following permissions to run this module.
 | <a name="output_crn"></a> [crn](#output\_crn) | Event Streams crn |
 | <a name="output_guid"></a> [guid](#output\_guid) | Event Streams guid |
 | <a name="output_id"></a> [id](#output\_id) | Event Streams instance id |
-| <a name="output_kafka_broker_version"></a> [kafka\_broker\_version](#output\_kafka\_broker\_version) | The Kafka version |
-| <a name="output_kafka_brokers_sasl"></a> [kafka\_brokers\_sasl](#output\_kafka\_brokers\_sasl) | (Array of Strings) Kafka brokers use for interacting with Kafka native API |
-| <a name="output_kafka_http_url"></a> [kafka\_http\_url](#output\_kafka\_http\_url) | The API endpoint to interact with Event Streams REST API |
+| <a name="output_kafka_broker_version"></a> [kafka\_broker\_version](#output\_kafka\_broker\_version) | The Kafka version. For enterprise-gen2, returns the `dataservices.kafka.version` extension value. |
+| <a name="output_kafka_brokers_sasl"></a> [kafka\_brokers\_sasl](#output\_kafka\_brokers\_sasl) | (Array of Strings) Kafka brokers used for interacting with Kafka native API. For classic instances, returns the broker list from extensions. For enterprise-gen2, returns the brokers parsed from the `dataservices.connection.bootstrap_servers` extension. |
+| <a name="output_kafka_http_url"></a> [kafka\_http\_url](#output\_kafka\_http\_url) | The API endpoint to interact with Event Streams REST API. For enterprise-gen2, returns the `dataservices.connection.rest_url` extension value. |
 | <a name="output_mirroring_config_id"></a> [mirroring\_config\_id](#output\_mirroring\_config\_id) | The ID of the mirroring config in CRN format |
 | <a name="output_mirroring_topic_patterns"></a> [mirroring\_topic\_patterns](#output\_mirroring\_topic\_patterns) | Mirroring topic patterns |
 | <a name="output_resource_keys"></a> [resource\_keys](#output\_resource\_keys) | List of resource keys |
