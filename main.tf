@@ -9,8 +9,7 @@ locals {
   kms_account_id     = length(local.parsed_kms_key_crn) > 0 ? split("/", local.kms_scope)[1] : null
   kms_key_id         = length(local.parsed_kms_key_crn) > 0 ? local.parsed_kms_key_crn[9] : null
   # Determine if gen2 plan is being used
-  is_gen2    = can(regex("-gen2$", var.plan))
-  is_classic = !local.is_gen2 # For code readability and maintenance
+  is_gen2 = can(regex("-gen2$", var.plan))
 }
 
 # workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
@@ -83,7 +82,7 @@ resource "ibm_event_streams_schema" "es_schema" {
   for_each = {
     for schema in var.schemas :
     schema.schema_id => schema
-    if local.is_classic && var.plan != "lite" && var.plan != "standard"
+    if var.plan == "enterprise-3nodes-2tb"
   }
 
   resource_instance_id = ibm_resource_instance.es_instance.id

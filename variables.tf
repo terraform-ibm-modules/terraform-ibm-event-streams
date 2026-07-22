@@ -63,13 +63,6 @@ variable "region" {
     ], var.region))
     error_message = "The 'enterprise-3nodes-2tb' plan is only supported in the following regions: us-south, br-sao, ca-tor, us-east, eu-de, eu-fr2, eu-gb, eu-es, jp-osa, au-syd, jp-tok, che01."
   }
-
-  validation {
-    condition = !(local.is_gen2 && !contains([
-      "ca-mon", "in-che", "in-mum", "eu-de"
-    ], var.region))
-    error_message = "The 'enterprise-gen2' plan is only supported in the following regions: ca-mon, in-che, in-mum, eu-de."
-  }
 }
 
 
