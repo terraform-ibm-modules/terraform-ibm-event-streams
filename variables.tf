@@ -71,12 +71,8 @@ variable "throughput" {
   description = "Throughput capacity in MB per second. Applies only to Enterprise plan instances. For `enterprise-3nodes-2tb`, possible values are `150`, `300`, `450`. For `enterprise-gen2`, the only supported value is `100`."
   default     = 150
   validation {
-    condition     = !(local.is_gen2 && var.throughput != 100)
-    error_message = "For the enterprise-gen2 plan, throughput must be 100."
-  }
-  validation {
-    condition     = local.is_gen2 || contains([150, 300, 450], var.throughput)
-    error_message = "Supported throughput values are: 150, 300, 450."
+    condition     = contains(local.is_gen2 ? [100] : [150, 300, 450], var.throughput)
+    error_message = "For enterprise-gen2, throughput must be 100. For other plans, supported values are: 150, 300, 450."
   }
   validation {
     condition     = !((var.plan == "lite" || var.plan == "standard") && var.throughput != 150)
@@ -86,15 +82,11 @@ variable "throughput" {
 
 variable "storage_size" {
   type        = number
-  description = "Storage size of the Event Streams in GB. Applies only to Enterprise plan instances. For `enterprise-3nodes-2tb`, possible values are `2048`, `4096`, `6144`, `8192`, `10240`, `12288`. For `enterprise-gen2`, possible values are `2000` (2TB), `4000` (4TB), `6000` (6TB). Storage capacity cannot be reduced after the instance is created. When the `throughput` input variable is set to `300`, storage size starts at 4096. When `throughput` is `450`, storage size starts at `6144`."
+  description = "Storage size of the Event Streams in GB. Applies only to Enterprise plan instances. For `enterprise-3nodes-2tb`, possible values are `2048`, `4096`, `6144`, `8192`, `10240`, `12288`. For `enterprise-gen2`, possible values are `2000` (2TB), `4000` (4TB), `6000` (6TB). Storage capacity cannot be reduced after the instance is created. When the `throughput` input variable is set to `300`, storage size starts at 4096. When `throughput` is `450`, storage size starts at `6144`. When using `enterprise-gen2`, you must explicitly set this to `2000`, `4000`, or `6000`."
   default     = 2048
   validation {
-    condition     = !(local.is_gen2 && !contains([2000, 4000, 6000], var.storage_size))
-    error_message = "For the enterprise-gen2 plan, storage_size must be one of: 2000 (2TB), 4000 (4TB), 6000 (6TB)."
-  }
-  validation {
-    condition     = local.is_gen2 || contains([2048, 4096, 6144, 8192, 10240, 12288], var.storage_size)
-    error_message = "Supported storage_size values are: 2048, 4096, 6144, 8192, 10240, 12288."
+    condition     = contains(local.is_gen2 ? [2000, 4000, 6000] : [2048, 4096, 6144, 8192, 10240, 12288], var.storage_size)
+    error_message = "For enterprise-gen2, storage_size must be one of: 2000 (2TB), 4000 (4TB), 6000 (6TB). For other plans, supported values are: 2048, 4096, 6144, 8192, 10240, 12288."
   }
   validation {
     condition     = !((var.plan == "lite" || var.plan == "standard") && var.storage_size != 2048)
