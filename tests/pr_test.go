@@ -17,6 +17,7 @@ import (
 	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/testschematic"
 )
 
+const basicExampleDir = "examples/basic"
 const completeExampleTerraformDir = "examples/complete"
 const quickstartTerraformDir = "solutions/quickstart"
 const fsCloudTerraformDir = "examples/fscloud"
@@ -64,7 +65,7 @@ func setupOptions(t *testing.T, prefix string, dir string) *testhelper.TestOptio
 func setupGen2BasicOptions(t *testing.T, prefix string) *testhelper.TestOptions {
 	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
 		Testing:       t,
-		TerraformDir:  basicExampleTerraformDir,
+		TerraformDir:  basicExampleDir,
 		Prefix:        prefix,
 		ResourceGroup: resourceGroup,
 		// No BestRegionYAMLPath — enterprise-gen2 is only available in ca-mon/in-che/in-mum/eu-de, region must be fixed
