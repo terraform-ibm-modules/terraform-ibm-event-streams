@@ -641,19 +641,6 @@
               "key": "event_streams_name"
             },
             {
-              "key": "plan",
-              "options": [
-                {
-                  "displayname": "enterprise-3nodes-2tb",
-                  "value": "enterprise-3nodes-2tb"
-                },
-                {
-                  "displayname": "enterprise-gen2",
-                  "value": "enterprise-gen2"
-                }
-              ]
-            },
-            {
               "key": "resource_tags"
             },
             {

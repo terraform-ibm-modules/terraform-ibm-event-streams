@@ -50,16 +50,6 @@ variable "event_streams_name" {
   default     = "event-streams"
 }
 
-variable "plan" {
-  type        = string
-  description = "The plan for the Event Streams instance. Possible values: `enterprise-3nodes-2tb`, `enterprise-gen2`."
-  default     = "enterprise-3nodes-2tb"
-  validation {
-    condition     = contains(["enterprise-3nodes-2tb", "enterprise-gen2"], var.plan)
-    error_message = "The specified plan is not a valid selection! Supported plans are: enterprise-3nodes-2tb or enterprise-gen2."
-  }
-}
-
 variable "resource_tags" {
   type        = list(string)
   description = "Add user resource tags to the Event Streams instance to organize, track, and manage costs. [Learn more](https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#tag-types)."
