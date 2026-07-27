@@ -163,8 +163,16 @@ variable "topics" {
       config     = map(string)
     }
   ))
-  description = "The list of topics to apply to resources. Only one topic is allowed for Lite plan instances."
+  description = "The list of topics to apply to resources. Only one topic is allowed for Lite plan instances. Not supported on the `enterprise-gen2` plan."
   default     = []
+  validation {
+    condition     = !(var.plan == "lite" && length(var.topics) > 1)
+    error_message = "Only one topic is allowed for the Lite plan."
+  }
+  validation {
+    condition     = !(local.is_gen2 && length(var.topics) > 0)
+    error_message = "Topics are not supported on the enterprise-gen2 plan. The provider crashes when topic creation is attempted against a gen2 instance (terraform-provider-ibm v2.4.0: createSaramaAdminClient reads Extensions[\"kafka_http_url\"] which is absent on gen2 instances)."
+  }
 }
 
 variable "kms_encryption_enabled" {

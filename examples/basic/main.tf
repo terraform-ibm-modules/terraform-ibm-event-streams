@@ -19,9 +19,5 @@ module "event_streams" {
   resource_group_id = module.resource_group.resource_group_id
   es_name           = "${var.prefix}-es"
   resource_tags     = var.resource_tags
-  plan              = var.plan
-  region            = var.region
-  service_endpoints = var.service_endpoints
-  throughput        = var.throughput
-  storage_size      = var.storage_size
+  plan              = "standard"
 }

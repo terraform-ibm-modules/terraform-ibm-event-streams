@@ -17,7 +17,6 @@ import (
 	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/testschematic"
 )
 
-const basicExampleDir = "examples/basic"
 const completeExampleTerraformDir = "examples/complete"
 const quickstartTerraformDir = "solutions/quickstart"
 const fsCloudTerraformDir = "examples/fscloud"
@@ -58,24 +57,6 @@ func setupOptions(t *testing.T, prefix string, dir string) *testhelper.TestOptio
 		Prefix:             prefix,
 		ResourceGroup:      resourceGroup,
 		BestRegionYAMLPath: regionSelectionPath,
-	})
-	return options
-}
-
-func setupGen2BasicOptions(t *testing.T, prefix string) *testhelper.TestOptions {
-	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
-		Testing:       t,
-		TerraformDir:  basicExampleDir,
-		Prefix:        prefix,
-		ResourceGroup: resourceGroup,
-		// No BestRegionYAMLPath — enterprise-gen2 is only available in ca-mon/in-che/in-mum/eu-de, region must be fixed
-		TerraformVars: map[string]interface{}{
-			"plan":              "enterprise-gen2",
-			"region":            "ca-mon",
-			"throughput":        100,
-			"storage_size":      2000,
-			"service_endpoints": "private",
-		},
 	})
 	return options
 }
@@ -165,11 +146,30 @@ func TestRunQuickstartUpgradeSchematics(t *testing.T) {
 	}
 }
 
-// Test for the Gen2 basic example
-func TestRunBasicGen2Example(t *testing.T) {
+// setupGen2CompleteOptions configures a terraform test against the complete example
+func setupGen2CompleteOptions(t *testing.T, prefix string) *testhelper.TestOptions {
+	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
+		Testing:       t,
+		TerraformDir:  completeExampleTerraformDir,
+		Prefix:        prefix,
+		ResourceGroup: resourceGroup,
+		// No BestRegionYAMLPath — enterprise-gen2 is only available in ca-mon/in-che/in-mum/eu-de, region must be fixed
+		TerraformVars: map[string]interface{}{
+			"plan":              "enterprise-gen2",
+			"region":            "ca-mon",
+			"throughput":        100,
+			"storage_size":      2000,
+			"service_endpoints": "private",
+		},
+	})
+	return options
+}
+
+// TestRunCompleteGen2Example tests the complete example with enterprise-gen2 plan.
+func TestRunCompleteGen2Example(t *testing.T) {
 	t.Parallel()
 
-	options := setupGen2BasicOptions(t, "es-gen2-bsc")
+	options := setupGen2CompleteOptions(t, "es-gen2-com")
 
 	output, err := options.RunTest()
 	assert.Nil(t, err, "This should not have errored")
