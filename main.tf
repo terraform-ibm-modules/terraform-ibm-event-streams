@@ -8,6 +8,19 @@ locals {
   kms_scope          = length(local.parsed_kms_key_crn) > 0 ? local.parsed_kms_key_crn[6] : null
   kms_account_id     = length(local.parsed_kms_key_crn) > 0 ? split("/", local.kms_scope)[1] : null
   kms_key_id         = length(local.parsed_kms_key_crn) > 0 ? local.parsed_kms_key_crn[9] : null
+  # Determine if gen2 plan is being used
+  is_gen2 = can(regex("-gen2$", var.plan))
+  # Gen2 parameters_json
+  gen2_parameters = var.kms_key_crn != null ? jsonencode({
+    dataservices = {
+      kafka      = { throughput_mb_s = tostring(var.throughput), storage_gb = var.storage_size }
+      encryption = { disk = var.kms_key_crn }
+    }
+    }) : jsonencode({
+    dataservices = {
+      kafka = { throughput_mb_s = tostring(var.throughput), storage_gb = var.storage_size }
+    }
+  })
 }
 
 # workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
@@ -31,7 +44,7 @@ resource "ibm_resource_instance" "es_instance" {
     delete = var.delete_timeout
   }
 
-  parameters_json = var.plan != "enterprise-3nodes-2tb" ? null : (var.kms_key_crn != null || var.metrics != null || var.mirroring != null) ? jsonencode(
+  parameters_json = local.is_gen2 ? local.gen2_parameters : var.plan == "lite" || var.plan == "standard" ? null : (var.kms_key_crn != null || length(var.metrics) > 0 || var.mirroring != null) ? jsonencode(
     {
       service-endpoints = var.service_endpoints
       throughput        = tostring(var.throughput)

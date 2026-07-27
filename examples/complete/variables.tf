@@ -33,3 +33,27 @@ variable "access_tags" {
   description = "The list of access tags associated with the Event Streams instance."
   default     = []
 }
+
+variable "plan" {
+  type        = string
+  description = "The plan for the Event Streams instance. Possible values: `lite`, `standard`, `enterprise-3nodes-2tb`, `enterprise-gen2`."
+  default     = "standard"
+}
+
+variable "service_endpoints" {
+  type        = string
+  description = "The type of service endpoints. Possible values: 'public', 'private', 'public-and-private'. The `enterprise-gen2` plan supports private endpoints only (enforced by the service); set this to 'private' when using the gen2 plan."
+  default     = "public"
+}
+
+variable "throughput" {
+  type        = number
+  description = "Throughput capacity in MB per second. For `enterprise-3nodes-2tb`, possible values are `150`, `300`, `450`. For `enterprise-gen2`, the only supported value is `100`."
+  default     = 150
+}
+
+variable "storage_size" {
+  type        = number
+  description = "Storage size of the Event Streams in GB. For `enterprise-3nodes-2tb`, possible values are `2048`–`12288`. For `enterprise-gen2`, possible values are `2000`, `4000`, `6000`."
+  default     = 2048
+}
