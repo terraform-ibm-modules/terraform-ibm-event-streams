@@ -8,11 +8,24 @@ locals {
   kms_scope          = length(local.parsed_kms_key_crn) > 0 ? local.parsed_kms_key_crn[6] : null
   kms_account_id     = length(local.parsed_kms_key_crn) > 0 ? split("/", local.kms_scope)[1] : null
   kms_key_id         = length(local.parsed_kms_key_crn) > 0 ? local.parsed_kms_key_crn[9] : null
+  # Determine if gen2 plan is being used
+  is_gen2 = can(regex("-gen2$", var.plan))
+  # Gen2 parameters_json
+  gen2_parameters = var.kms_key_crn != null ? jsonencode({
+    dataservices = {
+      kafka      = { throughput_mb_s = tostring(var.throughput), storage_gb = var.storage_size }
+      encryption = { disk = var.kms_key_crn }
+    }
+    }) : jsonencode({
+    dataservices = {
+      kafka = { throughput_mb_s = tostring(var.throughput), storage_gb = var.storage_size }
+    }
+  })
 }
 
 # workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
 resource "time_sleep" "wait_for_authorization_policy" {
-  depends_on = [ibm_iam_authorization_policy.kms_policy]
+  depends_on = [ibm_iam_authorization_policy.kms_policy, ibm_iam_authorization_policy.kms_policy_gen2]
 
   create_duration = "30s"
 }
@@ -31,7 +44,7 @@ resource "ibm_resource_instance" "es_instance" {
     delete = var.delete_timeout
   }
 
-  parameters_json = var.plan != "enterprise-3nodes-2tb" ? null : (var.kms_key_crn != null || var.metrics != null || var.mirroring != null) ? jsonencode(
+  parameters_json = local.is_gen2 ? local.gen2_parameters : var.plan == "lite" || var.plan == "standard" ? null : (var.kms_key_crn != null || length(var.metrics) > 0 || var.mirroring != null) ? jsonencode(
     {
       service-endpoints = var.service_endpoints
       throughput        = tostring(var.throughput)
@@ -131,9 +144,10 @@ resource "ibm_event_streams_quota" "eventstreams_quotas" {
 # IAM Authorization Policies
 ##############################################################################
 
-# Create IAM Authorization Policies to allow messagehub to access kms for the encryption key
+# Create IAM Authorization Policies to allow messagehub to access kms for the encryption key.
+# Classic enterprise plan: resource-group-scoped source, Reader role only.
 resource "ibm_iam_authorization_policy" "kms_policy" {
-  count                    = var.kms_encryption_enabled == false || var.skip_kms_iam_authorization_policy ? 0 : 1
+  count                    = var.kms_encryption_enabled == false || var.skip_kms_iam_authorization_policy || local.is_gen2 ? 0 : 1
   source_service_name      = "messagehub"
   source_resource_group_id = var.resource_group_id
   roles                    = ["Reader"]
@@ -170,10 +184,50 @@ resource "ibm_iam_authorization_policy" "kms_policy" {
   }
 }
 
+# Gen2 enterprise plan: account-scoped source with Reader + AuthorizationDelegator roles.
+# AuthorizationDelegator is required so Event Streams can delegate the KMS Reader role to
+# Block Storage for VPC (the underlying storage layer for gen2 brokers).
+# Source must be account-scoped (no resource group) per the gen2 KMS integration doc.
+# See: https://cloud.ibm.com/docs/EventStreams-gen2?topic=EventStreams-gen2-key-protect&interface=api
+resource "ibm_iam_authorization_policy" "kms_policy_gen2" {
+  count               = var.kms_encryption_enabled == false || var.skip_kms_iam_authorization_policy || !local.is_gen2 ? 0 : 1
+  source_service_name = "messagehub"
+  roles               = ["Reader", "Authorization Delegator"]
+  description         = "Allow all Event Streams instances in the account to read the ${local.kms_service} key ${local.kms_key_id} from the instance ${local.kms_instance_guid} and delegate that access to Block Storage for VPC"
+  resource_attributes {
+    name     = "serviceName"
+    operator = "stringEquals"
+    value    = local.kms_service
+  }
+  resource_attributes {
+    name     = "accountId"
+    operator = "stringEquals"
+    value    = local.kms_account_id
+  }
+  resource_attributes {
+    name     = "serviceInstance"
+    operator = "stringEquals"
+    value    = local.kms_instance_guid
+  }
+  resource_attributes {
+    name     = "resourceType"
+    operator = "stringEquals"
+    value    = "key"
+  }
+  resource_attributes {
+    name     = "resource"
+    operator = "stringEquals"
+    value    = local.kms_key_id
+  }
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
 # workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
 resource "time_sleep" "wait_for_kms_authorization_policy" {
   count      = var.kms_encryption_enabled == false || var.skip_kms_iam_authorization_policy ? 0 : 1
-  depends_on = [ibm_iam_authorization_policy.kms_policy]
+  depends_on = [ibm_iam_authorization_policy.kms_policy, ibm_iam_authorization_policy.kms_policy_gen2]
 
   create_duration = "30s"
 }
