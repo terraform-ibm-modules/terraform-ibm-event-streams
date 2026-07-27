@@ -63,7 +63,7 @@ variable "topics" {
 
 variable "skip_kms_iam_authorization_policy" {
   type        = bool
-  description = "Set to true to skip the creation of an IAM authorization policy that permits all Event Streams database instances in the resource group to read the encryption key from the KMS instance. If set to false, pass in a value for the KMS instance in the kms_key_crn variable. In addition, no policy is created if var.kms_encryption_enabled is set to false."
+  description = "Set to true to skip the creation of an IAM authorization policy that permits Event Streams instances to read the encryption key from the KMS instance. For the classic `enterprise-3nodes-2tb` plan, the policy is scoped to the resource group with the `Reader` role. For the `enterprise-gen2` plan, the policy is account-scoped and includes the `Reader` and `Authorization Delegator` roles required for Block Storage for VPC key delegation. If set to false, pass in a value for the KMS instance in the kms_key_crn variable. In addition, no policy is created if var.kms_encryption_enabled is set to false."
   default     = false
 }
 

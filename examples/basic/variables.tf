@@ -30,7 +30,7 @@ variable "resource_tags" {
 
 variable "plan" {
   type        = string
-  description = "The plan for the Event Streams instance. Possible values: `lite`, `standard`, `enterprise-3nodes-2tb`, `enterprise-3nodes-2tb-gen2`."
+  description = "The plan for the Event Streams instance. Possible values: `lite`, `standard`, `enterprise-3nodes-2tb`, `enterprise-gen2`."
   default     = "standard"
 }
 

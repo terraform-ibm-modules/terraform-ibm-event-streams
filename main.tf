@@ -25,7 +25,7 @@ locals {
 
 # workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
 resource "time_sleep" "wait_for_authorization_policy" {
-  depends_on = [ibm_iam_authorization_policy.kms_policy]
+  depends_on = [ibm_iam_authorization_policy.kms_policy, ibm_iam_authorization_policy.kms_policy_gen2]
 
   create_duration = "30s"
 }
@@ -144,9 +144,10 @@ resource "ibm_event_streams_quota" "eventstreams_quotas" {
 # IAM Authorization Policies
 ##############################################################################
 
-# Create IAM Authorization Policies to allow messagehub to access kms for the encryption key
+# Create IAM Authorization Policies to allow messagehub to access kms for the encryption key.
+# Classic enterprise plan: resource-group-scoped source, Reader role only.
 resource "ibm_iam_authorization_policy" "kms_policy" {
-  count                    = var.kms_encryption_enabled == false || var.skip_kms_iam_authorization_policy ? 0 : 1
+  count                    = var.kms_encryption_enabled == false || var.skip_kms_iam_authorization_policy || local.is_gen2 ? 0 : 1
   source_service_name      = "messagehub"
   source_resource_group_id = var.resource_group_id
   roles                    = ["Reader"]
@@ -183,10 +184,50 @@ resource "ibm_iam_authorization_policy" "kms_policy" {
   }
 }
 
+# Gen2 enterprise plan: account-scoped source with Reader + AuthorizationDelegator roles.
+# AuthorizationDelegator is required so Event Streams can delegate the KMS Reader role to
+# Block Storage for VPC (the underlying storage layer for gen2 brokers).
+# Source must be account-scoped (no resource group) per the gen2 KMS integration doc.
+# See: https://cloud.ibm.com/docs/EventStreams-gen2?topic=EventStreams-gen2-key-protect&interface=api
+resource "ibm_iam_authorization_policy" "kms_policy_gen2" {
+  count               = var.kms_encryption_enabled == false || var.skip_kms_iam_authorization_policy || !local.is_gen2 ? 0 : 1
+  source_service_name = "messagehub"
+  roles               = ["Reader", "Authorization Delegator"]
+  description         = "Allow all Event Streams instances in the account to read the ${local.kms_service} key ${local.kms_key_id} from the instance ${local.kms_instance_guid} and delegate that access to Block Storage for VPC"
+  resource_attributes {
+    name     = "serviceName"
+    operator = "stringEquals"
+    value    = local.kms_service
+  }
+  resource_attributes {
+    name     = "accountId"
+    operator = "stringEquals"
+    value    = local.kms_account_id
+  }
+  resource_attributes {
+    name     = "serviceInstance"
+    operator = "stringEquals"
+    value    = local.kms_instance_guid
+  }
+  resource_attributes {
+    name     = "resourceType"
+    operator = "stringEquals"
+    value    = "key"
+  }
+  resource_attributes {
+    name     = "resource"
+    operator = "stringEquals"
+    value    = local.kms_key_id
+  }
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
 # workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
 resource "time_sleep" "wait_for_kms_authorization_policy" {
   count      = var.kms_encryption_enabled == false || var.skip_kms_iam_authorization_policy ? 0 : 1
-  depends_on = [ibm_iam_authorization_policy.kms_policy]
+  depends_on = [ibm_iam_authorization_policy.kms_policy, ibm_iam_authorization_policy.kms_policy_gen2]
 
   create_duration = "30s"
 }

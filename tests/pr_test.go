@@ -315,6 +315,85 @@ func TestSecurityEnforcedUpgradeSchematics(t *testing.T) {
 	}
 }
 
+func setupSecurityEnforcedGen2Options(t *testing.T, prefix string) *testschematic.TestSchematicOptions {
+	options := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
+		Testing: t,
+		Prefix:  prefix,
+		// enterprise-gen2 is only available in limited regions (ca-mon, eu-de, in-che, in-mum).
+		// Region is fixed to ca-mon; no BestRegionYAMLPath needed.
+		TarIncludePatterns: []string{
+			"*.tf",
+			securityEnforcedDir + "/*.tf",
+		},
+		TemplateFolder:         securityEnforcedDir,
+		Tags:                   []string{"test-schematic"},
+		DeleteWorkspaceOnFail:  false,
+		WaitJobCompleteMinutes: 360,
+		TerraformVersion:       terraformVersion,
+	})
+
+	serviceCredentialSecrets := []map[string]interface{}{
+		{
+			"secret_group_name": fmt.Sprintf("%s-secret-group", options.Prefix),
+			"service_credentials": []map[string]string{
+				{
+					"secret_name": fmt.Sprintf("%s-cred-config-reader", options.Prefix),
+					"service_credentials_source_service_role_crn": "crn:v1:bluemix:public:iam::::role:ConfigReader",
+				},
+				{
+					"secret_name": fmt.Sprintf("%s-cred-reader", options.Prefix),
+					"service_credentials_source_service_role_crn": "crn:v1:bluemix:public:iam::::serviceRole:Reader",
+				},
+				{
+					"secret_name": fmt.Sprintf("%s-cred-key-manager", options.Prefix),
+					"service_credentials_source_service_role_crn": "crn:v1:bluemix:public:resource-controller::::role:KeyManager",
+				},
+			},
+		},
+	}
+
+	resourceKeys := []map[string]interface{}{
+		{
+			"name":     "es_writer",
+			"role":     "Writer",
+			"endpoint": "private",
+		},
+		{
+			"name":     "es_reader",
+			"role":     "Reader",
+			"endpoint": "private",
+		},
+	}
+
+	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
+		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
+		{Name: "prefix", Value: options.Prefix, DataType: "string"},
+		{Name: "region", Value: "ca-mon", DataType: "string"},
+		{Name: "plan", Value: "enterprise-gen2", DataType: "string"},
+		{Name: "existing_resource_group_name", Value: "Default", DataType: "string"},
+		{Name: "existing_kms_key_crn", Value: permanentResources["kp_dedicated_us_south_root_key_crn"], DataType: "string"},
+		{Name: "access_tags", Value: permanentResources["accessTags"], DataType: "list(string)"},
+		{Name: "resource_tags", Value: options.Tags, DataType: "list(string)"},
+		{Name: "create_timeout", Value: "6h", DataType: "string"},
+		{Name: "storage_size", Value: 2000, DataType: "number"},
+		{Name: "throughput", Value: 100, DataType: "number"},
+		{Name: "resource_keys", Value: resourceKeys, DataType: "list(object)"},
+		{Name: "existing_secrets_manager_instance_crn", Value: permanentResources["secretsManagerCRN"], DataType: "string"},
+		{Name: "service_credential_secrets", Value: serviceCredentialSecrets, DataType: "list(object)"},
+	}
+	return options
+}
+
+// Test for the SecurityEnforced DA with enterprise-gen2 plan
+func TestSecurityEnforcedGen2Schematics(t *testing.T) {
+	t.Parallel()
+
+	options := setupSecurityEnforcedGen2Options(t, "es-sen-gen2")
+
+	err := options.RunSchematicTest()
+	assert.Nil(t, err, "This should not have errored")
+}
+
 func TestEventStreamsDefaultConfiguration(t *testing.T) {
 	t.Parallel()
 
