@@ -25,7 +25,7 @@ module "event_streams" {
   storage_size      = var.storage_size
   resource_tags     = var.resource_tags
   access_tags       = var.access_tags
-  # Topics are not supported on enterprise-gen2 (provider bug: createSaramaAdminClient
+  # Topics are not supported on enterprise-gen2 (provider bug: createSaramaAdminClient)
   topics = var.plan == "enterprise-gen2" ? [] : [
     {
       name       = "topic-1"
