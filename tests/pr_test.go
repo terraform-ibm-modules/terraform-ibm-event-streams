@@ -256,7 +256,7 @@ func setupSecurityEnforcedUpgradeOptions(t *testing.T, prefix string) *testschem
 		{Name: "prefix", Value: options.Prefix, DataType: "string"},
 		{Name: "region", Value: "us-south", DataType: "string"},
 		{Name: "existing_resource_group_name", Value: "Default", DataType: "string"},
-		{Name: "existing_kms_instance_crn", Value: permanentResources["hpcs_south_crn"], DataType: "string"},
+		{Name: "existing_kms_instance_crn", Value: permanentResources["kp_dedicated_us_south_crn"], DataType: "string"},
 		{Name: "access_tags", Value: permanentResources["accessTags"], DataType: "list(string)"},
 		{Name: "resource_tags", Value: options.Tags, DataType: "list(string)"},
 		{Name: "create_timeout", Value: "6h", DataType: "string"},

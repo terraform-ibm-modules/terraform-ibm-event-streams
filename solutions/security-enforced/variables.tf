@@ -213,14 +213,14 @@ variable "skip_s2s_iam_auth_policy" {
 
 variable "skip_event_streams_kms_auth_policy" {
   type        = bool
-  description = "Set to true to skip the creation of IAM authorization policies that permits all Event Streams instances in the given resource group 'Reader' access to the Key Protect or Hyper Protect Crypto Services key. This policy is required in order to enable KMS encryption, so only skip creation if there is one already present in your account."
+  description = "Set to true to skip the creation of IAM authorization policies that permits all Event Streams instances in the given resource group 'Reader' access to the Key Protect key. This policy is required in order to enable KMS encryption, so only skip creation if there is one already present in your account."
   default     = false
   nullable    = false
 }
 
 variable "existing_kms_key_crn" {
   type        = string
-  description = "The CRN of a Key Protect or Hyper Protect Crypto Services key to use for Event Streams. If not specified, a key ring and key are created."
+  description = "The CRN of a Key Protect key to use for Event Streams. If not specified, a key ring and key are created."
   default     = null
 }
 
@@ -231,14 +231,14 @@ variable "existing_kms_key_crn" {
 
 variable "existing_kms_instance_crn" {
   type        = string
-  description = "The CRN of a Key Protect or Hyper Protect Crypto Services instance. Required only when creating a new encryption key and key ring which will be used to encrypt event streams. To use an existing key, pass values for `existing_kms_key_crn`."
+  description = "The CRN of a Key Protect instance. Required only when creating a new encryption key and key ring which will be used to encrypt event streams. To use an existing key, pass values for `existing_kms_key_crn`."
   default     = null
   validation {
     condition = anytrue([
-      can(regex("^crn:(.*:){3}(kms|hs-crypto):(.*:){2}[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}::$", var.existing_kms_instance_crn)),
+      can(regex("^crn:(.*:){3}kms:(.*:){2}[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}::$", var.existing_kms_instance_crn)),
       var.existing_kms_instance_crn == null,
     ])
-    error_message = "The provided KMS instance CRN in the input 'existing_kms_instance_crn' in not valid."
+    error_message = "The provided KMS instance CRN in the input 'existing_kms_instance_crn' is not valid."
   }
 }
 

@@ -51,7 +51,7 @@ func TestFSCloudInSchematics(t *testing.T) {
 		/*
 			Comment out the 'ResourceGroup' input to force this tests to create a unique resource group to ensure tests do
 			not clash. This is due to the fact that an auth policy may already exist in this resource group since we are
-			re-using a permanent HPCS instance and a permanent Event Streams instance. By using a new resource group, the auth policy will not already exist
+			re-using a permanent Key Protect instance and a permanent Event Streams instance. By using a new resource group, the auth policy will not already exist
 			since this module scopes auth policies by resource group.
 		*/
 		//ResourceGroup:      resourceGroup,
@@ -64,7 +64,7 @@ func TestFSCloudInSchematics(t *testing.T) {
 	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
 		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
 		{Name: "prefix", Value: options.Prefix, DataType: "string"},
-		{Name: "kms_key_crn", Value: permanentResources["hpcs_south_root_key_crn"].(string), DataType: "string"},
+		{Name: "kms_key_crn", Value: permanentResources["kp_dedicated_us_south_root_key_crn"].(string), DataType: "string"},
 		{Name: "event_streams_source_crn", Value: permanentResources["event_streams_us_south_crn"].(string), DataType: "string"},
 	}
 
@@ -168,7 +168,7 @@ func setupSecurityEnforcedOptions(t *testing.T, prefix string) *testschematic.Te
 		{Name: "prefix", Value: options.Prefix, DataType: "string"},
 		{Name: "region", Value: "us-south", DataType: "string"},
 		{Name: "existing_resource_group_name", Value: uniqueResourceGroupName, DataType: "string"},
-		{Name: "existing_kms_instance_crn", Value: permanentResources["hpcs_south_crn"], DataType: "string"},
+		{Name: "existing_kms_instance_crn", Value: permanentResources["kp_dedicated_us_south_crn"], DataType: "string"},
 		{Name: "access_tags", Value: permanentResources["accessTags"], DataType: "list(string)"},
 		{Name: "resource_tags", Value: options.Tags, DataType: "list(string)"},
 		{Name: "create_timeout", Value: "6h", DataType: "string"},
