@@ -10,8 +10,8 @@ An end-to-end example that uses the [Profile for IBM Cloud Framework for Financi
 The example uses the IBM Cloud Terraform provider to create the following infrastructure:
 
 - A resource group, if one is not passed in.
-- An IAM authorization between all Event Stream instances in the given resource group and the Hyper Protect Crypto Services instance that is passed in.
-- An Event Streams instance that is encrypted with the Hyper Protect Crypto Services root key that is passed in.
+- An IAM authorization between all Event Stream instances in the given resource group and the Key Protect instance that is passed in.
+- An Event Streams instance that is encrypted with the Key Protect root key that is passed in.
 - A sample virtual private cloud (VPC).
 - A context-based restriction (CBR) rule to only allow Event Streams to be accessible from within the VPC and Schematics.
 
@@ -19,7 +19,7 @@ The example uses the IBM Cloud Terraform provider to create the following infras
 
 ## Before you begin
 
-- You need a Hyper Protect Crypto Services instance and root key available in the region that you want to deploy your Event Streams instance to.
+- You need a Key Protect instance and root key available in the region that you want to deploy your Event Streams instance to.
 
 <!-- BEGIN SCHEMATICS DEPLOY TIP HOOK -->
 :information_source: Ctrl/Cmd+Click or right-click on the Schematics deploy button to open in a new tab
