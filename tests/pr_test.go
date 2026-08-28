@@ -76,13 +76,6 @@ func setupQuickstartOptions(t *testing.T, prefix string) *testschematic.TestSche
 		WaitJobCompleteMinutes: 360,
 		TerraformVersion:       terraformVersion,
 	})
-	options.IgnoreUpdates = testhelper.Exemptions{
-		List: []string{
-			"module.event_streams.ibm_resource_instance.es_instance",
-			"module.event_streams.ibm_resource_tag.es_access_tag[0]",
-		},
-	}
-
 	serviceCredentialSecrets := []map[string]interface{}{
 		{
 			"secret_group_name": fmt.Sprintf("%s-secret-group", options.Prefix),
@@ -168,13 +161,6 @@ func setupSecurityEnforcedUpgradeOptions(t *testing.T, prefix string) *testschem
 		WaitJobCompleteMinutes: 360,
 		TerraformVersion:       terraformVersion,
 	})
-	options.IgnoreUpdates = testhelper.Exemptions{
-		List: []string{
-			"module.event_streams.ibm_resource_instance.es_instance",
-			"module.event_streams.ibm_resource_tag.es_access_tag[0]",
-		},
-	}
-
 	serviceCredentialSecrets := []map[string]interface{}{
 		{
 			"secret_group_name": fmt.Sprintf("%s-secret-group", options.Prefix),
