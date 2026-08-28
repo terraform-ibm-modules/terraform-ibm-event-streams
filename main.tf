@@ -195,6 +195,11 @@ resource "ibm_iam_authorization_policy" "es_s2s_policy" {
   target_resource_instance_id = module.es_guid_crn_parser[0].service_instance
   roles                       = ["Reader"]
   description                 = "Allow all Event Streams instances in the resource group ${var.resource_group_id} to read from the source Event Streams instance ${module.es_guid_crn_parser[0].service_instance}."
+  # Ensure the new policy is in place before destroying the old one to prevent
+  # the s2s authorization being absent during a running enterprise provision.
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 # workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
