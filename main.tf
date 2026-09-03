@@ -49,6 +49,9 @@ resource "ibm_resource_instance" "es_instance" {
       iam_token_only    = var.iam_token_only
     }
   )
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 ########################################################################################################################
@@ -58,7 +61,7 @@ resource "ibm_resource_instance" "es_instance" {
 module "kms_key_crn_parser" {
   count   = var.kms_encryption_enabled == true ? 1 : 0
   source  = "terraform-ibm-modules/common-utilities/ibm//modules/crn-parser"
-  version = "1.5.0"
+  version = "1.9.0"
   crn     = var.kms_key_crn
 }
 
@@ -113,6 +116,9 @@ resource "ibm_resource_tag" "es_access_tag" {
   resource_id = ibm_resource_instance.es_instance.id
   tags        = var.access_tags
   tag_type    = "access"
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 ##############################################################################
@@ -182,7 +188,7 @@ resource "time_sleep" "wait_for_kms_authorization_policy" {
 module "es_guid_crn_parser" {
   count   = var.mirroring != null ? 1 : 0
   source  = "terraform-ibm-modules/common-utilities/ibm//modules/crn-parser"
-  version = "1.5.0"
+  version = "1.9.0"
   crn     = var.mirroring.source_crn
 }
 
@@ -216,7 +222,7 @@ resource "time_sleep" "wait_for_es_s2s_policy" {
 module "cbr_rule" {
   count            = length(var.cbr_rules) > 0 ? length(var.cbr_rules) : 0
   source           = "terraform-ibm-modules/cbr/ibm//modules/cbr-rule-module"
-  version          = "1.36.0"
+  version          = "1.36.7"
   rule_description = var.cbr_rules[count.index].description
   enforcement_mode = var.cbr_rules[count.index].enforcement_mode
   rule_contexts    = var.cbr_rules[count.index].rule_contexts
