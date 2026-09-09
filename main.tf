@@ -49,9 +49,6 @@ resource "ibm_resource_instance" "es_instance" {
       iam_token_only    = var.iam_token_only
     }
   )
-  lifecycle {
-    ignore_changes = [tags]
-  }
 }
 
 ########################################################################################################################
@@ -116,9 +113,6 @@ resource "ibm_resource_tag" "es_access_tag" {
   resource_id = ibm_resource_instance.es_instance.id
   tags        = var.access_tags
   tag_type    = "access"
-  lifecycle {
-    ignore_changes = [tags]
-  }
 }
 
 ##############################################################################
