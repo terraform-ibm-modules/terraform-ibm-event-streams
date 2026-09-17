@@ -71,7 +71,7 @@ resource "ibm_resource_instance" "es_instance" {
 module "kms_key_crn_parser" {
   count   = var.kms_encryption_enabled == true ? 1 : 0
   source  = "terraform-ibm-modules/common-utilities/ibm//modules/crn-parser"
-  version = "1.5.0"
+  version = "1.9.0"
   crn     = var.kms_key_crn
 }
 
@@ -236,7 +236,7 @@ resource "time_sleep" "wait_for_kms_authorization_policy" {
 module "es_guid_crn_parser" {
   count   = var.mirroring != null ? 1 : 0
   source  = "terraform-ibm-modules/common-utilities/ibm//modules/crn-parser"
-  version = "1.5.0"
+  version = "1.9.0"
   crn     = var.mirroring.source_crn
 }
 
@@ -249,6 +249,11 @@ resource "ibm_iam_authorization_policy" "es_s2s_policy" {
   target_resource_instance_id = module.es_guid_crn_parser[0].service_instance
   roles                       = ["Reader"]
   description                 = "Allow all Event Streams instances in the resource group ${var.resource_group_id} to read from the source Event Streams instance ${module.es_guid_crn_parser[0].service_instance}."
+  # Ensure the new policy is in place before destroying the old one to prevent
+  # the s2s authorization being absent during a running enterprise provision.
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 # workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
@@ -265,7 +270,7 @@ resource "time_sleep" "wait_for_es_s2s_policy" {
 module "cbr_rule" {
   count            = length(var.cbr_rules) > 0 ? length(var.cbr_rules) : 0
   source           = "terraform-ibm-modules/cbr/ibm//modules/cbr-rule-module"
-  version          = "1.36.0"
+  version          = "1.36.7"
   rule_description = var.cbr_rules[count.index].description
   enforcement_mode = var.cbr_rules[count.index].enforcement_mode
   rule_contexts    = var.cbr_rules[count.index].rule_contexts
