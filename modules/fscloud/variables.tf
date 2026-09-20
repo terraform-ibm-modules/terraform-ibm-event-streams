@@ -22,20 +22,30 @@ variable "es_name" {
   type        = string
 }
 
+variable "plan" {
+  type        = string
+  description = "The plan for the Event Streams instance. Possible values: `enterprise-3nodes-2tb`, `enterprise-gen2`."
+  default     = "enterprise-3nodes-2tb"
+  validation {
+    condition     = contains(["enterprise-3nodes-2tb", "enterprise-gen2"], var.plan)
+    error_message = "The specified plan is not a valid selection! Supported plans are: enterprise-3nodes-2tb or enterprise-gen2."
+  }
+}
+
 variable "region" {
   type        = string
-  description = "The region where the Event Streams are created."
+  description = "The region where the Event Streams instance is created."
   default     = "us-south"
 }
 
 variable "schemas" {
   type        = any
-  description = "List of schema objects. Each schema must include `schema_id` and `schema` definition. Supports full Apache Avro specification with nested structures. [Learn more](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-ES_schema_registry#ES_apache_avro_data_format)."
+  description = "List of schema objects. Each schema must include `schema_id` and `schema` definition. Supports full Apache Avro specification with nested structures. Not supported on the `enterprise-gen2` plan. [Learn more](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-ES_schema_registry#ES_apache_avro_data_format)."
   default     = []
 }
 variable "schema_global_rule" {
   type        = string
-  description = "Schema global compatibility rule. Allowed values are 'NONE', 'FULL', 'FULL_TRANSITIVE', 'FORWARD', 'FORWARD_TRANSITIVE', 'BACKWARD', 'BACKWARD_TRANSITIVE'."
+  description = "Schema global compatibility rule. Allowed values are 'NONE', 'FULL', 'FULL_TRANSITIVE', 'FORWARD', 'FORWARD_TRANSITIVE', 'BACKWARD', 'BACKWARD_TRANSITIVE'. Not supported on the `enterprise-gen2` plan."
   default     = null
 }
 
@@ -53,7 +63,7 @@ variable "topics" {
 
 variable "skip_kms_iam_authorization_policy" {
   type        = bool
-  description = "Set to true to skip the creation of an IAM authorization policy that permits all Event Streams database instances in the resource group to read the encryption key from the KMS instance. If set to false, pass in a value for the KMS instance in the kms_key_crn variable. In addition, no policy is created if var.kms_encryption_enabled is set to false."
+  description = "Set to true to skip the creation of an IAM authorization policy that permits Event Streams instances to read the encryption key from the KMS instance. For the classic `enterprise-3nodes-2tb` plan, the policy is scoped to the resource group with the `Reader` role. For the `enterprise-gen2` plan, the policy is account-scoped and includes the `Reader` and `Authorization Delegator` roles required for Block Storage for VPC key delegation. If set to false, pass in a value for the KMS instance in the kms_key_crn variable. In addition, no policy is created if var.kms_encryption_enabled is set to false."
   default     = false
 }
 
@@ -120,12 +130,12 @@ variable "quotas" {
 
 variable "mirroring_topic_patterns" {
   type        = list(string)
-  description = "The list of the topics to set in instance. Required only if creating mirroring instance."
+  description = "The list of the topics to set in instance. Required only if creating mirroring instance. Not supported on the `enterprise-gen2` plan."
   default     = null
 }
 
 variable "mirroring" {
-  description = "Event Streams mirroring configuration. Required only if creating mirroring instance. For more information on mirroring, see https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-mirroring."
+  description = "Event Streams mirroring configuration. Required only if creating mirroring instance. Not supported on the `enterprise-gen2` plan. For more information on mirroring, see https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-mirroring."
   type = object({
     source_crn   = string
     source_alias = string
@@ -181,12 +191,12 @@ variable "delete_timeout" {
 
 variable "storage_size" {
   type        = number
-  description = "Storage size of the Event Streams in GB. Possible values: `2048`, `4096`, `6144`, `8192`, `10240`, `12288`. Storage capacity cannot be reduced after the instance is created. When the `throughput` input variable is set to `300`, storage size starts at 4096. When `throughput` is `450`, storage size starts starts at `6144`."
-  default     = "2048"
+  description = "Storage size of the Event Streams in GB. For `enterprise-3nodes-2tb`, possible values are `2048`, `4096`, `6144`, `8192`, `10240`, `12288`. For `enterprise-gen2`, possible values are `2000` (2TB), `4000` (4TB), `6000` (6TB). Storage capacity cannot be reduced after the instance is created."
+  default     = 2048
 }
 
 variable "throughput" {
   type        = number
-  description = "Throughput capacity in MB per second. Possible values: `150`, `300`, `450`."
-  default     = "150"
+  description = "Throughput capacity in MB per second. For `enterprise-3nodes-2tb`, possible values are `150`, `300`, `450`. For `enterprise-gen2`, the only supported value is `100`."
+  default     = 150
 }
