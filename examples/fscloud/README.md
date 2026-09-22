@@ -24,7 +24,3 @@ The example uses the IBM Cloud Terraform provider to create the following infras
 ## Before you begin
 
 - You need a Key Protect instance and root key available in the region that you want to deploy your Event Streams instance to.
-
-<!-- BEGIN SCHEMATICS DEPLOY TIP HOOK -->
-:information_source: Ctrl/Cmd+Click or right-click on the Schematics deploy button to open in a new tab
-<!-- END SCHEMATICS DEPLOY TIP HOOK -->
