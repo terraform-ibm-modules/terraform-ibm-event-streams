@@ -65,7 +65,7 @@ variable "skip_es_s2s_iam_authorization_policy" {
 
 variable "kms_key_crn" {
   type        = string
-  description = "The root key CRN of the key management service (Key Protect or Hyper Protect Crypto Services) to use to encrypt the payload data."
+  description = "The root key CRN of the Key Protect key management service to use to encrypt the payload data."
 }
 
 ##############################################################

@@ -172,7 +172,7 @@ variable "topics" {
 
 variable "kms_encryption_enabled" {
   type        = bool
-  description = "Set this to true to control the encryption keys used to encrypt the data that you store in IBM Cloud® Databases. If set to false, the data is encrypted by using randomly generated keys. For more info on Key Protect integration, see https://cloud.ibm.com/docs/cloud-databases?topic=cloud-databases-key-protect. For more info on HPCS integration, see https://cloud.ibm.com/docs/cloud-databases?topic=cloud-databases-hpcs"
+  description = "Set this to true to control the encryption keys used to encrypt the data that you store in IBM Cloud® Databases. If set to false, the data is encrypted by using randomly generated keys. For more info on Key Protect integration, see https://cloud.ibm.com/docs/cloud-databases?topic=cloud-databases-key-protect."
   default     = false
   validation {
     condition     = !(var.kms_encryption_enabled && var.kms_key_crn == null)
@@ -190,15 +190,14 @@ variable "kms_encryption_enabled" {
 
 variable "kms_key_crn" {
   type        = string
-  description = "The root key CRN of the key management service (Key Protect or Hyper Protect Crypto Services) to use to encrypt the payload data. [Learn more](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-managing_encryption) about integrating Hyper Protect Crypto Services with Event Streams."
+  description = "The root key CRN of the Key Protect key management service to use to encrypt the payload data. [Learn more](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-managing_encryption) about integrating Key Protect with Event Streams."
   default     = null
   validation {
     condition = anytrue([
       var.kms_key_crn == null,
       can(regex(".*kms.*", var.kms_key_crn)),
-      can(regex(".*hs-crypto.*", var.kms_key_crn)),
     ])
-    error_message = "Must be the root key CRN from either the Key Protect or Hyper Protect Crypto Service."
+    error_message = "Must be the root key CRN from Key Protect."
   }
   validation {
     condition     = !(var.plan != "enterprise-3nodes-2tb" && var.kms_key_crn != null)
