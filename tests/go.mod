@@ -6,7 +6,7 @@ require (
 	github.com/IBM/go-sdk-core/v5 v5.23.4
 	github.com/google/uuid v1.6.0
 	github.com/stretchr/testify v1.12.1
-	github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper v1.78.3
+	github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper v1.78.6
 )
 
 require (
