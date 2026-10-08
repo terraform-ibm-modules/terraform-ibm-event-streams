@@ -145,17 +145,104 @@ func TestRunQuickstartUpgradeSchematics(t *testing.T) {
 	}
 }
 
+// setupGen2SchematicOptions configures a Schematics test against the complete example
+// with enterprise-gen2 plan, including topic creation.
+func setupGen2SchematicOptions(t *testing.T, prefix string) *testschematic.TestSchematicOptions {
+	options := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
+		Testing: t,
+		Prefix:  prefix,
+		TarIncludePatterns: []string{
+			"*.tf",
+			completeExampleTerraformDir + "/*.tf",
+		},
+		TemplateFolder:         completeExampleTerraformDir,
+		Tags:                   []string{"test-schematic"},
+		DeleteWorkspaceOnFail:  false,
+		WaitJobCompleteMinutes: 360,
+		TerraformVersion:       terraformVersion,
+	})
+
+	topics := []map[string]interface{}{
+		{
+			"name":       "topic-1",
+			"partitions": 1,
+			"config": map[string]interface{}{
+				"cleanup.policy":  "delete",
+				"retention.ms":    "86400000",
+				"retention.bytes": "10485760",
+				"segment.bytes":   "10485760",
+			},
+		},
+		{
+			"name":       "topic-2",
+			"partitions": 1,
+			"config": map[string]interface{}{
+				"cleanup.policy":  "compact,delete",
+				"retention.ms":    "86400000",
+				"retention.bytes": "1073741824",
+				"segment.bytes":   "536870912",
+			},
+		},
+	}
+
+	resourceKeys := []map[string]interface{}{
+		{
+			"name":     fmt.Sprintf("%s-writer-key", prefix),
+			"role":     "Writer",
+			"endpoint": "private",
+		},
+		{
+			"name":     fmt.Sprintf("%s-reader-key", prefix),
+			"role":     "Reader",
+			"endpoint": "private",
+		},
+		{
+			"name":     fmt.Sprintf("%s-manager-key", prefix),
+			"role":     "Manager",
+			"endpoint": "private",
+		},
+	}
+
+	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
+		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
+		{Name: "prefix", Value: options.Prefix, DataType: "string"},
+		{Name: "plan", Value: "enterprise-gen2", DataType: "string"},
+		{Name: "region", Value: "eu-fr2", DataType: "string"},
+		{Name: "throughput", Value: 100, DataType: "number"},
+		{Name: "storage_size", Value: 2000, DataType: "number"},
+		{Name: "service_endpoints", Value: "private", DataType: "string"},
+		{Name: "resource_group", Value: resourceGroup, DataType: "string"},
+		{Name: "resource_tags", Value: options.Tags, DataType: "list(string)"},
+		{Name: "topics", Value: topics, DataType: "list(object)"},
+		{Name: "resource_keys", Value: resourceKeys, DataType: "list(object)"},
+		// Update the create timeout as gen2 provisioning can take longer
+		{Name: "create_timeout", Value: "6h", DataType: "string"},
+	}
+	return options
+}
+
+// TestRunGen2CompleteSchematics tests provisioning of the complete example with enterprise-gen2 plan
+// via Schematics, including topic creation.
+func TestRunGen2CompleteSchematics(t *testing.T) {
+	t.Parallel()
+
+	options := setupGen2SchematicOptions(t, "es-gen2-sch")
+	err := options.RunSchematicTest()
+	assert.Nil(t, err, "This should not have errored")
+}
+
 // setupGen2CompleteOptions configures a terraform test against the complete example
+// with enterprise-gen2 plan.
 func setupGen2CompleteOptions(t *testing.T, prefix string) *testhelper.TestOptions {
 	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
 		Testing:       t,
 		TerraformDir:  completeExampleTerraformDir,
 		Prefix:        prefix,
 		ResourceGroup: resourceGroup,
-		// No BestRegionYAMLPath — enterprise-gen2 is only available in ca-mon/in-che/in-mum/eu-de, region must be fixed
+		// No BestRegionYAMLPath — enterprise-gen2 region is fixed to eu-fr2 (supported Gen2 region)
 		TerraformVars: map[string]interface{}{
 			"plan":              "enterprise-gen2",
-			"region":            "ca-mon",
+			"region":            "eu-fr2",
 			"throughput":        100,
 			"storage_size":      2000,
 			"service_endpoints": "private",
@@ -164,7 +251,7 @@ func setupGen2CompleteOptions(t *testing.T, prefix string) *testhelper.TestOptio
 	return options
 }
 
-// TestRunCompleteGen2Example tests the complete example with enterprise-gen2 plan.
+// TestRunCompleteGen2Example tests provisioning of the complete example with enterprise-gen2 plan.
 func TestRunCompleteGen2Example(t *testing.T) {
 	t.Parallel()
 

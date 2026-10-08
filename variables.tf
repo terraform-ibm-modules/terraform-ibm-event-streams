@@ -63,12 +63,21 @@ variable "region" {
     ], var.region))
     error_message = "The 'enterprise-3nodes-2tb' plan is only supported in the following regions: us-south, br-sao, ca-tor, us-east, eu-de, eu-fr2, eu-gb, eu-es, jp-osa, au-syd, jp-tok, che01."
   }
+
+  validation {
+    condition = !(var.plan == "enterprise-gen2" && !contains([
+      "us-south", "br-sao", "ca-tor", "us-east",
+      "eu-fr2", "eu-gb", "eu-es", "jp-osa", "au-syd", "jp-tok",
+      "ca-mon", "in-mum"
+    ], var.region))
+    error_message = "The 'enterprise-gen2' plan is only supported in the following regions: us-south, br-sao, ca-tor, us-east, eu-fr2, eu-gb, eu-es, jp-osa, au-syd, jp-tok, ca-mon, in-mum."
+  }
 }
 
 
 variable "throughput" {
   type        = number
-  description = "Throughput capacity in MB per second. Applies only to Enterprise plan instances. For `enterprise-3nodes-2tb`, possible values are `150`, `300`, `450`. For `enterprise-gen2`, the only supported value is `100`."
+  description = "Throughput capacity in MB per second. Applies only to Enterprise plan instances. For `enterprise-3nodes-2tb`, possible values are `150`, `300`, `450`. For `enterprise-gen2`, the only supported value is `100` (50 MB/s produce + 50 MB/s consume). Throughput is adjustable after deployment for `enterprise-gen2`."
   default     = 150
   validation {
     condition     = contains(local.is_gen2 ? [100] : [150, 300, 450], var.throughput)
@@ -82,7 +91,7 @@ variable "throughput" {
 
 variable "storage_size" {
   type        = number
-  description = "Storage size of the Event Streams in GB. Applies only to Enterprise plan instances. For `enterprise-3nodes-2tb`, possible values are `2048`, `4096`, `6144`, `8192`, `10240`, `12288`. For `enterprise-gen2`, possible values are `2000` (2TB), `4000` (4TB), `6000` (6TB). Storage capacity cannot be reduced after the instance is created. When the `throughput` input variable is set to `300`, storage size starts at 4096. When `throughput` is `450`, storage size starts at `6144`. When using `enterprise-gen2`, you must explicitly set this to `2000`, `4000`, or `6000`."
+  description = "Storage size of the Event Streams in GB. Applies only to Enterprise plan instances. For `enterprise-3nodes-2tb`, possible values are `2048`, `4096`, `6144`, `8192`, `10240`, `12288`. For `enterprise-gen2`, possible values are `2000` (2TB), `4000` (4TB), `6000` (6TB); storage is adjustable after deployment. Storage capacity cannot be reduced after the instance is created. When the `throughput` input variable is set to `300`, storage size starts at 4096. When `throughput` is `450`, storage size starts at `6144`. When using `enterprise-gen2`, you must explicitly set this to `2000`, `4000`, or `6000`."
   default     = 2048
   validation {
     condition     = contains(local.is_gen2 ? [2000, 4000, 6000] : [2048, 4096, 6144, 8192, 10240, 12288], var.storage_size)
@@ -122,7 +131,7 @@ variable "skip_es_s2s_iam_authorization_policy" {
 
 variable "schemas" {
   type        = any
-  description = "List of schema objects. Each schema must include `schema_id` and `schema` definition. Supports full Apache Avro specification with nested structures. Not supported on the `enterprise-gen2` plan. [Learn more](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-ES_schema_registry#ES_apache_avro_data_format)."
+  description = "List of schema objects. Each schema must include `schema_id` and `schema` definition. Supports full Apache Avro specification with nested structures. [Learn more](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-ES_schema_registry#ES_apache_avro_data_format)."
   default     = []
 
   validation {
@@ -139,7 +148,7 @@ variable "schemas" {
 
 variable "schema_global_rule" {
   type        = string
-  description = "Schema global compatibility rule. Allowed values are 'NONE', 'FULL', 'FULL_TRANSITIVE', 'FORWARD', 'FORWARD_TRANSITIVE', 'BACKWARD', 'BACKWARD_TRANSITIVE'. Not supported on the `enterprise-gen2` plan."
+  description = "Schema global compatibility rule. Allowed values are 'NONE', 'FULL', 'FULL_TRANSITIVE', 'FORWARD', 'FORWARD_TRANSITIVE', 'BACKWARD', 'BACKWARD_TRANSITIVE'."
   default     = null
   validation {
     condition     = var.schema_global_rule == null || contains(["NONE", "FULL", "FULL_TRANSITIVE", "FORWARD", "FORWARD_TRANSITIVE", "BACKWARD", "BACKWARD_TRANSITIVE"], coalesce(var.schema_global_rule, "NONE"))
@@ -163,15 +172,11 @@ variable "topics" {
       config     = map(string)
     }
   ))
-  description = "The list of topics to apply to resources. Only one topic is allowed for Lite plan instances. Not supported on the `enterprise-gen2` plan."
+  description = "The list of topics to apply to resources. Only one topic is allowed for Lite plan instances."
   default     = []
   validation {
     condition     = !(var.plan == "lite" && length(var.topics) > 1)
     error_message = "Only one topic is allowed for the Lite plan."
-  }
-  validation {
-    condition     = !(local.is_gen2 && length(var.topics) > 0)
-    error_message = "Topics are not supported on the enterprise-gen2 plan. The provider crashes when topic creation is attempted against a gen2 instance (terraform-provider-ibm v2.4.0: createSaramaAdminClient reads Extensions[\"kafka_http_url\"] which is absent on gen2 instances)."
   }
 }
 
@@ -328,7 +333,7 @@ variable "mirroring_topic_patterns" {
   }
   validation {
     condition     = !(local.is_gen2 && var.mirroring_topic_patterns != null)
-    error_message = "Mirroring is not supported on the enterprise-gen2 plan."
+    error_message = "Mirroring is not supported on the enterprise-gen2 plan. Mirroring support is planned for a future release."
   }
   validation {
     condition     = !(var.mirroring == null && var.mirroring_topic_patterns != null)
@@ -375,7 +380,7 @@ variable "mirroring" {
   }
   validation {
     condition     = !(local.is_gen2 && var.mirroring != null)
-    error_message = "Mirroring is not supported on the enterprise-gen2 plan."
+    error_message = "Mirroring is not supported on the enterprise-gen2 plan. Mirroring support is planned for a future release."
   }
 
   validation {
