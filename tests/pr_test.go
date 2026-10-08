@@ -147,6 +147,7 @@ func TestRunQuickstartUpgradeSchematics(t *testing.T) {
 
 // setupGen2SchematicOptions configures a Schematics test against the complete example
 // with enterprise-gen2 plan, including topic creation.
+// Topics and resource keys are hardcoded in the example's main.tf and do not need to be passed as variables.
 func setupGen2SchematicOptions(t *testing.T, prefix string) *testschematic.TestSchematicOptions {
 	options := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
 		Testing: t,
@@ -162,47 +163,6 @@ func setupGen2SchematicOptions(t *testing.T, prefix string) *testschematic.TestS
 		TerraformVersion:       terraformVersion,
 	})
 
-	topics := []map[string]interface{}{
-		{
-			"name":       "topic-1",
-			"partitions": 1,
-			"config": map[string]interface{}{
-				"cleanup.policy":  "delete",
-				"retention.ms":    "86400000",
-				"retention.bytes": "10485760",
-				"segment.bytes":   "10485760",
-			},
-		},
-		{
-			"name":       "topic-2",
-			"partitions": 1,
-			"config": map[string]interface{}{
-				"cleanup.policy":  "compact,delete",
-				"retention.ms":    "86400000",
-				"retention.bytes": "1073741824",
-				"segment.bytes":   "536870912",
-			},
-		},
-	}
-
-	resourceKeys := []map[string]interface{}{
-		{
-			"name":     fmt.Sprintf("%s-writer-key", prefix),
-			"role":     "Writer",
-			"endpoint": "private",
-		},
-		{
-			"name":     fmt.Sprintf("%s-reader-key", prefix),
-			"role":     "Reader",
-			"endpoint": "private",
-		},
-		{
-			"name":     fmt.Sprintf("%s-manager-key", prefix),
-			"role":     "Manager",
-			"endpoint": "private",
-		},
-	}
-
 	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
 		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
 		{Name: "prefix", Value: options.Prefix, DataType: "string"},
@@ -213,8 +173,6 @@ func setupGen2SchematicOptions(t *testing.T, prefix string) *testschematic.TestS
 		{Name: "service_endpoints", Value: "private", DataType: "string"},
 		{Name: "resource_group", Value: resourceGroup, DataType: "string"},
 		{Name: "resource_tags", Value: options.Tags, DataType: "list(string)"},
-		{Name: "topics", Value: topics, DataType: "list(object)"},
-		{Name: "resource_keys", Value: resourceKeys, DataType: "list(object)"},
 		// Update the create timeout as gen2 provisioning can take longer
 		{Name: "create_timeout", Value: "6h", DataType: "string"},
 	}
