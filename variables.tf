@@ -196,6 +196,7 @@ variable "kms_key_crn" {
     condition = anytrue([
       var.kms_key_crn == null,
       can(regex(".*kms.*", var.kms_key_crn)),
+      can(regex(".*hs-crypto.*", var.kms_key_crn)),
     ])
     error_message = "Must be the root key CRN from Key Protect."
   }
