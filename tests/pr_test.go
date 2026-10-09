@@ -150,8 +150,9 @@ func TestRunQuickstartUpgradeSchematics(t *testing.T) {
 // Topics and resource keys are hardcoded in the example's main.tf and do not need to be passed as variables.
 func setupGen2SchematicOptions(t *testing.T, prefix string) *testschematic.TestSchematicOptions {
 	options := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
-		Testing: t,
-		Prefix:  prefix,
+		Testing:           t,
+		Prefix:            prefix,
+		WorkspaceLocation: "us",
 		TarIncludePatterns: []string{
 			"*.tf",
 			completeExampleTerraformDir + "/*.tf",
@@ -167,14 +168,12 @@ func setupGen2SchematicOptions(t *testing.T, prefix string) *testschematic.TestS
 		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
 		{Name: "prefix", Value: options.Prefix, DataType: "string"},
 		{Name: "plan", Value: "enterprise-gen2", DataType: "string"},
-		{Name: "region", Value: "eu-fr2", DataType: "string"},
+		{Name: "region", Value: "us-south", DataType: "string"},
 		{Name: "throughput", Value: 100, DataType: "number"},
 		{Name: "storage_size", Value: 2000, DataType: "number"},
 		{Name: "service_endpoints", Value: "private", DataType: "string"},
 		{Name: "resource_group", Value: resourceGroup, DataType: "string"},
 		{Name: "resource_tags", Value: options.Tags, DataType: "list(string)"},
-		// Update the create timeout as gen2 provisioning can take longer
-		{Name: "create_timeout", Value: "6h", DataType: "string"},
 	}
 	return options
 }
@@ -197,10 +196,10 @@ func setupGen2CompleteOptions(t *testing.T, prefix string) *testhelper.TestOptio
 		TerraformDir:  completeExampleTerraformDir,
 		Prefix:        prefix,
 		ResourceGroup: resourceGroup,
-		// No BestRegionYAMLPath — enterprise-gen2 region is fixed to eu-fr2 (supported Gen2 region)
+		// No BestRegionYAMLPath — enterprise-gen2 region is fixed to us-south
 		TerraformVars: map[string]interface{}{
 			"plan":              "enterprise-gen2",
-			"region":            "eu-fr2",
+			"region":            "us-south",
 			"throughput":        100,
 			"storage_size":      2000,
 			"service_endpoints": "private",
