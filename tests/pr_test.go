@@ -145,6 +145,80 @@ func TestRunQuickstartUpgradeSchematics(t *testing.T) {
 	}
 }
 
+// setupGen2SchematicOptions configures a Schematics test against the complete example
+// with enterprise-gen2 plan, including topic creation.
+// Topics and resource keys are hardcoded in the example's main.tf and do not need to be passed as variables.
+func setupGen2SchematicOptions(t *testing.T, prefix string) *testschematic.TestSchematicOptions {
+	options := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
+		Testing:           t,
+		Prefix:            prefix,
+		WorkspaceLocation: "us",
+		TarIncludePatterns: []string{
+			"*.tf",
+			completeExampleTerraformDir + "/*.tf",
+		},
+		TemplateFolder:         completeExampleTerraformDir,
+		Tags:                   []string{"test-schematic"},
+		DeleteWorkspaceOnFail:  false,
+		WaitJobCompleteMinutes: 360,
+		TerraformVersion:       terraformVersion,
+	})
+
+	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
+		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
+		{Name: "prefix", Value: options.Prefix, DataType: "string"},
+		{Name: "plan", Value: "enterprise-gen2", DataType: "string"},
+		{Name: "region", Value: "us-south", DataType: "string"},
+		{Name: "throughput", Value: 100, DataType: "number"},
+		{Name: "storage_size", Value: 2000, DataType: "number"},
+		{Name: "service_endpoints", Value: "private", DataType: "string"},
+		{Name: "resource_group", Value: resourceGroup, DataType: "string"},
+		{Name: "resource_tags", Value: options.Tags, DataType: "list(string)"},
+	}
+	return options
+}
+
+// TestRunGen2CompleteSchematics tests provisioning of the complete example with enterprise-gen2 plan
+// via Schematics, including topic creation.
+func TestRunGen2CompleteSchematics(t *testing.T) {
+	t.Parallel()
+
+	options := setupGen2SchematicOptions(t, "es-gen2-sch")
+	err := options.RunSchematicTest()
+	assert.Nil(t, err, "This should not have errored")
+}
+
+// setupGen2CompleteOptions configures a terraform test against the complete example
+// with enterprise-gen2 plan.
+func setupGen2CompleteOptions(t *testing.T, prefix string) *testhelper.TestOptions {
+	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
+		Testing:       t,
+		TerraformDir:  completeExampleTerraformDir,
+		Prefix:        prefix,
+		ResourceGroup: resourceGroup,
+		// No BestRegionYAMLPath — enterprise-gen2 region is fixed to us-south
+		TerraformVars: map[string]interface{}{
+			"plan":              "enterprise-gen2",
+			"region":            "us-south",
+			"throughput":        100,
+			"storage_size":      2000,
+			"service_endpoints": "private",
+		},
+	})
+	return options
+}
+
+// TestRunCompleteGen2Example tests provisioning of the complete example with enterprise-gen2 plan.
+func TestRunCompleteGen2Example(t *testing.T) {
+	t.Parallel()
+
+	options := setupGen2CompleteOptions(t, "es-gen2-com")
+
+	output, err := options.RunTest()
+	assert.Nil(t, err, "This should not have errored")
+	assert.NotNil(t, output, "Expected some output")
+}
+
 func setupSecurityEnforcedUpgradeOptions(t *testing.T, prefix string) *testschematic.TestSchematicOptions {
 
 	options := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{

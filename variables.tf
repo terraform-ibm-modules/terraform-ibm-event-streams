@@ -14,11 +14,11 @@ variable "es_name" {
 
 variable "plan" {
   type        = string
-  description = "The plan for the Event Streams instance. Possible values: `lite`, `standard`, `enterprise-3nodes-2tb`."
+  description = "The plan for the Event Streams instance. Possible values: `lite`, `standard`, `enterprise-3nodes-2tb`, `enterprise-gen2`."
   default     = "standard"
   validation {
-    condition     = contains(["lite", "standard", "enterprise-3nodes-2tb"], var.plan)
-    error_message = "The specified plan is not a valid selection! Supported plans are: lite, standard or enterprise-3nodes-2tb."
+    condition     = contains(["lite", "standard", "enterprise-3nodes-2tb", "enterprise-gen2"], var.plan)
+    error_message = "The specified plan is not a valid selection! Supported plans are: lite, standard, enterprise-3nodes-2tb, or enterprise-gen2."
   }
 }
 
@@ -63,20 +63,25 @@ variable "region" {
     ], var.region))
     error_message = "The 'enterprise-3nodes-2tb' plan is only supported in the following regions: us-south, br-sao, ca-tor, us-east, eu-de, eu-fr2, eu-gb, eu-es, jp-osa, au-syd, jp-tok, che01."
   }
+
+  validation {
+    condition = !(var.plan == "enterprise-gen2" && !contains([
+      "us-south", "br-sao", "ca-tor", "us-east", "ca-mon",
+      "eu-gb", "eu-es",
+      "jp-osa", "au-syd", "jp-tok"
+    ], var.region))
+    error_message = "The 'enterprise-gen2' plan is only supported in the following regions: us-south, br-sao, ca-tor, us-east, ca-mon, eu-gb, eu-es, jp-osa, au-syd, jp-tok."
+  }
 }
 
 
 variable "throughput" {
   type        = number
-  description = "Throughput capacity in MB per second. Applies only to Enterprise plan instances. Possible values: `150`, `300`, `450`."
-  default     = "150"
+  description = "Throughput capacity in MB per second. Applies only to Enterprise plan instances. For `enterprise-3nodes-2tb`, possible values are `150`, `300`, `450`. For `enterprise-gen2`, the only supported value is `100` (50 MB/s produce + 50 MB/s consume). Throughput is adjustable after deployment for `enterprise-gen2`."
+  default     = 150
   validation {
-    condition = anytrue([
-      var.throughput == 150,
-      var.throughput == 300,
-      var.throughput == 450,
-    ])
-    error_message = "Supported throughput values are: 150, 300, 450."
+    condition     = contains(local.is_gen2 ? [100] : [150, 300, 450], var.throughput)
+    error_message = "For enterprise-gen2, throughput must be 100. For other plans, supported values are: 150, 300, 450."
   }
   validation {
     condition     = !((var.plan == "lite" || var.plan == "standard") && var.throughput != 150)
@@ -86,18 +91,11 @@ variable "throughput" {
 
 variable "storage_size" {
   type        = number
-  description = "Storage size of the Event Streams in GB. Applies only to Enterprise plan instances. Possible values: `2048`, `4096`, `6144`, `8192`, `10240`, `12288`. Storage capacity cannot be reduced after the instance is created. When the `throughput` input variable is set to `300`, storage size starts at 4096. When `throughput` is `450`, storage size starts starts at `6144`."
-  default     = "2048"
+  description = "Storage size of the Event Streams in GB. Applies only to Enterprise plan instances. For `enterprise-3nodes-2tb`, possible values are `2048`, `4096`, `6144`, `8192`, `10240`, `12288`. For `enterprise-gen2`, possible values are `2000` (2TB), `4000` (4TB), `6000` (6TB); storage is adjustable after deployment. Storage capacity cannot be reduced after the instance is created. When the `throughput` input variable is set to `300`, storage size starts at 4096. When `throughput` is `450`, storage size starts at `6144`. When using `enterprise-gen2`, you must explicitly set this to `2000`, `4000`, or `6000`."
+  default     = 2048
   validation {
-    condition = anytrue([
-      var.storage_size == 2048,
-      var.storage_size == 4096,
-      var.storage_size == 6144,
-      var.storage_size == 8192,
-      var.storage_size == 10240,
-      var.storage_size == 12288,
-    ])
-    error_message = "Supported throughput values are: 2048, 4096, 6144, 8192, 10240, 12288."
+    condition     = contains(local.is_gen2 ? [2000, 4000, 6000] : [2048, 4096, 6144, 8192, 10240, 12288], var.storage_size)
+    error_message = "For enterprise-gen2, storage_size must be one of: 2000 (2TB), 4000 (4TB), 6000 (6TB). For other plans, supported values are: 2048, 4096, 6144, 8192, 10240, 12288."
   }
   validation {
     condition     = !((var.plan == "lite" || var.plan == "standard") && var.storage_size != 2048)
@@ -107,7 +105,7 @@ variable "storage_size" {
 
 variable "service_endpoints" {
   type        = string
-  description = "The type of service endpoints. Possible values: 'public', 'private', 'public-and-private'."
+  description = "The type of service endpoints. Possible values: 'public', 'private', 'public-and-private'. The `enterprise-gen2` plan supports private endpoints only (enforced by the service); this variable is ignored for gen2 and does not need to be set."
   default     = "public"
   validation {
     condition     = contains(["public", "public-and-private", "private"], var.service_endpoints)
@@ -142,6 +140,10 @@ variable "schemas" {
     ])
     error_message = "Each schema must have a 'schema_id' and a 'schema' definition."
   }
+  validation {
+    condition     = !(local.is_gen2 && length(var.schemas) > 0)
+    error_message = "Schema Registry is not supported on the enterprise-gen2 plan."
+  }
 }
 
 variable "schema_global_rule" {
@@ -153,8 +155,12 @@ variable "schema_global_rule" {
     error_message = "The schema_global_rule must be null or one of 'NONE', 'FULL', 'FULL_TRANSITIVE', 'FORWARD', 'FORWARD_TRANSITIVE', 'BACKWARD', 'BACKWARD_TRANSITIVE'."
   }
   validation {
-    condition     = !(var.plan != "enterprise-3nodes-2tb" && var.schema_global_rule != null)
-    error_message = "Schema global rule is only supported for enterprise plan."
+    condition     = !(var.plan == "lite" || var.plan == "standard") || var.schema_global_rule == null
+    error_message = "Schema global rule is only supported for enterprise plans."
+  }
+  validation {
+    condition     = !(local.is_gen2 && var.schema_global_rule != null)
+    error_message = "Schema global rule is not supported on the enterprise-gen2 plan."
   }
 }
 
@@ -168,6 +174,10 @@ variable "topics" {
   ))
   description = "The list of topics to apply to resources. Only one topic is allowed for Lite plan instances."
   default     = []
+  validation {
+    condition     = !(var.plan == "lite" && length(var.topics) > 1)
+    error_message = "Only one topic is allowed for the Lite plan."
+  }
 }
 
 variable "kms_encryption_enabled" {
@@ -200,8 +210,8 @@ variable "kms_key_crn" {
     error_message = "Must be the root key CRN from Key Protect."
   }
   validation {
-    condition     = !(var.plan != "enterprise-3nodes-2tb" && var.kms_key_crn != null)
-    error_message = "KMS encryption is only supported for enterprise plan."
+    condition     = !(var.plan == "lite" || var.plan == "standard") || var.kms_key_crn == null
+    error_message = "KMS encryption is only supported for enterprise plans."
   }
 }
 
@@ -288,8 +298,8 @@ variable "metrics" {
     error_message = "The specified metrics are not valid. The following values are valid for metrics: 'topic', 'partition', 'consumers'."
   }
   validation {
-    condition     = !(var.plan != "enterprise-3nodes-2tb" && length(var.metrics) > 0)
-    error_message = "Metrics are only supported for enterprise plan."
+    condition     = !(var.plan == "lite" || var.plan == "standard") || length(var.metrics) == 0
+    error_message = "Metrics are only supported for enterprise plans."
   }
 }
 
@@ -306,8 +316,8 @@ variable "quotas" {
     error_message = "The quota entity must be defined, and at least one of producer_byte_rate or consumer_byte_rate must be set to a non-negative value"
   }
   validation {
-    condition     = !(var.plan != "enterprise-3nodes-2tb" && length(var.quotas) > 0)
-    error_message = "Quotas are only supported for enterprise plan."
+    condition     = !(var.plan == "lite" || var.plan == "standard") || length(var.quotas) == 0
+    error_message = "Quotas are only supported for enterprise plans."
   }
 }
 
@@ -317,8 +327,12 @@ variable "mirroring_topic_patterns" {
   default     = null
 
   validation {
-    condition     = !(var.mirroring_topic_patterns != null && var.plan != "enterprise-3nodes-2tb")
-    error_message = "mirroring is only supported for enterprise plan."
+    condition     = var.mirroring_topic_patterns == null || !(var.plan == "lite" || var.plan == "standard")
+    error_message = "mirroring is only supported for enterprise plans."
+  }
+  validation {
+    condition     = !(local.is_gen2 && var.mirroring_topic_patterns != null)
+    error_message = "Mirroring is not supported on the enterprise-gen2 plan. Mirroring support is planned for a future release."
   }
   validation {
     condition     = !(var.mirroring == null && var.mirroring_topic_patterns != null)
@@ -360,8 +374,12 @@ variable "mirroring" {
   })
 
   validation {
-    condition     = !(var.mirroring != null && var.plan != "enterprise-3nodes-2tb")
-    error_message = "Mirroring is only supported for enterprise plan."
+    condition     = var.mirroring == null || !(var.plan == "lite" || var.plan == "standard")
+    error_message = "Mirroring is only supported for enterprise plans."
+  }
+  validation {
+    condition     = !(local.is_gen2 && var.mirroring != null)
+    error_message = "Mirroring is not supported on the enterprise-gen2 plan. Mirroring support is planned for a future release."
   }
 
   validation {
@@ -390,7 +408,7 @@ variable "iam_token_only" {
   description = "If set to true, disables Kafka's SASL PLAIN authentication method, only allowing clients to authenticate with SASL OAUTHBEARER via IAM access token. For more information, see: https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-security. Only allowed for enterprise plans."
   default     = false
   validation {
-    condition     = !(var.iam_token_only == true && var.plan != "enterprise-3nodes-2tb")
-    error_message = "iam_token_only is only supported for enterprise plan."
+    condition     = !var.iam_token_only || !(var.plan == "lite" || var.plan == "standard")
+    error_message = "iam_token_only is only supported for enterprise plans."
   }
 }
