@@ -17,6 +17,19 @@ resource "time_sleep" "wait_for_authorization_policy" {
   create_duration = "30s"
 }
 
+##############################################################################
+# Check Blocks
+##############################################################################
+
+check "warn_hpcs_deprecation" {
+  assert {
+    condition = !(
+      (var.kms_key_crn != null && can(regex(".*hs-crypto.*", var.kms_key_crn)))
+    )
+    error_message = "WARNING (Non-fatal, execution will continue): An IBM Cloud Hyper Protect Crypto Services (hs-crypto) instance or key CRN was provided. Note that IBM Cloud Hyper Protect Crypto Services is deprecated. Consider migrating to a supported alternative."
+  }
+}
+
 resource "ibm_resource_instance" "es_instance" {
   depends_on        = [time_sleep.wait_for_kms_authorization_policy, time_sleep.wait_for_es_s2s_policy]
   name              = var.es_name
