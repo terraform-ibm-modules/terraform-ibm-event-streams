@@ -57,3 +57,9 @@ variable "storage_size" {
   description = "Storage size of the Event Streams in GB. For `enterprise-3nodes-2tb`, possible values are `2048`–`12288`. For `enterprise-gen2`, possible values are `2000`, `4000`, `6000`."
   default     = 2048
 }
+
+variable "vpe_vpc_name" {
+  type        = string
+  description = "Name of an existing VPC in which to create a VPE to the Event Streams instance. Required for the `enterprise-gen2` plan. When set, Terraform must run inside the VPC (e.g. on a Schematics agent). When null, no VPE is created."
+  default     = null
+}

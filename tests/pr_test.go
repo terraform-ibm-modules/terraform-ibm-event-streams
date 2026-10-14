@@ -31,6 +31,12 @@ const regionSelectionPath = "../common-dev-assets/common-go-assets/icd-region-pr
 
 const yamlLocation = "../common-dev-assets/common-go-assets/common-permanent-resources.yaml"
 
+// setup gen2schematic tests
+const gen2AgentWorkspaceTag = "es-gen2-agent"
+const gen2AgentVpcName = "ocpoct13-vpc"
+const gen2WorkspaceLocation = "us"
+const gen2AgentResourceGroup = "ocpoct13-resource-group"
+
 var sharedInfoSvc *cloudinfo.CloudInfoService
 
 var permanentResources map[string]interface{}
@@ -145,20 +151,21 @@ func TestRunQuickstartUpgradeSchematics(t *testing.T) {
 	}
 }
 
-// setupGen2SchematicOptions configures a Schematics test against the complete example
-// with enterprise-gen2 plan, including topic creation.
-// Topics and resource keys are hardcoded in the example's main.tf and do not need to be passed as variables.
 func setupGen2SchematicOptions(t *testing.T, prefix string) *testschematic.TestSchematicOptions {
+	resourceGroupID, err := sharedInfoSvc.GetResourceGroupIDByName(gen2AgentResourceGroup)
+	require.NoError(t, err, "Failed to get the ID of resource group %s", gen2AgentResourceGroup)
+
 	options := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
 		Testing:           t,
 		Prefix:            prefix,
-		WorkspaceLocation: "us",
+		WorkspaceLocation: gen2WorkspaceLocation,
+		ResourceGroup:     resourceGroupID,
 		TarIncludePatterns: []string{
 			"*.tf",
 			completeExampleTerraformDir + "/*.tf",
 		},
 		TemplateFolder:         completeExampleTerraformDir,
-		Tags:                   []string{"test-schematic"},
+		Tags:                   []string{"test-schematic", gen2AgentWorkspaceTag},
 		DeleteWorkspaceOnFail:  false,
 		WaitJobCompleteMinutes: 360,
 		TerraformVersion:       terraformVersion,
@@ -172,7 +179,8 @@ func setupGen2SchematicOptions(t *testing.T, prefix string) *testschematic.TestS
 		{Name: "throughput", Value: 100, DataType: "number"},
 		{Name: "storage_size", Value: 2000, DataType: "number"},
 		{Name: "service_endpoints", Value: "private", DataType: "string"},
-		{Name: "resource_group", Value: resourceGroup, DataType: "string"},
+		{Name: "vpe_vpc_name", Value: gen2AgentVpcName, DataType: "string"},
+		{Name: "resource_group", Value: gen2AgentResourceGroup, DataType: "string"},
 		{Name: "resource_tags", Value: options.Tags, DataType: "list(string)"},
 	}
 	return options
