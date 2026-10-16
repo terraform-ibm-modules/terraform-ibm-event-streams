@@ -67,10 +67,10 @@ variable "region" {
   validation {
     condition = !(var.plan == "enterprise-gen2" && !contains([
       "us-south", "br-sao", "ca-tor", "us-east", "ca-mon",
-      "eu-gb", "eu-es",
+      "eu-fr2", "eu-gb", "eu-es",
       "jp-osa", "au-syd", "jp-tok"
     ], var.region))
-    error_message = "The 'enterprise-gen2' plan is only supported in the following regions: us-south, br-sao, ca-tor, us-east, ca-mon, eu-gb, eu-es, jp-osa, au-syd, jp-tok."
+    error_message = "The 'enterprise-gen2' plan is only supported in the following regions: us-south, br-sao, ca-tor, us-east, ca-mon, eu-fr2, eu-gb, eu-es, jp-osa, au-syd, jp-tok."
   }
 }
 

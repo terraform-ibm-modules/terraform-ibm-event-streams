@@ -17,9 +17,9 @@ The Event Streams service supports payload data encryption that uses a root key 
 
 The `enterprise-gen2` plan is a next-generation Enterprise plan for Event Streams. It uses a different provisioning API from the classic `enterprise-3nodes-2tb` plan. Key differences:
 
-- **Regions**: `us-south`, `br-sao`, `ca-tor`, `us-east`, `eu-de`, `eu-fr2`, `eu-gb`, `eu-es`, `jp-osa`, `au-syd`, `jp-tok`, `ca-mon`, `in-mum`.
+- **Regions**: `us-south`, `br-sao`, `ca-tor`, `us-east`, `ca-mon`, `eu-fr2`, `eu-gb`, `eu-es`, `jp-osa`, `au-syd`, `jp-tok`.
 - **Kafka version**: Kafka 4.1 (vs 3.8 on classic plans).
-- **Networking**: Private (VPE) only. The `service_endpoints` input variable does not apply to this plan.
+- **Networking**: Private (VPE) only. Set the `service_endpoints` input variable to `private`.
 - **Throughput**: Only `100` MB/s is supported (50 MB/s produce + 50 MB/s consume). Adjustable after deployment.
 - **Storage size**: `2000` (2TB), `4000` (4TB), or `6000` (6TB). Adjustable after deployment.
 - **Parameters**: Uses a nested `dataservices` JSON structure internally.
