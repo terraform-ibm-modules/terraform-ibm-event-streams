@@ -11,15 +11,10 @@ module "resource_group" {
 }
 
 ##############################################################################
-# Events-streams-instance
+# Topics
 ##############################################################################
 
-module "event_streams" {
-  source            = "../../"
-  resource_group_id = module.resource_group.resource_group_id
-  es_name           = "${var.prefix}-es"
-  resource_tags     = var.resource_tags
-  access_tags       = var.access_tags
+locals {
   topics = [
     {
       name       = "topic-1"
@@ -42,21 +37,50 @@ module "event_streams" {
       }
     }
   ]
-  metrics = []
-  quotas  = []
+  # Gen2 supports only 100 MB/s and 2000 GB (2 TB) in this example
+  is_gen2      = var.plan == "enterprise-gen2"
+  throughput   = local.is_gen2 ? 100 : 150
+  storage_size = local.is_gen2 ? 2000 : 2048
+}
+
+##############################################################################
+# Events-streams-instance
+##############################################################################
+
+module "event_streams" {
+  source            = "../../"
+  resource_group_id = module.resource_group.resource_group_id
+  es_name           = "${var.prefix}-es"
+  plan              = var.plan
+  region            = var.region
+  service_endpoints = var.service_endpoints
+  throughput        = local.throughput
+  storage_size      = local.storage_size
+  resource_tags     = var.resource_tags
+  access_tags       = var.access_tags
+  # VPE to the instance. The `enterprise-gen2` plan is only reachable through a VPE.
+  vpe_vpc_id             = var.vpe_vpc_id
+  vpe_subnet_ids         = var.vpe_subnet_id != null ? [var.vpe_subnet_id] : []
+  vpe_security_group_ids = var.vpe_security_group_id != null ? [var.vpe_security_group_id] : []
+  topics                 = local.topics
+  metrics                = []
+  quotas                 = []
 
   resource_keys = [
     {
-      name = "${var.prefix}-writer-key"
-      role = "Writer"
+      name     = "${var.prefix}-writer-key"
+      role     = "Writer"
+      endpoint = "private"
     },
     {
-      name = "${var.prefix}-reader-key"
-      role = "Reader"
+      name     = "${var.prefix}-reader-key"
+      role     = "Reader"
+      endpoint = "private"
     },
     {
-      name = "${var.prefix}-manager-key"
-      role = "Manager"
+      name     = "${var.prefix}-manager-key"
+      role     = "Manager"
+      endpoint = "private"
     }
   ]
 }

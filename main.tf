@@ -8,6 +8,19 @@ locals {
   kms_scope          = length(local.parsed_kms_key_crn) > 0 ? local.parsed_kms_key_crn[6] : null
   kms_account_id     = length(local.parsed_kms_key_crn) > 0 ? split("/", local.kms_scope)[1] : null
   kms_key_id         = length(local.parsed_kms_key_crn) > 0 ? local.parsed_kms_key_crn[9] : null
+  # Determine if gen2 plan is being used
+  is_gen2 = can(regex("-gen2$", var.plan))
+  # Gen2 parameters_json
+  gen2_parameters = var.kms_key_crn != null ? jsonencode({
+    dataservices = {
+      kafka      = { throughput_mb_s = tostring(var.throughput), storage_gb = var.storage_size }
+      encryption = { disk = var.kms_key_crn }
+    }
+    }) : jsonencode({
+    dataservices = {
+      kafka = { throughput_mb_s = tostring(var.throughput), storage_gb = var.storage_size }
+    }
+  })
 }
 
 # workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
@@ -44,7 +57,7 @@ resource "ibm_resource_instance" "es_instance" {
     delete = var.delete_timeout
   }
 
-  parameters_json = var.plan != "enterprise-3nodes-2tb" ? null : (var.kms_key_crn != null || var.metrics != null || var.mirroring != null) ? jsonencode(
+  parameters_json = local.is_gen2 ? local.gen2_parameters : var.plan == "lite" || var.plan == "standard" ? null : (var.kms_key_crn != null || var.metrics != null || var.mirroring != null) ? jsonencode(
     {
       service-endpoints = var.service_endpoints
       throughput        = tostring(var.throughput)
@@ -101,10 +114,54 @@ resource "ibm_event_streams_schema_global_rule" "es_globalrule" {
 }
 
 ##############################################################################
+# VPE - virtual private endpoint to the Event Streams instance
+##############################################################################
+
+data "ibm_is_subnet" "vpe_subnet" {
+  for_each   = var.vpe_vpc_id != null ? toset(var.vpe_subnet_ids) : toset([])
+  identifier = each.value
+}
+
+module "vpe" {
+  count              = var.vpe_vpc_id != null ? 1 : 0
+  source             = "terraform-ibm-modules/vpe-gateway/ibm"
+  version            = "5.3.5"
+  region             = var.region
+  prefix             = var.es_name
+  vpc_id             = var.vpe_vpc_id
+  resource_group_id  = var.resource_group_id
+  security_group_ids = length(var.vpe_security_group_ids) > 0 ? var.vpe_security_group_ids : null
+  subnet_zone_list = [
+    for subnet in data.ibm_is_subnet.vpe_subnet : {
+      name = subnet.name
+      id   = subnet.id
+      zone = subnet.zone
+      cidr = subnet.ipv4_cidr_block
+    }
+  ]
+  cloud_service_by_crn = [
+    {
+      crn          = ibm_resource_instance.es_instance.crn
+      service_name = "event-streams"
+    }
+  ]
+}
+
+# Give the VPE time to be bound before the topics are created, and time between the VPE and
+# the topics destruction on deletion.
+resource "time_sleep" "wait_for_vpe" {
+  count            = var.vpe_vpc_id != null ? 1 : 0
+  depends_on       = [module.vpe]
+  create_duration  = "120s"
+  destroy_duration = "60s"
+}
+
+##############################################################################
 # TOPIC
 ##############################################################################
 
 resource "ibm_event_streams_topic" "es_topic" {
+  depends_on           = [time_sleep.wait_for_vpe]
   for_each             = { for topic in var.topics : topic.name => topic }
   resource_instance_id = ibm_resource_instance.es_instance.id
   name                 = each.value.name
