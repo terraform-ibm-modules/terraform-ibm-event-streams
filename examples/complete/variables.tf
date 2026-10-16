@@ -46,20 +46,20 @@ variable "service_endpoints" {
   default     = "public"
 }
 
-variable "vpe_vpc_name" {
+variable "vpe_vpc_id" {
   type        = string
-  description = "Name of an existing VPC in which to create a VPE to the Event Streams instance. Required for the `enterprise-gen2` plan. When set, Terraform must run inside the VPC (e.g. on a Schematics agent). When null, no VPE is created."
+  description = "ID of an existing VPC in which to create a VPE to the Event Streams instance. Required for the `enterprise-gen2` plan. When set, Terraform must run inside the VPC (e.g. on a Schematics agent). When null, no VPE is created."
   default     = null
 }
 
-variable "vpe_subnet_name" {
+variable "vpe_subnet_id" {
   type        = string
-  description = "Name of the subnet in `vpe_vpc_name` in which to place the VPE. Required when `vpe_vpc_name` is set."
+  description = "ID of the subnet in `vpe_vpc_id` in which to place the VPE. Required when `vpe_vpc_id` is set."
   default     = null
 }
 
-variable "vpe_security_group_name" {
+variable "vpe_security_group_id" {
   type        = string
-  description = "Name of an existing security group in `vpe_vpc_name` to attach to the VPE. Required when `vpe_vpc_name` is set."
+  description = "ID of an existing security group in `vpe_vpc_id` to attach to the VPE. Required when `vpe_vpc_id` is set."
   default     = null
 }

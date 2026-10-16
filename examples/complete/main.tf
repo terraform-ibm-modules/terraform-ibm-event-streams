@@ -37,8 +37,6 @@ locals {
       }
     }
   ]
-  # Event Streams `enterprise-gen2` is only reachable through a VPE.
-  create_vpe = var.vpe_vpc_name != null
   # Gen2 supports only 100 MB/s and 2000 GB (2 TB) in this example
   is_gen2      = var.plan == "enterprise-gen2"
   throughput   = local.is_gen2 ? 100 : 150
@@ -61,9 +59,9 @@ module "event_streams" {
   resource_tags     = var.resource_tags
   access_tags       = var.access_tags
   # VPE to the instance. The `enterprise-gen2` plan is only reachable through a VPE.
-  vpe_vpc_id             = local.create_vpe ? data.ibm_is_vpc.vpc[0].id : null
-  vpe_subnet_ids         = local.create_vpe ? [data.ibm_is_subnet.vpe_subnet[0].id] : []
-  vpe_security_group_ids = local.create_vpe ? [data.ibm_is_security_group.vpe[0].id] : []
+  vpe_vpc_id             = var.vpe_vpc_id
+  vpe_subnet_ids         = var.vpe_subnet_id != null ? [var.vpe_subnet_id] : []
+  vpe_security_group_ids = var.vpe_security_group_id != null ? [var.vpe_security_group_id] : []
   topics                 = local.topics
   metrics                = []
   quotas                 = []
@@ -85,24 +83,4 @@ module "event_streams" {
       endpoint = "private"
     }
   ]
-}
-
-##############################################################################
-# Look up the IDs of the existing VPC, subnet and security group used by the VPE
-##############################################################################
-
-data "ibm_is_vpc" "vpc" {
-  count = local.create_vpe ? 1 : 0
-  name  = var.vpe_vpc_name
-}
-
-data "ibm_is_subnet" "vpe_subnet" {
-  count = local.create_vpe ? 1 : 0
-  name  = var.vpe_subnet_name
-}
-
-data "ibm_is_security_group" "vpe" {
-  count = local.create_vpe ? 1 : 0
-  name  = var.vpe_security_group_name
-  vpc   = data.ibm_is_vpc.vpc[0].id
 }
