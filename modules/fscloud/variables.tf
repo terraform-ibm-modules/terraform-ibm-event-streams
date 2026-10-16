@@ -110,7 +110,7 @@ variable "resource_keys" {
 
 variable "metrics" {
   type        = list(string)
-  description = "Enhanced metrics to activate, as list of strings. Allowed values: 'topic', 'partition', 'consumers'."
+  description = "Enhanced metrics to activate, as list of strings. Not supported on the `enterprise-gen2` plan. Allowed values: 'topic', 'partition', 'consumers'."
   default     = []
 }
 
@@ -167,7 +167,7 @@ variable "mirroring" {
 
 variable "iam_token_only" {
   type        = bool
-  description = "If set to true, disables Kafka's SASL PLAIN authentication method, only allowing clients to authenticate with SASL OAUTHBEARER via IAM access token. For more information, see: https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-security. Only allowed for enterprise plans."
+  description = "If set to true, disables Kafka's SASL PLAIN authentication method, only allowing clients to authenticate with SASL OAUTHBEARER via IAM access token. For more information, see: https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-security. Only allowed for enterprise plans. Not supported on the `enterprise-gen2` plan."
   default     = false
 }
 

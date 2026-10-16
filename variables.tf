@@ -174,10 +174,6 @@ variable "topics" {
   ))
   description = "The list of topics to apply to resources. Only one topic is allowed for Lite plan instances."
   default     = []
-  validation {
-    condition     = !(var.plan == "lite" && length(var.topics) > 1)
-    error_message = "Only one topic is allowed for the Lite plan."
-  }
 }
 
 variable "kms_encryption_enabled" {
@@ -292,7 +288,7 @@ variable "resource_keys" {
 
 variable "metrics" {
   type        = list(string)
-  description = "Enhanced metrics to activate, as list of strings. Only allowed for enterprise plans. Allowed values: 'topic', 'partition', 'consumers'."
+  description = "Enhanced metrics to activate, as list of strings. Only allowed for enterprise plans. Not supported on the `enterprise-gen2` plan. Allowed values: 'topic', 'partition', 'consumers'."
   default     = []
   validation {
     condition     = alltrue([for name in var.metrics : contains(["topic", "partition", "consumers"], name)])
@@ -301,6 +297,10 @@ variable "metrics" {
   validation {
     condition     = !(var.plan == "lite" || var.plan == "standard") || length(var.metrics) == 0
     error_message = "Metrics are only supported for enterprise plans."
+  }
+  validation {
+    condition     = !(local.is_gen2 && length(var.metrics) > 0)
+    error_message = "Metrics are not supported on the enterprise-gen2 plan."
   }
 }
 
@@ -406,10 +406,14 @@ variable "mirroring" {
 
 variable "iam_token_only" {
   type        = bool
-  description = "If set to true, disables Kafka's SASL PLAIN authentication method, only allowing clients to authenticate with SASL OAUTHBEARER via IAM access token. For more information, see: https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-security. Only allowed for enterprise plans."
+  description = "If set to true, disables Kafka's SASL PLAIN authentication method, only allowing clients to authenticate with SASL OAUTHBEARER via IAM access token. For more information, see: https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-security. Only allowed for enterprise plans. Not supported on the `enterprise-gen2` plan."
   default     = false
   validation {
     condition     = !var.iam_token_only || !(var.plan == "lite" || var.plan == "standard")
     error_message = "iam_token_only is only supported for enterprise plans."
+  }
+  validation {
+    condition     = !(local.is_gen2 && var.iam_token_only)
+    error_message = "iam_token_only is not supported on the enterprise-gen2 plan."
   }
 }
