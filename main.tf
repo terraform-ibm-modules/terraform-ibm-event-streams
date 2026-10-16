@@ -57,7 +57,7 @@ resource "ibm_resource_instance" "es_instance" {
     delete = var.delete_timeout
   }
 
-  parameters_json = local.is_gen2 ? local.gen2_parameters : var.plan == "lite" || var.plan == "standard" ? null : (var.kms_key_crn != null || length(var.metrics) > 0 || var.mirroring != null) ? jsonencode(
+  parameters_json = local.is_gen2 ? local.gen2_parameters : var.plan == "lite" || var.plan == "standard" ? null : (var.kms_key_crn != null || var.metrics != null || var.mirroring != null) ? jsonencode(
     {
       service-endpoints = var.service_endpoints
       throughput        = tostring(var.throughput)
