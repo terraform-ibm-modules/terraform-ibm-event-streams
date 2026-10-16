@@ -56,9 +56,9 @@ module "event_streams" {
   storage_size      = var.storage_size
   resource_tags     = var.resource_tags
   access_tags       = var.access_tags
-  topics  = local.create_vpe ? [] : local.topics
-  metrics = []
-  quotas  = []
+  topics            = local.create_vpe ? [] : local.topics
+  metrics           = []
+  quotas            = []
 
   resource_keys = [
     {

@@ -105,7 +105,7 @@ variable "storage_size" {
 
 variable "service_endpoints" {
   type        = string
-  description = "The type of service endpoints. Possible values: 'public', 'private', 'public-and-private'. The `enterprise-gen2` plan supports private endpoints only (enforced by the service); this variable is ignored for gen2 and does not need to be set."
+  description = "The type of service endpoints. Possible values: 'public', 'private', 'public-and-private'. The `enterprise-gen2` plan supports private endpoints only (enforced by the service) and ignores this variable when creating the instance. Set it to `private` when using the gen2 plan, so that `resource_keys` use the private endpoint."
   default     = "public"
   validation {
     condition     = contains(["public", "public-and-private", "private"], var.service_endpoints)
