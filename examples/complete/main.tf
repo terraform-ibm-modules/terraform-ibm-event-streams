@@ -119,13 +119,14 @@ module "vpe" {
   vpc_id             = data.ibm_is_vpc.vpc[0].id
   resource_group_id  = module.resource_group.resource_group_id
   security_group_ids = [ibm_is_security_group.vpe[0].id]
+  # Place the VPE only in the given subnet (if set), otherwise in every subnet of the VPC
   subnet_zone_list = [
     for subnet in data.ibm_is_subnet.subnet : {
       name = subnet.name
       id   = subnet.id
       zone = subnet.zone
       cidr = subnet.ipv4_cidr_block
-    }
+    } if var.vpe_subnet_name == null || subnet.name == var.vpe_subnet_name
   ]
   cloud_service_by_crn = [
     {

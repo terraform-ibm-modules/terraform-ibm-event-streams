@@ -63,3 +63,9 @@ variable "vpe_vpc_name" {
   description = "Name of an existing VPC in which to create a VPE to the Event Streams instance. Required for the `enterprise-gen2` plan. When set, Terraform must run inside the VPC (e.g. on a Schematics agent). When null, no VPE is created."
   default     = null
 }
+
+variable "vpe_subnet_name" {
+  type        = string
+  description = "Name of the subnet in `vpe_vpc_name` in which to place the VPE. If null, the VPE is placed in every subnet of the VPC. Only used when `vpe_vpc_name` is set."
+  default     = null
+}

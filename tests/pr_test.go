@@ -178,6 +178,7 @@ func setupGen2SchematicOptions(t *testing.T, prefix string) *testschematic.TestS
 		{Name: "storage_size", Value: 2000, DataType: "number"},
 		{Name: "service_endpoints", Value: "private", DataType: "string"},
 		{Name: "vpe_vpc_name", Value: permanentResources["schematics_agent_vpc_name"], DataType: "string"},
+		{Name: "vpe_subnet_name", Value: permanentResources["schematics_agent_vpe_subnet_name"], DataType: "string"},
 		{Name: "resource_group", Value: agentResourceGroup, DataType: "string"},
 		{Name: "resource_tags", Value: options.Tags, DataType: "list(string)"},
 	}
