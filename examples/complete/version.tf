@@ -4,11 +4,7 @@ terraform {
     # Use latest version of provider in non-basic examples to verify latest version works with module
     ibm = {
       source  = "IBM-Cloud/ibm"
-      version = ">= 2.2.0"
-    }
-    time = {
-      source  = "hashicorp/time"
-      version = ">= 0.9.1"
+      version = ">= 2.7.0"
     }
   }
 }

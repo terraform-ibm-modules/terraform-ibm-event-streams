@@ -39,6 +39,10 @@ locals {
   ]
   # Event Streams `enterprise-gen2` is only reachable through a VPE.
   create_vpe = var.vpe_vpc_name != null
+  # Gen2 supports only 100 MB/s and 2000 GB (2 TB) in this example
+  is_gen2      = var.plan == "enterprise-gen2"
+  throughput   = local.is_gen2 ? 100 : 150
+  storage_size = local.is_gen2 ? 2000 : 2048
 }
 
 ##############################################################################
@@ -52,35 +56,39 @@ module "event_streams" {
   plan              = var.plan
   region            = var.region
   service_endpoints = var.service_endpoints
-  throughput        = var.throughput
-  storage_size      = var.storage_size
+  throughput        = local.throughput
+  storage_size      = local.storage_size
   resource_tags     = var.resource_tags
   access_tags       = var.access_tags
-  topics            = local.create_vpe ? [] : local.topics
-  metrics           = []
-  quotas            = []
+  # VPE to the instance. The `enterprise-gen2` plan is only reachable through a VPE.
+  vpe_vpc_id             = local.create_vpe ? data.ibm_is_vpc.vpc[0].id : null
+  vpe_subnet_ids         = local.create_vpe ? [data.ibm_is_subnet.vpe_subnet[0].id] : []
+  vpe_security_group_ids = local.create_vpe ? [data.ibm_is_security_group.vpe[0].id] : []
+  topics                 = local.topics
+  metrics                = []
+  quotas                 = []
 
   resource_keys = [
     {
       name     = "${var.prefix}-writer-key"
       role     = "Writer"
-      endpoint = var.service_endpoints == "private" ? "private" : "public"
+      endpoint = "private"
     },
     {
       name     = "${var.prefix}-reader-key"
       role     = "Reader"
-      endpoint = var.service_endpoints == "private" ? "private" : "public"
+      endpoint = "private"
     },
     {
       name     = "${var.prefix}-manager-key"
       role     = "Manager"
-      endpoint = var.service_endpoints == "private" ? "private" : "public"
+      endpoint = "private"
     }
   ]
 }
 
 ##############################################################################
-# VPE to the Event Streams instance
+# Look up the IDs of the existing VPC, subnet and security group used by the VPE
 ##############################################################################
 
 data "ibm_is_vpc" "vpc" {
@@ -88,69 +96,13 @@ data "ibm_is_vpc" "vpc" {
   name  = var.vpe_vpc_name
 }
 
-# The VPC data source does not return the subnet CIDR blocks, so look up each subnet
-data "ibm_is_subnet" "subnet" {
-  for_each   = local.create_vpe ? { for subnet in data.ibm_is_vpc.vpc[0].subnets : subnet.name => subnet.id } : {}
-  identifier = each.value
+data "ibm_is_subnet" "vpe_subnet" {
+  count = local.create_vpe ? 1 : 0
+  name  = var.vpe_subnet_name
 }
 
-resource "ibm_is_security_group" "vpe" {
-  count          = local.create_vpe ? 1 : 0
-  name           = "${var.prefix}-vpe-sg"
-  vpc            = data.ibm_is_vpc.vpc[0].id
-  resource_group = module.resource_group.resource_group_id
-}
-
-# Allow every subnet of the VPC (including the agent cluster workers) to reach the VPE
-resource "ibm_is_security_group_rule" "vpe_inbound" {
-  for_each  = data.ibm_is_subnet.subnet
-  group     = ibm_is_security_group.vpe[0].id
-  direction = "inbound"
-  remote    = each.value.ipv4_cidr_block
-}
-
-module "vpe" {
-  count              = local.create_vpe ? 1 : 0
-  source             = "terraform-ibm-modules/vpe-gateway/ibm"
-  version            = "5.3.5"
-  region             = var.region
-  prefix             = var.prefix
-  vpc_name           = var.vpe_vpc_name
-  vpc_id             = data.ibm_is_vpc.vpc[0].id
-  resource_group_id  = module.resource_group.resource_group_id
-  security_group_ids = [ibm_is_security_group.vpe[0].id]
-  # Place the VPE only in the given subnet (if set), otherwise in every subnet of the VPC
-  subnet_zone_list = [
-    for subnet in data.ibm_is_subnet.subnet : {
-      name = subnet.name
-      id   = subnet.id
-      zone = subnet.zone
-      cidr = subnet.ipv4_cidr_block
-    } if var.vpe_subnet_name == null || subnet.name == var.vpe_subnet_name
-  ]
-  cloud_service_by_crn = [
-    {
-      crn          = module.event_streams.crn
-      service_name = "event-streams"
-    }
-  ]
-  depends_on = [ibm_is_security_group_rule.vpe_inbound]
-}
-
-# Give the VPE time to be bound before using it, and time between the VPE and security group
-# destruction on deletion.
-resource "time_sleep" "wait_for_vpe" {
-  count            = local.create_vpe ? 1 : 0
-  depends_on       = [module.vpe]
-  create_duration  = "120s"
-  destroy_duration = "60s"
-}
-
-resource "ibm_event_streams_topic" "topic" {
-  for_each             = local.create_vpe ? { for topic in local.topics : topic.name => topic } : {}
-  resource_instance_id = module.event_streams.id
-  name                 = each.value.name
-  partitions           = each.value.partitions
-  config               = each.value.config
-  depends_on           = [time_sleep.wait_for_vpe]
+data "ibm_is_security_group" "vpe" {
+  count = local.create_vpe ? 1 : 0
+  name  = var.vpe_security_group_name
+  vpc   = data.ibm_is_vpc.vpc[0].id
 }

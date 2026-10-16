@@ -46,18 +46,6 @@ variable "service_endpoints" {
   default     = "public"
 }
 
-variable "throughput" {
-  type        = number
-  description = "Throughput capacity in MB per second. For `enterprise-3nodes-2tb`, possible values are `150`, `300`, `450`. For `enterprise-gen2`, the only supported value is `100`."
-  default     = 150
-}
-
-variable "storage_size" {
-  type        = number
-  description = "Storage size of the Event Streams in GB. For `enterprise-3nodes-2tb`, possible values are `2048`–`12288`. For `enterprise-gen2`, possible values are `2000`, `4000`, `6000`."
-  default     = 2048
-}
-
 variable "vpe_vpc_name" {
   type        = string
   description = "Name of an existing VPC in which to create a VPE to the Event Streams instance. Required for the `enterprise-gen2` plan. When set, Terraform must run inside the VPC (e.g. on a Schematics agent). When null, no VPE is created."
@@ -66,6 +54,12 @@ variable "vpe_vpc_name" {
 
 variable "vpe_subnet_name" {
   type        = string
-  description = "Name of the subnet in `vpe_vpc_name` in which to place the VPE. If null, the VPE is placed in every subnet of the VPC. Only used when `vpe_vpc_name` is set."
+  description = "Name of the subnet in `vpe_vpc_name` in which to place the VPE. Required when `vpe_vpc_name` is set."
+  default     = null
+}
+
+variable "vpe_security_group_name" {
+  type        = string
+  description = "Name of an existing security group in `vpe_vpc_name` to attach to the VPE. Required when `vpe_vpc_name` is set."
   default     = null
 }

@@ -417,3 +417,29 @@ variable "iam_token_only" {
     error_message = "iam_token_only is not supported on the enterprise-gen2 plan."
   }
 }
+
+##############################################################################
+# VPE (virtual private endpoint) inputs
+##############################################################################
+
+variable "vpe_vpc_id" {
+  type        = string
+  description = "The ID of an existing VPC in which to create a virtual private endpoint (VPE) to the Event Streams instance. The `enterprise-gen2` plan is reachable through a VPE only. If not set, no VPE is created. When set, Terraform must run from inside the VPC (for example on a Schematics agent) so that the topics can be reached."
+  default     = null
+}
+
+variable "vpe_subnet_ids" {
+  type        = list(string)
+  description = "The IDs of the subnets in `vpe_vpc_id` in which to place the VPE. Required when `vpe_vpc_id` is set."
+  default     = []
+  validation {
+    condition     = var.vpe_vpc_id == null || length(var.vpe_subnet_ids) > 0
+    error_message = "At least one subnet ID must be passed in `vpe_subnet_ids` when `vpe_vpc_id` is set."
+  }
+}
+
+variable "vpe_security_group_ids" {
+  type        = list(string)
+  description = "The IDs of the security groups to attach to the VPE. Only used when `vpe_vpc_id` is set."
+  default     = []
+}

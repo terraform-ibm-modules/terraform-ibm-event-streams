@@ -114,10 +114,54 @@ resource "ibm_event_streams_schema_global_rule" "es_globalrule" {
 }
 
 ##############################################################################
+# VPE - virtual private endpoint to the Event Streams instance
+##############################################################################
+
+data "ibm_is_subnet" "vpe_subnet" {
+  for_each   = var.vpe_vpc_id != null ? toset(var.vpe_subnet_ids) : toset([])
+  identifier = each.value
+}
+
+module "vpe" {
+  count              = var.vpe_vpc_id != null ? 1 : 0
+  source             = "terraform-ibm-modules/vpe-gateway/ibm"
+  version            = "5.3.5"
+  region             = var.region
+  prefix             = var.es_name
+  vpc_id             = var.vpe_vpc_id
+  resource_group_id  = var.resource_group_id
+  security_group_ids = length(var.vpe_security_group_ids) > 0 ? var.vpe_security_group_ids : null
+  subnet_zone_list = [
+    for subnet in data.ibm_is_subnet.vpe_subnet : {
+      name = subnet.name
+      id   = subnet.id
+      zone = subnet.zone
+      cidr = subnet.ipv4_cidr_block
+    }
+  ]
+  cloud_service_by_crn = [
+    {
+      crn          = ibm_resource_instance.es_instance.crn
+      service_name = "event-streams"
+    }
+  ]
+}
+
+# Give the VPE time to be bound before the topics are created, and time between the VPE and
+# the topics destruction on deletion.
+resource "time_sleep" "wait_for_vpe" {
+  count            = var.vpe_vpc_id != null ? 1 : 0
+  depends_on       = [module.vpe]
+  create_duration  = "120s"
+  destroy_duration = "60s"
+}
+
+##############################################################################
 # TOPIC
 ##############################################################################
 
 resource "ibm_event_streams_topic" "es_topic" {
+  depends_on           = [time_sleep.wait_for_vpe]
   for_each             = { for topic in var.topics : topic.name => topic }
   resource_instance_id = ibm_resource_instance.es_instance.id
   name                 = each.value.name

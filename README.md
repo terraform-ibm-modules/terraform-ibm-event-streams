@@ -145,7 +145,7 @@ You need the following permissions to run this module.
 | Name | Version |
 | ---- | ------- |
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.9.0 |
-| <a name="requirement_ibm"></a> [ibm](#requirement\_ibm) | >= 2.2.0, < 3.0.0 |
+| <a name="requirement_ibm"></a> [ibm](#requirement\_ibm) | >= 2.7.0, < 3.0.0 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | >= 0.9.1 |
 
 ### Modules
@@ -155,6 +155,7 @@ You need the following permissions to run this module.
 | <a name="module_cbr_rule"></a> [cbr\_rule](#module\_cbr\_rule) | terraform-ibm-modules/cbr/ibm//modules/cbr-rule-module | 1.36.9 |
 | <a name="module_es_guid_crn_parser"></a> [es\_guid\_crn\_parser](#module\_es\_guid\_crn\_parser) | terraform-ibm-modules/common-utilities/ibm//modules/crn-parser | 1.9.0 |
 | <a name="module_kms_key_crn_parser"></a> [kms\_key\_crn\_parser](#module\_kms\_key\_crn\_parser) | terraform-ibm-modules/common-utilities/ibm//modules/crn-parser | 1.9.0 |
+| <a name="module_vpe"></a> [vpe](#module\_vpe) | terraform-ibm-modules/vpe-gateway/ibm | 5.3.5 |
 
 ### Resources
 
@@ -173,7 +174,9 @@ You need the following permissions to run this module.
 | [time_sleep.wait_for_authorization_policy](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
 | [time_sleep.wait_for_es_s2s_policy](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
 | [time_sleep.wait_for_kms_authorization_policy](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
+| [time_sleep.wait_for_vpe](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
 | [ibm_iam_access_tag.access_tag](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/data-sources/iam_access_tag) | data source |
+| [ibm_is_subnet.vpe_subnet](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/data-sources/is_subnet) | data source |
 
 ### Inputs
 
@@ -205,6 +208,9 @@ You need the following permissions to run this module.
 | <a name="input_throughput"></a> [throughput](#input\_throughput) | Throughput capacity in MB per second. Applies only to Enterprise plan instances. For `enterprise-3nodes-2tb`, possible values are `150`, `300`, `450`. For `enterprise-gen2`, the only supported value is `100` (50 MB/s produce + 50 MB/s consume). Throughput is adjustable after deployment for `enterprise-gen2`. | `number` | `150` | no |
 | <a name="input_topics"></a> [topics](#input\_topics) | The list of topics to apply to resources. Only one topic is allowed for Lite plan instances. | <pre>list(object(<br/>    {<br/>      name       = string<br/>      partitions = number<br/>      config     = map(string)<br/>    }<br/>  ))</pre> | `[]` | no |
 | <a name="input_update_timeout"></a> [update\_timeout](#input\_update\_timeout) | The timeout value for updating an Event Streams instance. Specify `1h` for an Enterprise plan instance. Add 1 h for each level of non-default throughput. A 30 min for each level of non-default storage size. | `string` | `"1h"` | no |
+| <a name="input_vpe_security_group_ids"></a> [vpe\_security\_group\_ids](#input\_vpe\_security\_group\_ids) | The IDs of the security groups to attach to the VPE. Only used when `vpe_vpc_id` is set. | `list(string)` | `[]` | no |
+| <a name="input_vpe_subnet_ids"></a> [vpe\_subnet\_ids](#input\_vpe\_subnet\_ids) | The IDs of the subnets in `vpe_vpc_id` in which to place the VPE. Required when `vpe_vpc_id` is set. | `list(string)` | `[]` | no |
+| <a name="input_vpe_vpc_id"></a> [vpe\_vpc\_id](#input\_vpe\_vpc\_id) | The ID of an existing VPC in which to create a virtual private endpoint (VPE) to the Event Streams instance. The `enterprise-gen2` plan is reachable through a VPE only. If not set, no VPE is created. When set, Terraform must run from inside the VPC (for example on a Schematics agent) so that the topics can be reached. | `string` | `null` | no |
 
 ### Outputs
 
