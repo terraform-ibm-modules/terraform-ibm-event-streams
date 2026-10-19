@@ -353,6 +353,42 @@ func setupSecurityEnforcedGen2Options(t *testing.T, prefix string) *testschemati
 		TerraformVersion:       terraformVersion,
 	})
 
+	resourceKeys := []map[string]interface{}{
+		{
+			"name":     "es_writer",
+			"role":     "Writer",
+			"endpoint": "private",
+		},
+		{
+			"name":     "es_reader",
+			"role":     "Reader",
+			"endpoint": "private",
+		},
+	}
+
+	topics := []map[string]interface{}{
+		{
+			"name":       "topic-1",
+			"partitions": 1,
+			"config": map[string]string{
+				"cleanup.policy":  "delete",
+				"retention.ms":    "86400000",
+				"retention.bytes": "10485760",
+				"segment.bytes":   "10485760",
+			},
+		},
+		{
+			"name":       "topic-2",
+			"partitions": 1,
+			"config": map[string]string{
+				"cleanup.policy":  "compact,delete",
+				"retention.ms":    "86400000",
+				"retention.bytes": "1073741824",
+				"segment.bytes":   "536870912",
+			},
+		},
+	}
+
 	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
 		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
 		{Name: "prefix", Value: options.Prefix, DataType: "string"},
@@ -363,6 +399,8 @@ func setupSecurityEnforcedGen2Options(t *testing.T, prefix string) *testschemati
 		{Name: "vpe_vpc_id", Value: permanentResources["schematics_agent_vpc_id"], DataType: "string"},
 		{Name: "vpe_subnet_ids", Value: []string{permanentResources["schematics_agent_vpe_subnet_id"].(string)}, DataType: "list(string)"},
 		{Name: "resource_tags", Value: options.Tags, DataType: "list(string)"},
+		{Name: "resource_keys", Value: resourceKeys, DataType: "list(object)"},
+		{Name: "topics", Value: topics, DataType: "list(object)"},
 		{Name: "storage_size", Value: 2000, DataType: "number"},
 		{Name: "throughput", Value: 100, DataType: "number"},
 		{Name: "create_timeout", Value: "1h", DataType: "string"},
