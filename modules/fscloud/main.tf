@@ -2,7 +2,7 @@ module "event_streams" {
   source                               = "../../"
   resource_group_id                    = var.resource_group_id
   es_name                              = var.es_name
-  plan                                 = "enterprise-3nodes-2tb"
+  plan                                 = var.plan
   region                               = var.region
   kms_key_crn                          = var.kms_key_crn
   skip_kms_iam_authorization_policy    = var.skip_kms_iam_authorization_policy
@@ -26,4 +26,7 @@ module "event_streams" {
   delete_timeout                       = var.delete_timeout
   storage_size                         = var.storage_size
   throughput                           = var.throughput
+  vpe_vpc_id                           = var.vpe_vpc_id
+  vpe_subnet_ids                       = var.vpe_subnet_ids
+  vpe_security_group_ids               = var.vpe_security_group_ids
 }

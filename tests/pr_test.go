@@ -31,6 +31,9 @@ const regionSelectionPath = "../common-dev-assets/common-go-assets/icd-region-pr
 
 const yamlLocation = "../common-dev-assets/common-go-assets/common-permanent-resources.yaml"
 
+// setup gen2schematic tests
+const gen2WorkspaceLocation = "us"
+
 var sharedInfoSvc *cloudinfo.CloudInfoService
 
 var permanentResources map[string]interface{}
@@ -143,6 +146,52 @@ func TestRunQuickstartUpgradeSchematics(t *testing.T) {
 	if !options.UpgradeTestSkipped {
 		assert.Nil(t, err, "This should not have errored")
 	}
+}
+
+func setupGen2SchematicOptions(t *testing.T, prefix string) *testschematic.TestSchematicOptions {
+	agentResourceGroup := permanentResources["schematics_agent_resource_group"].(string)
+	resourceGroupID, err := sharedInfoSvc.GetResourceGroupIDByName(agentResourceGroup)
+	require.NoError(t, err, "Failed to get the ID of resource group %s", agentResourceGroup)
+
+	options := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
+		Testing:           t,
+		Prefix:            prefix,
+		WorkspaceLocation: gen2WorkspaceLocation,
+		ResourceGroup:     resourceGroupID,
+		TarIncludePatterns: []string{
+			"*.tf",
+			completeExampleTerraformDir + "/*.tf",
+		},
+		TemplateFolder:         completeExampleTerraformDir,
+		Tags:                   []string{"test-schematic", permanentResources["schematics_agent_workspace_tag"].(string)},
+		DeleteWorkspaceOnFail:  false,
+		WaitJobCompleteMinutes: 360,
+		TerraformVersion:       terraformVersion,
+	})
+
+	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
+		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
+		{Name: "prefix", Value: options.Prefix, DataType: "string"},
+		{Name: "plan", Value: "enterprise-gen2", DataType: "string"},
+		{Name: "region", Value: "us-south", DataType: "string"},
+		{Name: "service_endpoints", Value: "private", DataType: "string"},
+		{Name: "vpe_vpc_id", Value: permanentResources["schematics_agent_vpc_id"], DataType: "string"},
+		{Name: "vpe_subnet_id", Value: permanentResources["schematics_agent_vpe_subnet_id"], DataType: "string"},
+		{Name: "vpe_security_group_id", Value: permanentResources["schematics_agent_vpe_security_group_id"], DataType: "string"},
+		{Name: "resource_group", Value: agentResourceGroup, DataType: "string"},
+		{Name: "resource_tags", Value: options.Tags, DataType: "list(string)"},
+	}
+	return options
+}
+
+// TestRunGen2CompleteSchematics tests provisioning of the complete example with enterprise-gen2 plan
+// via Schematics, including topic creation.
+func TestRunGen2CompleteSchematics(t *testing.T) {
+	t.Parallel()
+
+	options := setupGen2SchematicOptions(t, "es-gen2-sch")
+	err := options.RunSchematicTest()
+	assert.Nil(t, err, "This should not have errored")
 }
 
 func setupSecurityEnforcedUpgradeOptions(t *testing.T, prefix string) *testschematic.TestSchematicOptions {
