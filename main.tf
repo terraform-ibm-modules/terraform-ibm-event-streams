@@ -99,7 +99,7 @@ resource "ibm_event_streams_schema" "es_schema" {
   for_each = {
     for schema in var.schemas :
     schema.schema_id => schema
-    if !local.is_gen2
+    if var.plan == "enterprise-3nodes-2tb"
   }
 
   resource_instance_id = ibm_resource_instance.es_instance.id

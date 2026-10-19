@@ -103,7 +103,7 @@ variable "topics" {
 
 variable "metrics" {
   type        = list(string)
-  description = "Enhanced metrics to activate, as list of strings. Only allowed for enterprise plans. Not supported on the `enterprise-gen2` plan. Allowed values: 'topic', 'partition', 'consumers'."
+  description = "Enhanced metrics to activate, as list of strings. Not supported on the `enterprise-gen2` plan. Allowed values: 'topic', 'partition', 'consumers'."
   default     = []
 
   validation {
