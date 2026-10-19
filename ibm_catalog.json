@@ -638,6 +638,19 @@
               "description": "The name of an existing resource group to provision the resources. [Learn more](https://cloud.ibm.com/docs/account?topic=account-rgs&interface=ui#create_rgs) about how to create a resource group."
             },
             {
+              "key": "plan",
+              "options": [
+                {
+                  "displayname": "enterprise-3nodes-2tb",
+                  "value": "enterprise-3nodes-2tb"
+                },
+                {
+                  "displayname": "enterprise-gen2",
+                  "value": "enterprise-gen2"
+                }
+              ]
+            },
+            {
               "key": "event_streams_name"
             },
             {
@@ -743,6 +756,15 @@
                   ]
                 }
               }
+            },
+            {
+              "key": "vpe_vpc_id"
+            },
+            {
+              "key": "vpe_subnet_ids"
+            },
+            {
+              "key": "vpe_security_group_ids"
             },
             {
               "key": "iam_token_only"

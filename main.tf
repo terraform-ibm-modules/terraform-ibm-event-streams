@@ -99,7 +99,7 @@ resource "ibm_event_streams_schema" "es_schema" {
   for_each = {
     for schema in var.schemas :
     schema.schema_id => schema
-    if var.plan == "enterprise-3nodes-2tb"
+    if !local.is_gen2
   }
 
   resource_instance_id = ibm_resource_instance.es_instance.id
@@ -108,7 +108,7 @@ resource "ibm_event_streams_schema" "es_schema" {
 }
 
 resource "ibm_event_streams_schema_global_rule" "es_globalrule" {
-  count                = var.schema_global_rule != null ? 1 : 0
+  count                = var.schema_global_rule != null && !local.is_gen2 ? 1 : 0
   resource_instance_id = ibm_resource_instance.es_instance.id
   config               = var.schema_global_rule
 }
@@ -205,9 +205,9 @@ resource "ibm_event_streams_quota" "eventstreams_quotas" {
 resource "ibm_iam_authorization_policy" "kms_policy" {
   count                    = var.kms_encryption_enabled == false || var.skip_kms_iam_authorization_policy ? 0 : 1
   source_service_name      = "messagehub"
-  source_resource_group_id = var.resource_group_id
-  roles                    = ["Reader"]
-  description              = "Allow the Event Streams instances in the resource group ${var.resource_group_id} to read the ${local.kms_service} key ${local.kms_key_id} from the instance ${local.kms_instance_guid}"
+  source_resource_group_id = local.is_gen2 ? null : var.resource_group_id
+  roles                    = local.is_gen2 ? ["Reader", "Authorization Delegator"] : ["Reader"]
+  description              = local.is_gen2 ? "Allow all Event Streams instances in the account to read the ${local.kms_service} key ${local.kms_key_id} from the instance ${local.kms_instance_guid}" : "Allow the Event Streams instances in the resource group ${var.resource_group_id} to read the ${local.kms_service} key ${local.kms_key_id} from the instance ${local.kms_instance_guid}"
   resource_attributes {
     name     = "serviceName"
     operator = "stringEquals"
@@ -322,7 +322,7 @@ resource "ibm_resource_key" "service_credentials" {
 }
 
 resource "ibm_event_streams_mirroring_config" "es_mirroring_config" {
-  count                    = var.mirroring != null ? 1 : 0
+  count                    = var.mirroring != null && !local.is_gen2 ? 1 : 0
   resource_instance_id     = ibm_resource_instance.es_instance.id
   mirroring_topic_patterns = var.mirroring_topic_patterns
 }

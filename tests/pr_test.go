@@ -332,6 +332,53 @@ func TestSecurityEnforcedUpgradeSchematics(t *testing.T) {
 	}
 }
 
+func setupSecurityEnforcedGen2Options(t *testing.T, prefix string) *testschematic.TestSchematicOptions {
+	agentResourceGroup := permanentResources["schematics_agent_resource_group"].(string)
+	resourceGroupID, err := sharedInfoSvc.GetResourceGroupIDByName(agentResourceGroup)
+	require.NoError(t, err, "Failed to get the ID of resource group %s", agentResourceGroup)
+
+	options := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
+		Testing:           t,
+		Prefix:            prefix,
+		WorkspaceLocation: gen2WorkspaceLocation,
+		ResourceGroup:     resourceGroupID,
+		TarIncludePatterns: []string{
+			"*.tf",
+			securityEnforcedDir + "/*.tf",
+		},
+		TemplateFolder:         securityEnforcedDir,
+		Tags:                   []string{"test-schematic", permanentResources["schematics_agent_workspace_tag"].(string)},
+		DeleteWorkspaceOnFail:  false,
+		WaitJobCompleteMinutes: 360,
+		TerraformVersion:       terraformVersion,
+	})
+
+	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
+		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
+		{Name: "prefix", Value: options.Prefix, DataType: "string"},
+		{Name: "plan", Value: "enterprise-gen2", DataType: "string"},
+		{Name: "region", Value: "us-south", DataType: "string"},
+		{Name: "existing_resource_group_name", Value: agentResourceGroup, DataType: "string"},
+		{Name: "existing_kms_instance_crn", Value: permanentResources["kp_dedicated_us_south_crn"], DataType: "string"},
+		{Name: "vpe_vpc_id", Value: permanentResources["schematics_agent_vpc_id"], DataType: "string"},
+		{Name: "vpe_subnet_ids", Value: []string{permanentResources["schematics_agent_vpe_subnet_id"].(string)}, DataType: "list(string)"},
+		{Name: "resource_tags", Value: options.Tags, DataType: "list(string)"},
+		{Name: "storage_size", Value: 2000, DataType: "number"},
+		{Name: "throughput", Value: 100, DataType: "number"},
+		{Name: "create_timeout", Value: "1h", DataType: "string"},
+	}
+	return options
+}
+
+// TestSecurityEnforcedGen2Schematics tests provisioning of the security-enforced DA with enterprise-gen2 plan
+func TestSecurityEnforcedGen2Schematics(t *testing.T) {
+	t.Parallel()
+
+	options := setupSecurityEnforcedGen2Options(t, "es-sen-gen2")
+	err := options.RunSchematicTest()
+	assert.Nil(t, err, "This should not have errored")
+}
+
 func TestEventStreamsDefaultConfiguration(t *testing.T) {
 	t.Parallel()
 
