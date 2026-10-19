@@ -69,12 +69,28 @@ variable "throughput" {
   type        = number
   description = "Throughput capacity in MB per second. Applies only to Enterprise plan instances. For `enterprise-3nodes-2tb`, possible values are `150`, `300`, `450`. For `enterprise-gen2`, the only supported value is `100` (50 MB/s produce + 50 MB/s consume). Throughput is adjustable after deployment for `enterprise-gen2`."
   default     = 150
+  validation {
+    condition     = contains(var.plan == "enterprise-gen2" ? [100] : [150, 300, 450], var.throughput)
+    error_message = "For enterprise-gen2, throughput must be 100. For other plans, supported values are: 150, 300, 450."
+  }
+  validation {
+    condition     = !((var.plan == "lite" || var.plan == "standard") && var.throughput != 150)
+    error_message = "Throughput value cannot be changed in lite and standard plan. Default value is 150."
+  }
 }
 
 variable "storage_size" {
   type        = number
   description = "Storage size of the Event Streams in GB. Applies only to Enterprise plan instances. For `enterprise-3nodes-2tb`, possible values are `2048`, `4096`, `6144`, `8192`, `10240`, `12288`. For `enterprise-gen2`, possible values are `2000` (2TB), `4000` (4TB), `6000` (6TB); storage is adjustable after deployment. Storage capacity cannot be reduced after the instance is created. When the `throughput` input variable is set to `300`, storage size starts at 4096. When `throughput` is `450`, storage size starts at `6144`. When using `enterprise-gen2`, you must explicitly set this to `2000`, `4000`, or `6000`."
   default     = 2048
+  validation {
+    condition     = contains(var.plan == "enterprise-gen2" ? [2000, 4000, 6000] : [2048, 4096, 6144, 8192, 10240, 12288], var.storage_size)
+    error_message = "For enterprise-gen2, storage_size must be one of: 2000 (2TB), 4000 (4TB), 6000 (6TB). For other plans, supported values are: 2048, 4096, 6144, 8192, 10240, 12288."
+  }
+  validation {
+    condition     = !((var.plan == "lite" || var.plan == "standard") && var.storage_size != 2048)
+    error_message = "Storage size value cannot be changed in lite and standard plan. Default value is 2048."
+  }
 }
 
 variable "service_endpoints" {
