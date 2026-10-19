@@ -13,19 +13,16 @@ This module implements IBM Event Streams for IBM Cloud with topics, partitions, 
 
 The Event Streams service supports payload data encryption that uses a root key CRN from Key Protect. You specify the root key CRN with the `kms_key_crn` input. For more information, see [Managing encryption in Event Streams](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-managing_encryption).
 
-## About Gen2 plans
+## About Enterprise Gen 2
 
-The `enterprise-gen2` plan is a next-generation Enterprise plan for Event Streams. It uses a different provisioning API from the classic `enterprise-3nodes-2tb` plan. Key differences:
+The `enterprise-gen2` plan is the next-generation Enterprise plan for IBM Event Streams, offering enhanced performance and private VPC integration. For more information on plan capabilities and architecture, see the [IBM Event Streams (Gen 2) documentation](https://cloud.ibm.com/docs/EventStreams-gen2).
 
-- **Regions**: `us-south`, `br-sao`, `ca-tor`, `us-east`, `ca-mon`, `eu-fr2`, `eu-gb`, `eu-es`, `jp-osa`, `au-syd`, `jp-tok`.
-- **Kafka version**: Kafka 4.1 (vs 3.8 on classic plans).
-- **Networking**: Private (VPE) only. Set the `service_endpoints` input variable to `private`.
-- **Throughput**: Only `100` MB/s is supported (50 MB/s produce + 50 MB/s consume). Adjustable after deployment.
-- **Storage size**: `2000` (2TB), `4000` (4TB), or `6000` (6TB). Adjustable after deployment.
-- **Parameters**: Uses a nested `dataservices` JSON structure internally.
-- **Not supported yet (future release)**: Schema Registry (`schemas`, `schema_global_rule`) and Mirroring (`mirroring`, `mirroring_topic_patterns`).
+Key considerations when deploying Gen 2 instances:
 
-For more information, see the [IBM Event Streams plan comparison](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-plan_choose) and the [Terraform reference](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-eventstreams_terraform).
+- **Plan selection**: Specify `plan = "enterprise-gen2"`.
+- **Private service endpoints only**: Gen 2 instances enforce private endpoints and do not have public network interfaces. Set the `service_endpoints` input variable to `"private"` and ensure resource keys use private endpoints.
+- **VPE requirement for topic creation**: Because Gen 2 instances are private-only, Kafka administrative APIs (used by Terraform to create and manage topics via the `topics` input variable) can only be accessed through the instance's private endpoint.
+- **Automated VPE Gateway provisioning**: Pass `vpe_vpc_id` and `vpe_subnet_ids` (and custom security groups in `vpe_security_group_ids` if desired) to have this module automatically provision the Virtual Private Endpoint (VPE) gateway in your VPC for the Event Streams instance.
 
 <!-- Below content is automatically populated via pre-commit hook -->
 <!-- BEGIN OVERVIEW HOOK -->

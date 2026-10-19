@@ -50,6 +50,9 @@ No resources.
 | <a name="input_throughput"></a> [throughput](#input\_throughput) | Throughput capacity in MB per second. For `enterprise-3nodes-2tb`, possible values are `150`, `300`, `450`. For `enterprise-gen2`, the only supported value is `100`. | `number` | `150` | no |
 | <a name="input_topics"></a> [topics](#input\_topics) | The list of topics to apply to resources. Only one topic is allowed for Lite plan instances. | <pre>list(object(<br/>    {<br/>      name       = string<br/>      partitions = number<br/>      config     = map(string)<br/>    }<br/>  ))</pre> | `[]` | no |
 | <a name="input_update_timeout"></a> [update\_timeout](#input\_update\_timeout) | The timeout value for updating an Event Streams instance. Specify `1h` for an Enterprise plan instance. Add 1 h for each level of non-default throughput. A 30 min for each level of non-default storage size. | `string` | `"1h"` | no |
+| <a name="input_vpe_security_group_ids"></a> [vpe\_security\_group\_ids](#input\_vpe\_security\_group\_ids) | The IDs of the security groups to attach to the VPE. Only used when `vpe_vpc_id` is set. | `list(string)` | `[]` | no |
+| <a name="input_vpe_subnet_ids"></a> [vpe\_subnet\_ids](#input\_vpe\_subnet\_ids) | The IDs of the subnets in `vpe_vpc_id` in which to place the VPE. Required when `vpe_vpc_id` is set. | `list(string)` | `[]` | no |
+| <a name="input_vpe_vpc_id"></a> [vpe\_vpc\_id](#input\_vpe\_vpc\_id) | The ID of an existing VPC in which to create a virtual private endpoint (VPE) to the Event Streams instance. The `enterprise-gen2` plan is reachable through a VPE only. If not set, no VPE is created. When set, Terraform must run from inside the VPC (for example on a Schematics agent) so that the topics can be reached. | `string` | `null` | no |
 
 ### Outputs
 
