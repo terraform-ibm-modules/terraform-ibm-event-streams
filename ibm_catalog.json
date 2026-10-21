@@ -20,7 +20,7 @@
         "solution"
       ],
       "short_description": "Automates provisioning and configuration of IBM Event Streams instance on IBM Cloud for building secure, scalable, and event-driven cloud-native applications.",
-      "long_description": "This solution deploys and configures [IBM Cloud® Event Streams](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-getting-started), a fully managed, high-throughput message bus built on Apache Kafka. It supports real-time event ingestion and distribution across services and applications in IBM Cloud®. It supports provisioning the Event Streams instance and configuring Kafka topics and quotas. For Gen 1 (Classic) plans, it also supports schemas and mirroring of topics for high availability and disaster recovery, which are not available for Gen 2. Additionally, it supports the creation of context-based restriction (CBR) rules for fine-grained access control. Data encryption is enforced through IBM Key Protect, ensuring data protection. This architecture is designed to provide a production-ready, scalable Kafka environment optimized for event-driven workloads in IBM Cloud®. \n\nLeverage [Terraform IBM Modules](https://github.com/terraform-ibm-modules) to shape and scale your solutions. You can integrate Terraform IBM Modules (TIM) to extend functionality and design a solution tailored to your environment and operations needs. These modules offer reusable, customizable elements that follow IBM Cloud's recommended practices. You can access the [source code and documentation](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams) and use it to extend your current architecture or create new solutions.",
+      "long_description": "This solution deploys and configures [IBM Cloud® Event Streams](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-getting-started), a fully managed, high-throughput message bus built on Apache Kafka. It supports real-time event ingestion and distribution across services and applications in IBM Cloud®. It supports provisioning the Event Streams instance and configuring Kafka topics, schemas, and quotas. It also enables mirroring of topics for high availability and disaster recovery. Additionally, it supports the creation of context-based restriction (CBR) rules for fine-grained access control. Data encryption is enforced through IBM Key Protect, ensuring data protection. This architecture is designed to provide a production-ready, scalable Kafka environment optimized for event-driven workloads in IBM Cloud®. \n\nLeverage [Terraform IBM Modules](https://github.com/terraform-ibm-modules) to shape and scale your solutions. You can integrate Terraform IBM Modules (TIM) to extend functionality and design a solution tailored to your environment and operations needs. These modules offer reusable, customizable elements that follow IBM Cloud's recommended practices. You can access the [source code and documentation](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams) and use it to extend your current architecture or create new solutions.",
       "offering_docs_url": "https://cloud.ibm.com/docs/ibm-cloud-provider-for-terraform?topic=ibm-cloud-provider-for-terraform-about-tim",
       "offering_icon_url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-streams/main/images/event_streams.svg",
       "provider_name": "IBM",
@@ -30,7 +30,7 @@
           "description": "Create and manage [topics](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-apache_kafka#kafka_topics_partitions) to organize your event streams. Customize partitions, retention, and configurations to optimize data flow and message durability."
         },
         {
-          "title": "Metrics (Gen 1 only)",
+          "title": "Metrics",
           "description": "Monitor your Event Streams instance with [metrics](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-getting-started-metrics) on throughput, latency, partition usage, and more. Use these insights to maintain performance and quickly detect issues."
         },
         {
@@ -38,11 +38,11 @@
           "description": "Set [quotas](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-kafka_quotas) to manage client resource usage and ensure fair access. Prevent overloads by controlling bandwidth and partition consumption per application or user."
         },
         {
-          "title": "Mirroring (Gen 1 only)",
+          "title": "Mirroring",
           "description": "Enable [mirroring](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-mirroring_setup) to replicate topics and consumer group offsets between clusters. Use this for disaster recovery, high availability, or multi-region deployments."
         },
         {
-          "title": "Schemas (Gen 1 only)",
+          "title": "Schemas",
           "description": "Leverage the [Schema Registry](https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-ES_schema_registry#ES_overview) (Enterprise plan) to register, manage, and validate message schemas. Enforce compatibility and data quality across producers and consumers."
         },
         {
@@ -1027,19 +1027,19 @@
           "ignore_readme": true
         },
         {
-          "label": "Security-enforced Gen 2",
+          "label": "Security-enforced Gen 2 (VPC)",
           "name": "security-enforced-gen2",
           "index": 3,
           "install_type": "fullstack",
           "working_directory": "solutions/security-enforced-gen2",
           "release_notes_url": "https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/releases",
-          "short_description": "Ideal for users who want locked down enforced security with the Event Streams Gen 2 (enterprise-gen2) plan.",
+          "short_description": "Ideal for users who want locked down enforced security for IBM Cloud Event Streams on VPC (Gen2).",
           "architecture": {
             "descriptions": "This architecture supports provisioning and configuring a security enforced Event Streams Gen 2 instance.",
             "features": [
               {
                 "title": "Security enforced variation",
-                "description": "Configured to use an Event Streams Gen 2 instance, secure-by-default with the enterprise-gen2 plan, including Kafka topics, KMS encryption, CBR rules, quotas and a virtual private endpoint (VPE); editable to fit your use case."
+                "description": "Configured to use IBM Cloud Event Streams Gen 2 (VPC) by default standards that can't be changed."
               }
             ],
             "diagrams": [
