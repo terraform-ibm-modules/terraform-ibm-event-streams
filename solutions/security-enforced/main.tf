@@ -19,7 +19,6 @@ locals {
   kms_key_ring_name = "${local.prefix}${var.kms_key_ring_name}"
   kms_key_name      = "${local.prefix}${var.kms_key_name}"
   kms_region        = var.existing_kms_instance_crn != null ? module.kms_instance_crn_parser[0].region : null
-  is_gen2           = can(regex("-gen2$", var.plan))
 
   create_cross_account_auth_policy = !var.skip_event_streams_kms_auth_policy && var.ibmcloud_kms_api_key != null
 
@@ -58,9 +57,9 @@ resource "ibm_iam_authorization_policy" "kms_policy" {
   provider                 = ibm.kms
   source_service_account   = data.ibm_iam_account_settings.iam_account_settings[0].account_id
   source_service_name      = "event_streams"
-  source_resource_group_id = local.is_gen2 ? null : module.resource_group.resource_group_id
-  roles                    = local.is_gen2 ? ["Reader", "Authorization Delegator"] : ["Reader"]
-  description              = local.is_gen2 ? "Allow all Event Streams instances in the account ${local.kms_account_id} to read the ${local.kms_service_name} key ${local.kms_key_id} from the instance GUID ${local.kms_instance_guid}" : "Allow all Event Streams instances in the resource group ${module.resource_group.resource_group_id} in the account ${local.kms_account_id} to read the ${local.kms_service_name} key ${local.kms_key_id} from the instance GUID ${local.kms_instance_guid}"
+  source_resource_group_id = module.resource_group.resource_group_id
+  roles                    = ["Reader"]
+  description              = "Allow all Event Streams instances in the resource group ${module.resource_group.resource_group_id} in the account ${local.kms_account_id} to read the ${local.kms_service_name} key ${local.kms_key_id} from the instance GUID ${local.kms_instance_guid}"
   resource_attributes {
     name     = "serviceName"
     operator = "stringEquals"
@@ -139,7 +138,7 @@ module "event_streams" {
   source                               = "../../"
   resource_group_id                    = module.resource_group.resource_group_id
   es_name                              = "${local.prefix}${var.event_streams_name}"
-  plan                                 = var.plan
+  plan                                 = "enterprise-3nodes-2tb"
   region                               = var.region
   kms_encryption_enabled               = true
   kms_key_crn                          = local.kms_key_crn
@@ -163,9 +162,6 @@ module "event_streams" {
   delete_timeout                       = var.delete_timeout
   storage_size                         = var.storage_size
   throughput                           = var.throughput
-  vpe_vpc_id                           = var.vpe_vpc_id
-  vpe_subnet_ids                       = var.vpe_subnet_ids
-  vpe_security_group_ids               = var.vpe_security_group_ids
 }
 
 ########################################################################################################################

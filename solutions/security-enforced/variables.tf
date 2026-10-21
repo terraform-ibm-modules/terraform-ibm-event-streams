@@ -50,16 +50,6 @@ variable "event_streams_name" {
   default     = "event-streams"
 }
 
-variable "plan" {
-  type        = string
-  description = "The plan for the Event Streams instance. Possible values: `enterprise-3nodes-2tb`, `enterprise-gen2`."
-  default     = "enterprise-3nodes-2tb"
-  validation {
-    condition     = contains(["enterprise-3nodes-2tb", "enterprise-gen2"], var.plan)
-    error_message = "The specified plan is not a valid selection! Supported plans are: enterprise-3nodes-2tb or enterprise-gen2."
-  }
-}
-
 variable "resource_tags" {
   type        = list(string)
   description = "Add user resource tags to the Event Streams instance to organize, track, and manage costs. [Learn more](https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#tag-types)."
@@ -74,13 +64,13 @@ variable "access_tags" {
 
 variable "schemas" {
   type        = any
-  description = "List of schema objects. Each schema must include `schema_id` and `schema` definition. Supports full Apache Avro specification with nested structures. Not supported on the `enterprise-gen2` plan. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/security-enforced/DA-schemas-topics-cbr.md#options-with-schemas)."
+  description = "List of schema objects. Each schema must include `schema_id` and `schema` definition. Supports full Apache Avro specification with nested structures. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/security-enforced/DA-schemas-topics-cbr.md#options-with-schemas)."
   default     = []
 }
 
 variable "schema_global_rule" {
   type        = string
-  description = "Schema global compatibility rule. Allowed values are 'NONE', 'FULL', 'FULL_TRANSITIVE', 'FORWARD', 'FORWARD_TRANSITIVE', 'BACKWARD', 'BACKWARD_TRANSITIVE'. Not supported on the `enterprise-gen2` plan."
+  description = "Schema global compatibility rule. Allowed values are 'NONE', 'FULL', 'FULL_TRANSITIVE', 'FORWARD', 'FORWARD_TRANSITIVE', 'BACKWARD', 'BACKWARD_TRANSITIVE'."
   default     = null
 
   validation {
@@ -103,7 +93,7 @@ variable "topics" {
 
 variable "metrics" {
   type        = list(string)
-  description = "Enhanced metrics to activate, as list of strings. Not supported on the `enterprise-gen2` plan. Allowed values: 'topic', 'partition', 'consumers'."
+  description = "Enhanced metrics to activate, as list of strings. Allowed values: 'topic', 'partition', 'consumers'."
   default     = []
 
   validation {
@@ -134,7 +124,7 @@ variable "resource_keys" {
 
 variable "iam_token_only" {
   type        = bool
-  description = "If set to true, disables Kafka's SASL PLAIN authentication method, only allowing clients to authenticate with SASL OAUTHBEARER via IAM access token. For more information, see: https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-security. Only allowed for `enterprise-3nodes-2tb` plan. Not supported on the `enterprise-gen2` plan."
+  description = "If set to true, disables Kafka's SASL PLAIN authentication method, only allowing clients to authenticate with SASL OAUTHBEARER via IAM access token. For more information, see: https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-security. Only allowed for enterprise plans."
   default     = false
 }
 
@@ -158,14 +148,14 @@ variable "delete_timeout" {
 
 variable "storage_size" {
   type        = number
-  description = "Storage size of the Event Streams in GB. For `enterprise-3nodes-2tb`, possible values are `2048`, `4096`, `6144`, `8192`, `10240`, `12288`. For `enterprise-gen2`, possible values are `2000` (2TB), `4000` (4TB), `6000` (6TB); storage is adjustable after deployment. Storage capacity cannot be reduced after the instance is created. When the `throughput` input variable is set to `300`, storage size starts at 4096. When `throughput` is `450`, storage size starts at `6144`. When using `enterprise-gen2`, you must explicitly set this to `2000`, `4000`, or `6000`."
-  default     = 2048
+  description = "Storage size of the Event Streams in GB. Possible values: `2048`, `4096`, `6144`, `8192`, `10240`, `12288`. Storage capacity cannot be reduced after the instance is created. When the `throughput` input variable is set to `300`, storage size starts at 4096. When `throughput` is `450`, storage size starts starts at `6144`."
+  default     = "2048"
 }
 
 variable "throughput" {
   type        = number
-  description = "Throughput capacity in MB per second. For `enterprise-3nodes-2tb`, possible values are `150`, `300`, `450`. For `enterprise-gen2`, the only supported value is `100` (50 MB/s produce + 50 MB/s consume). Throughput is adjustable after deployment for `enterprise-gen2`."
-  default     = 150
+  description = "Throughput capacity in MB per second. Possible values: `150`, `300`, `450`."
+  default     = "150"
 }
 
 
@@ -175,12 +165,12 @@ variable "throughput" {
 
 variable "mirroring_topic_patterns" {
   type        = list(string)
-  description = "The list of the topics to set in instance. Required only if creating mirroring instance. Not supported on the `enterprise-gen2` plan."
+  description = "The list of the topics to set in instance. Required only if creating mirroring instance."
   default     = null
 }
 
 variable "mirroring" {
-  description = "Event Streams mirroring configuration. Required only if creating mirroring instance. Not supported on the `enterprise-gen2` plan. For more information on mirroring, see https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/enterprise/DA-types.md#mirroring and https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-mirroring."
+  description = "Event Streams mirroring configuration. Required only if creating mirroring instance. For more information on mirroring, see https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/enterprise/DA-types.md#mirroring and https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-mirroring."
   type = object({
     source_crn   = string
     source_alias = string
@@ -223,7 +213,7 @@ variable "skip_s2s_iam_auth_policy" {
 
 variable "skip_event_streams_kms_auth_policy" {
   type        = bool
-  description = "Set to true to skip the creation of IAM authorization policies that permit Event Streams to access the Key Protect key. For `enterprise-3nodes-2tb`, the policy grants `Reader` access scoped to the resource group. For `enterprise-gen2`, the policy is account-scoped and grants `Reader` and `Authorization Delegator` roles."
+  description = "Set to true to skip the creation of IAM authorization policies that permits all Event Streams instances in the given resource group 'Reader' access to the Key Protect key. This policy is required in order to enable KMS encryption, so only skip creation if there is one already present in your account."
   default     = false
   nullable    = false
 }
@@ -269,32 +259,6 @@ variable "ibmcloud_kms_api_key" {
   description = "The IBM Cloud API key that can create a root key and key ring in the key management service (KMS) instance. If not specified, the 'ibmcloud_api_key' variable is used. Specify this key if the instance in `existing_kms_instance_crn` is in an account that's different from the Event Streams instance. Leave this input empty if the same account owns both instances."
   sensitive   = true
   default     = null
-}
-
-##############################################################
-# VPC / Virtual Private Endpoint (VPE)
-##############################################################
-
-variable "vpe_vpc_id" {
-  type        = string
-  description = "The ID of an existing VPC in which to create a virtual private endpoint (VPE) to the Event Streams instance. Required for the `enterprise-gen2` plan, which is reachable through a VPE only. If not set, no VPE is created. When set, Terraform must run from inside the VPC (for example on a Schematics agent) so that topics can be reached."
-  default     = null
-}
-
-variable "vpe_subnet_ids" {
-  type        = list(string)
-  description = "The IDs of the subnets in `vpe_vpc_id` in which to place the VPE. Required when `vpe_vpc_id` is set."
-  default     = []
-  validation {
-    condition     = var.vpe_vpc_id == null || length(var.vpe_subnet_ids) > 0
-    error_message = "At least one subnet ID must be passed in `vpe_subnet_ids` when `vpe_vpc_id` is set."
-  }
-}
-
-variable "vpe_security_group_ids" {
-  type        = list(string)
-  description = "The IDs of the security groups to attach to the VPE. Only used when `vpe_vpc_id` is set."
-  default     = []
 }
 
 ##############################################################

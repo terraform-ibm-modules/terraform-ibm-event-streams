@@ -11,15 +11,12 @@ locals {
   # Determine if gen2 plan is being used
   is_gen2 = can(regex("-gen2$", var.plan))
   # Gen2 parameters_json
-  gen2_parameters = var.kms_key_crn != null ? jsonencode({
-    dataservices = {
-      kafka      = { throughput_mb_s = tostring(var.throughput), storage_gb = var.storage_size }
-      encryption = { disk = var.kms_key_crn }
-    }
-    }) : jsonencode({
-    dataservices = {
-      kafka = { throughput_mb_s = tostring(var.throughput), storage_gb = var.storage_size }
-    }
+  gen2_parameters = jsonencode({
+    dataservices = merge(
+      { kafka = { throughput_mb_s = tostring(var.throughput), storage_gb = var.storage_size } },
+      var.kms_key_crn != null ? { encryption = { disk = var.kms_key_crn } } : {},
+      var.iam_token_only ? { options = { iam_token_only = true } } : {}
+    )
   })
 }
 
