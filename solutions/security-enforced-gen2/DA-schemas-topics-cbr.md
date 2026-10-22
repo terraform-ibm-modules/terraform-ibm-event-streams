@@ -40,7 +40,7 @@ The following example includes all the configuration options for topics.
 ## Options with context-based restriction (cbr) rules <a name="options-with-cbr"></a>
 
 - `description` (required): The description of the context-based restriction rule.
-- `enforcement_mode` (required): The rule enforcement mode. Supported values are: `enabled`, `disabled` and `report`.
+- `enforcement_mode` (required): The rule enforcement mode. Supported values are: `enabled` and `disabled`. Event Streams does not support report-only mode (`report`).
 - `account_id` (required): The id of the account owning this cbr rule .
 - `rule_contexts` (required): The list of contexts the rule applies to. Supported `attributes` configurations are: `name` and `value`.
 

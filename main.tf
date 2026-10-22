@@ -122,7 +122,7 @@ data "ibm_is_subnet" "vpe_subnet" {
 module "vpe" {
   count              = var.vpe_vpc_id != null ? 1 : 0
   source             = "terraform-ibm-modules/vpe-gateway/ibm"
-  version            = "5.3.5"
+  version            = "5.6.1"
   region             = var.region
   prefix             = var.es_name
   vpc_id             = var.vpe_vpc_id

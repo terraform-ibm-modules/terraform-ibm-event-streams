@@ -188,6 +188,26 @@ variable "ibmcloud_kms_api_key" {
 # VPC / Virtual Private Endpoint (VPE)
 ##############################################################
 
+variable "ibmcloud_vpe_api_key" {
+  type        = string
+  description = "The IBM Cloud API key that can create a virtual private endpoint (VPE) in the VPC in `vpe_vpc_id`. If not specified, the `ibmcloud_api_key` variable is used. Specify this key if the VPC is in an account that's different from the Event Streams instance. Leave this input empty if the same account owns both. When set, an authorization policy that allows VPEs from the VPC account to access Event Streams is created, unless `skip_vpe_auth_policy` is `true`."
+  sensitive   = true
+  default     = null
+}
+
+variable "skip_vpe_auth_policy" {
+  type        = bool
+  description = "Set to true to skip the creation of the IAM authorization policy that allows virtual private endpoints (VPE) from the account that owns the VPC to access the Event Streams instance. Only applies when `ibmcloud_vpe_api_key` is set (VPC in a different account). Skip only if the policy already exists in your account."
+  default     = false
+  nullable    = false
+}
+
+variable "vpe_resource_group_id" {
+  type        = string
+  description = "The ID of the resource group in which to create the VPE. Resource group IDs are specific to an account, so set this if the VPC is in a different account (`ibmcloud_vpe_api_key` is set). If not set, the ID of the resource group of the Event Streams instance is used."
+  default     = null
+}
+
 variable "vpe_vpc_id" {
   type        = string
   description = "The ID of an existing VPC in which to create a virtual private endpoint (VPE) to the Event Streams instance. Required, because the `enterprise-gen2` plan is reachable through a VPE only. Terraform must run from inside the VPC (for example on a Schematics agent) so that topics can be reached."

@@ -153,7 +153,7 @@ You need the following permissions to run this module.
 | <a name="module_cbr_rule"></a> [cbr\_rule](#module\_cbr\_rule) | terraform-ibm-modules/cbr/ibm//modules/cbr-rule-module | 1.36.9 |
 | <a name="module_es_guid_crn_parser"></a> [es\_guid\_crn\_parser](#module\_es\_guid\_crn\_parser) | terraform-ibm-modules/common-utilities/ibm//modules/crn-parser | 1.9.0 |
 | <a name="module_kms_key_crn_parser"></a> [kms\_key\_crn\_parser](#module\_kms\_key\_crn\_parser) | terraform-ibm-modules/common-utilities/ibm//modules/crn-parser | 1.9.0 |
-| <a name="module_vpe"></a> [vpe](#module\_vpe) | terraform-ibm-modules/vpe-gateway/ibm | 5.3.5 |
+| <a name="module_vpe"></a> [vpe](#module\_vpe) | terraform-ibm-modules/vpe-gateway/ibm | 5.6.1 |
 
 ### Resources
 

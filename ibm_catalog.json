@@ -1224,6 +1224,15 @@
               }
             },
             {
+              "key": "ibmcloud_vpe_api_key"
+            },
+            {
+              "key": "skip_vpe_auth_policy"
+            },
+            {
+              "key": "vpe_resource_group_id"
+            },
+            {
               "key": "vpe_vpc_id",
               "required": true
             },

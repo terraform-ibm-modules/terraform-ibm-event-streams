@@ -127,6 +127,39 @@ module "kms" {
 }
 
 
+########################################################################################################################
+# Cross-account VPE authorization
+# If the VPC is in a different account than the Event Streams instance, VPEs from the VPC account must be authorized
+# to access Event Streams. The policy is created before the VPE, so it applies to the `endpoint-gateway` resource type
+# and not to a single VPE ID. See https://cloud.ibm.com/docs/vpc?topic=vpc-ordering-cross-account-endpoint-gateway
+########################################################################################################################
+
+locals {
+  create_cross_account_vpe_auth_policy = !var.skip_vpe_auth_policy && var.ibmcloud_vpe_api_key != null
+}
+
+data "ibm_iam_account_settings" "vpe_account_settings" {
+  count    = local.create_cross_account_vpe_auth_policy ? 1 : 0
+  provider = ibm.vpe
+}
+
+resource "ibm_iam_authorization_policy" "vpe_policy" {
+  count                  = local.create_cross_account_vpe_auth_policy ? 1 : 0
+  source_service_account = data.ibm_iam_account_settings.vpe_account_settings[0].account_id
+  source_service_name    = "is"
+  source_resource_type   = "endpoint-gateway"
+  target_service_name    = "messagehub"
+  roles                  = ["Viewer"]
+  description            = "Allow virtual private endpoints (VPE) in the account ${data.ibm_iam_account_settings.vpe_account_settings[0].account_id} to access Event Streams instances in this account"
+}
+
+# workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
+resource "time_sleep" "wait_for_vpe_authorization_policy" {
+  count           = local.create_cross_account_vpe_auth_policy ? 1 : 0
+  depends_on      = [ibm_iam_authorization_policy.vpe_policy]
+  create_duration = "30s"
+}
+
 # #######################################################################################################################
 # # Event Streams Instance
 # #######################################################################################################################
@@ -141,7 +174,7 @@ module "event_streams" {
   kms_encryption_enabled            = true
   kms_key_crn                       = local.kms_key_crn
   skip_kms_iam_authorization_policy = var.skip_event_streams_kms_auth_policy || local.create_cross_account_auth_policy
-  topics                            = var.topics
+  topics                            = [] # topics are created below, after the VPE, because the instance is reachable only through the VPE
   quotas                            = var.quotas
   resource_tags                     = var.resource_tags
   access_tags                       = var.access_tags
@@ -154,9 +187,67 @@ module "event_streams" {
   delete_timeout                    = var.delete_timeout
   storage_size                      = var.storage_size
   throughput                        = var.throughput
-  vpe_vpc_id                        = var.vpe_vpc_id
-  vpe_subnet_ids                    = var.vpe_subnet_ids
-  vpe_security_group_ids            = var.vpe_security_group_ids
+}
+
+########################################################################################################################
+# Virtual Private Endpoint (VPE)
+# The enterprise-gen2 plan is reachable through a VPE only. The VPE is created with the `ibm.vpe` provider, so the VPC
+# can be in a different account than the Event Streams instance.
+########################################################################################################################
+
+data "ibm_is_subnet" "vpe_subnet" {
+  provider   = ibm.vpe
+  for_each   = toset(var.vpe_subnet_ids)
+  identifier = each.value
+}
+
+module "vpe" {
+  providers = {
+    ibm = ibm.vpe
+  }
+  depends_on         = [time_sleep.wait_for_vpe_authorization_policy]
+  source             = "terraform-ibm-modules/vpe-gateway/ibm"
+  version            = "5.6.1"
+  region             = var.region
+  prefix             = "${local.prefix}${var.event_streams_name}"
+  vpc_id             = var.vpe_vpc_id
+  resource_group_id  = var.vpe_resource_group_id != null ? var.vpe_resource_group_id : module.resource_group.resource_group_id
+  security_group_ids = var.vpe_security_group_ids
+  subnet_zone_list = [
+    for subnet in data.ibm_is_subnet.vpe_subnet : {
+      name = subnet.name
+      id   = subnet.id
+      zone = subnet.zone
+      cidr = subnet.ipv4_cidr_block
+    }
+  ]
+  cloud_service_by_crn = [
+    {
+      crn          = module.event_streams.crn
+      service_name = "event-streams"
+    }
+  ]
+}
+
+# Give the VPE time to be bound before the topics are created, and time between the VPE and
+# the topics destruction on deletion.
+resource "time_sleep" "wait_for_vpe" {
+  depends_on       = [module.vpe]
+  create_duration  = "120s"
+  destroy_duration = "60s"
+}
+
+########################################################################################################################
+# Topics
+########################################################################################################################
+
+resource "ibm_event_streams_topic" "es_topic" {
+  depends_on           = [time_sleep.wait_for_vpe]
+  for_each             = { for topic in var.topics : topic.name => topic }
+  resource_instance_id = module.event_streams.id
+  name                 = each.value.name
+  partitions           = each.value.partitions
+  config               = each.value.config
 }
 
 ########################################################################################################################
