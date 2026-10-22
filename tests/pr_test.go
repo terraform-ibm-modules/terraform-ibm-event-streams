@@ -354,6 +354,26 @@ func setupSecurityEnforcedGen2Options(t *testing.T, prefix string) *testschemati
 		TerraformVersion:       terraformVersion,
 	})
 
+	serviceCredentialSecrets := []map[string]interface{}{
+		{
+			"secret_group_name": fmt.Sprintf("%s-secret-group", options.Prefix),
+			"service_credentials": []map[string]string{
+				{
+					"secret_name": fmt.Sprintf("%s-cred-reader", options.Prefix),
+					"service_credentials_source_service_role_crn": "crn:v1:bluemix:public:iam::::serviceRole:Reader",
+				},
+				{
+					"secret_name": fmt.Sprintf("%s-cred-writer", options.Prefix),
+					"service_credentials_source_service_role_crn": "crn:v1:bluemix:public:iam::::serviceRole:Writer",
+				},
+				{
+					"secret_name": fmt.Sprintf("%s-cred-manager", options.Prefix),
+					"service_credentials_source_service_role_crn": "crn:v1:bluemix:public:iam::::serviceRole:Manager",
+				},
+			},
+		},
+	}
+
 	resourceKeys := []map[string]interface{}{
 		{
 			"name":     "es_writer",
@@ -401,6 +421,8 @@ func setupSecurityEnforcedGen2Options(t *testing.T, prefix string) *testschemati
 		{Name: "vpe_security_group_ids", Value: []string{permanentResources["schematics_agent_vpe_security_group_id"].(string)}, DataType: "list(string)"},
 		{Name: "resource_tags", Value: options.Tags, DataType: "list(string)"},
 		{Name: "resource_keys", Value: resourceKeys, DataType: "list(object)"},
+		{Name: "existing_secrets_manager_instance_crn", Value: permanentResources["secretsManagerCRN"], DataType: "string"},
+		{Name: "service_credential_secrets", Value: serviceCredentialSecrets, DataType: "list(object)"},
 		{Name: "topics", Value: topics, DataType: "list(object)"},
 		{Name: "iam_token_only", Value: true, DataType: "bool"},
 		{Name: "storage_size", Value: 2000, DataType: "number"},
