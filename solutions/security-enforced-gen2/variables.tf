@@ -210,28 +210,33 @@ variable "vpe_resource_group_id" {
 
 variable "vpe_vpc_id" {
   type        = string
-  description = "The ID of an existing VPC in which to create a virtual private endpoint (VPE) to the Event Streams instance. Required, because the `enterprise-gen2` plan is reachable through a VPE only. Terraform must run from inside the VPC (for example on a Schematics agent) so that topics can be reached."
+  description = "The ID of an existing VPC in which to create a virtual private endpoint (VPE) to the Event Streams instance. Optional, but required if `topics` are specified, because the `enterprise-gen2` plan is reachable through a VPE only. If not set, no VPE is created. When set, Terraform must run from inside the VPC (for example on a Schematics agent) so that topics can be reached."
+  default     = null
   validation {
-    condition     = var.vpe_vpc_id != null && trimspace(var.vpe_vpc_id) != ""
-    error_message = "A VPC ID must be passed in `vpe_vpc_id`. The `enterprise-gen2` plan is reachable through a virtual private endpoint (VPE) only."
+    condition     = length(var.topics) == 0 || (var.vpe_vpc_id != null && trimspace(var.vpe_vpc_id) != "")
+    error_message = "A VPC ID must be passed in `vpe_vpc_id` when `topics` are specified. The `enterprise-gen2` plan is reachable through a virtual private endpoint (VPE) only."
   }
 }
 
 variable "vpe_subnet_ids" {
   type        = list(string)
-  description = "The IDs of the subnets in `vpe_vpc_id` in which to place the VPE. Required."
+  description = "The IDs of the subnets in `vpe_vpc_id` in which to place the VPE. Required if `vpe_vpc_id` is set or if `topics` are specified."
+  default     = []
+  nullable    = false
   validation {
-    condition     = length(var.vpe_subnet_ids) > 0
-    error_message = "At least one subnet ID must be passed in `vpe_subnet_ids`."
+    condition     = length(var.vpe_subnet_ids) > 0 || (length(var.topics) == 0 && try(trimspace(var.vpe_vpc_id), "") == "")
+    error_message = "At least one subnet ID must be passed in `vpe_subnet_ids` when `vpe_vpc_id` is set or `topics` are specified."
   }
 }
 
 variable "vpe_security_group_ids" {
   type        = list(string)
-  description = "The IDs of the security groups in `vpe_vpc_id` to attach to the VPE. Required, because the VPE must be reachable for the topics to be created."
+  description = "The IDs of the security groups in `vpe_vpc_id` to attach to the VPE. Required if `topics` are specified, because the VPE must be reachable for the topics to be created."
+  default     = []
+  nullable    = false
   validation {
-    condition     = length(var.vpe_security_group_ids) > 0
-    error_message = "At least one security group ID must be passed in `vpe_security_group_ids`."
+    condition     = length(var.topics) == 0 || length(var.vpe_security_group_ids) > 0
+    error_message = "At least one security group ID must be passed in `vpe_security_group_ids` when `topics` are specified."
   }
 }
 
