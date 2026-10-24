@@ -4,5 +4,12 @@
   "prefix": $PREFIX,
   "existing_resource_group_name": "geretain-test-event-streams",
   "existing_kms_instance_crn": $KP_DEDICATED_US_SOUTH_CRN,
+  "vpe_vpc_id": $SCHEMATICS_AGENT_VPC_ID,
+  "vpe_subnet_ids": [
+    $SCHEMATICS_AGENT_VPE_SUBNET_ID
+  ],
+  "vpe_security_group_ids": [
+    $SCHEMATICS_AGENT_VPE_SECURITY_GROUP_ID
+  ],
   "create_timeout": "6h"
 }
