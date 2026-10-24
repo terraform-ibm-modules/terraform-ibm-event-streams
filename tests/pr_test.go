@@ -442,6 +442,7 @@ func TestSecurityEnforcedGen2Schematics(t *testing.T) {
 }
 
 func TestEventStreamsDefaultConfiguration(t *testing.T) {
+	t.Skip("Skipped: addon dependency tree fails to resolve deploy-arch-ibm-cos (pinned v10.13.1 is not in the catalog API). Re-enable once the dependency pins are fixed.")
 	t.Parallel()
 
 	options := testaddons.TestAddonsOptionsDefault(&testaddons.TestAddonOptions{
