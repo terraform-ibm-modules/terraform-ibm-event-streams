@@ -1233,16 +1233,13 @@
               "key": "vpe_resource_group_id"
             },
             {
-              "key": "vpe_vpc_id",
-              "required": true
+              "key": "vpe_vpc_id"
             },
             {
-              "key": "vpe_subnet_ids",
-              "required": true
+              "key": "vpe_subnet_ids"
             },
             {
-              "key": "vpe_security_group_ids",
-              "required": true
+              "key": "vpe_security_group_ids"
             },
             {
               "key": "iam_token_only"

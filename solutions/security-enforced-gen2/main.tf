@@ -135,7 +135,9 @@ module "kms" {
 ########################################################################################################################
 
 locals {
-  create_cross_account_vpe_auth_policy = !var.skip_vpe_auth_policy && var.ibmcloud_vpe_api_key != null
+  # the VPE is optional: it is created only when a VPC is passed (required if topics are specified)
+  create_vpe                           = try(trimspace(var.vpe_vpc_id), "") != ""
+  create_cross_account_vpe_auth_policy = local.create_vpe && !var.skip_vpe_auth_policy && var.ibmcloud_vpe_api_key != null
 }
 
 data "ibm_iam_account_settings" "vpe_account_settings" {
@@ -191,17 +193,19 @@ module "event_streams" {
 
 ########################################################################################################################
 # Virtual Private Endpoint (VPE)
-# The enterprise-gen2 plan is reachable through a VPE only. The VPE is created with the `ibm.vpe` provider, so the VPC
-# can be in a different account than the Event Streams instance.
+# The enterprise-gen2 plan is reachable through a VPE only. The VPE is optional and is created only when `vpe_vpc_id` is
+# set (required if topics are specified). It is created with the `ibm.vpe` provider, so the VPC can be in a different
+# account than the Event Streams instance.
 ########################################################################################################################
 
 data "ibm_is_subnet" "vpe_subnet" {
   provider   = ibm.vpe
-  for_each   = toset(var.vpe_subnet_ids)
+  for_each   = local.create_vpe ? toset(var.vpe_subnet_ids) : toset([])
   identifier = each.value
 }
 
 module "vpe" {
+  count = local.create_vpe ? 1 : 0
   providers = {
     ibm = ibm.vpe
   }
@@ -232,6 +236,7 @@ module "vpe" {
 # Give the VPE time to be bound before the topics are created, and time between the VPE and
 # the topics destruction on deletion.
 resource "time_sleep" "wait_for_vpe" {
+  count            = local.create_vpe ? 1 : 0
   depends_on       = [module.vpe]
   create_duration  = "120s"
   destroy_duration = "60s"
