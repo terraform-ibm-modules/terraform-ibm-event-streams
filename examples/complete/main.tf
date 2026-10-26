@@ -70,17 +70,17 @@ module "event_streams" {
     {
       name     = "${var.prefix}-writer-key"
       role     = "Writer"
-      endpoint = "private"
+      endpoint = var.plan == "enterprise-gen2" ? "private" : "public"
     },
     {
       name     = "${var.prefix}-reader-key"
       role     = "Reader"
-      endpoint = "private"
+      endpoint = var.plan == "enterprise-gen2" ? "private" : "public"
     },
     {
       name     = "${var.prefix}-manager-key"
       role     = "Manager"
-      endpoint = "private"
+      endpoint = var.plan == "enterprise-gen2" ? "private" : "public"
     }
   ]
 }
