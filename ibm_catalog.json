@@ -423,7 +423,7 @@
               ],
               "optional": true,
               "on_by_default": true,
-              "version": "v1.11.3"
+              "version": "v2.1.7"
             },
             {
               "name": "deploy-arch-ibm-activity-tracker",
@@ -452,7 +452,7 @@
               ],
               "optional": true,
               "on_by_default": true,
-              "version": "v1.6.13"
+              "version": "v2.1.7"
             },
             {
               "name": "deploy-arch-ibm-scc-workload-protection",
@@ -961,7 +961,7 @@
               ],
               "optional": true,
               "on_by_default": true,
-              "version": "v1.9.0"
+              "version": "v2.1.7"
             },
             {
               "name": "deploy-arch-ibm-activity-tracker",
@@ -990,7 +990,7 @@
               ],
               "optional": true,
               "on_by_default": true,
-              "version": "v1.4.3"
+              "version": "v2.1.7"
             },
             {
               "name": "deploy-arch-ibm-secrets-manager",
