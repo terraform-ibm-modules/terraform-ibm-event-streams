@@ -103,7 +103,7 @@ module "kms" {
   }
   count                       = var.existing_kms_key_crn == null ? 1 : 0 # no need to create any KMS resources if passing an existing key
   source                      = "terraform-ibm-modules/kms-all-inclusive/ibm"
-  version                     = "5.6.15"
+  version                     = "5.6.17"
   create_key_protect_instance = false
   region                      = local.kms_region
   existing_kms_instance_crn   = var.existing_kms_instance_crn
@@ -211,7 +211,7 @@ module "vpe" {
   }
   depends_on         = [time_sleep.wait_for_vpe_authorization_policy]
   source             = "terraform-ibm-modules/vpe-gateway/ibm"
-  version            = "5.6.1"
+  version            = "5.6.3"
   region             = var.region
   prefix             = "${local.prefix}${var.event_streams_name}"
   vpc_id             = var.vpe_vpc_id
@@ -317,7 +317,7 @@ module "secrets_manager_service_credentials" {
   count                       = length(local.service_credential_secrets) > 0 ? 1 : 0
   depends_on                  = [time_sleep.wait_for_en_authorization_policy]
   source                      = "terraform-ibm-modules/secrets-manager/ibm//modules/secrets"
-  version                     = "3.1.0"
+  version                     = "3.1.2"
   existing_sm_instance_guid   = local.existing_secrets_manager_instance_guid
   existing_sm_instance_region = local.existing_secrets_manager_instance_region
   endpoint_type               = var.existing_secrets_manager_endpoint_type
