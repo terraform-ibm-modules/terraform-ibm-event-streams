@@ -122,7 +122,7 @@ data "ibm_is_subnet" "vpe_subnet" {
 module "vpe" {
   count              = var.vpe_vpc_id != null ? 1 : 0
   source             = "terraform-ibm-modules/vpe-gateway/ibm"
-  version            = "5.6.1"
+  version            = "5.6.3"
   region             = var.region
   prefix             = var.es_name
   vpc_id             = var.vpe_vpc_id
@@ -283,7 +283,7 @@ resource "time_sleep" "wait_for_es_s2s_policy" {
 module "cbr_rule" {
   count            = length(var.cbr_rules) > 0 ? length(var.cbr_rules) : 0
   source           = "terraform-ibm-modules/cbr/ibm//modules/cbr-rule-module"
-  version          = "1.37.2"
+  version          = "1.37.4"
   rule_description = var.cbr_rules[count.index].description
   enforcement_mode = var.cbr_rules[count.index].enforcement_mode
   rule_contexts    = var.cbr_rules[count.index].rule_contexts
