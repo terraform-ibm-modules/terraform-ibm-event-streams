@@ -15,11 +15,12 @@ module "resource_group" {
 # KMS Key
 ######################################################################################################################
 locals {
-  kms_key_crn                      = var.existing_kms_key_crn != null ? var.existing_kms_key_crn : module.kms[0].keys[format("%s.%s", local.kms_key_ring_name, local.kms_key_name)].crn
+  create_new_kms_key               = var.kms_encryption_enabled && var.existing_kms_key_crn == null
+  kms_key_crn                      = !var.kms_encryption_enabled ? null : var.existing_kms_key_crn != null ? var.existing_kms_key_crn : module.kms[0].keys[format("%s.%s", local.kms_key_ring_name, local.kms_key_name)].crn
   kms_key_ring_name                = "${local.prefix}${var.kms_key_ring_name}"
   kms_key_name                     = "${local.prefix}${var.kms_key_name}"
   kms_region                       = var.existing_kms_instance_crn != null ? module.kms_instance_crn_parser[0].region : null
-  create_cross_account_auth_policy = !var.skip_event_streams_kms_auth_policy && var.ibmcloud_kms_api_key != null
+  create_cross_account_auth_policy = var.kms_encryption_enabled && !var.skip_event_streams_kms_auth_policy && var.ibmcloud_kms_api_key != null
 
   kms_service_name  = var.existing_kms_key_crn != null ? module.kms_key_crn_parser[0].service_name : (var.existing_kms_instance_crn != null ? module.kms_instance_crn_parser[0].service_name : null)
   kms_key_id        = var.existing_kms_key_crn != null ? module.kms_key_crn_parser[0].resource : (var.existing_kms_instance_crn != null ? module.kms_instance_crn_parser[0].resource : null)
@@ -101,14 +102,14 @@ module "kms" {
   providers = {
     ibm = ibm.kms
   }
-  count                       = var.existing_kms_key_crn == null ? 1 : 0 # no need to create any KMS resources if passing an existing key
+  count                       = local.create_new_kms_key ? 1 : 0 # no need to create any KMS resources if passing an existing key or if KMS encryption is disabled
   source                      = "terraform-ibm-modules/kms-all-inclusive/ibm"
   version                     = "5.6.15"
   create_key_protect_instance = false
   region                      = local.kms_region
   existing_kms_instance_crn   = var.existing_kms_instance_crn
-  key_ring_endpoint_type      = "private"
-  key_endpoint_type           = "private"
+  key_ring_endpoint_type      = var.kms_endpoint_type
+  key_endpoint_type           = var.kms_endpoint_type
   keys = [
     {
       key_ring_name     = local.kms_key_ring_name
@@ -173,7 +174,7 @@ module "event_streams" {
   es_name                           = "${local.prefix}${var.event_streams_name}"
   plan                              = "enterprise-gen2"
   region                            = var.region
-  kms_encryption_enabled            = true
+  kms_encryption_enabled            = var.kms_encryption_enabled
   kms_key_crn                       = local.kms_key_crn
   skip_kms_iam_authorization_policy = var.skip_event_streams_kms_auth_policy || local.create_cross_account_auth_policy
   topics                            = [] # topics are created below, after the VPE, because the instance is reachable only through the VPE

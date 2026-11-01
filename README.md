@@ -53,9 +53,9 @@ Key considerations when deploying Gen 2 instances:
   </li>
   <li><a href="https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions">Deployable Architectures</a>
     <ul>
+      <li><a href="https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/fully-configurable-gen2"> Cloud automation for Event Streams (Fully configurable Gen 2)</a></li>
       <li><a href="https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/quickstart"> Cloud automation for Event Streams (quickstart)</a></li>
       <li><a href="https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/security-enforced"> Cloud automation for Event Streams (Security-enforced)</a></li>
-      <li><a href="https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/security-enforced-gen2"> Cloud automation for Event Streams (Security-enforced Gen 2)</a></li>
     </ul>
   </li>
   <li><a href="#contributing">Contributing</a></li>

@@ -70,7 +70,7 @@ variable "topics" {
       config     = map(string)
     }
   ))
-  description = "The list of topics to apply to resources. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/security-enforced-gen2/DA-schemas-topics-cbr.md#options-with-topics)."
+  description = "The list of topics to apply to resources. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/fully-configurable-gen2/DA-schemas-topics-cbr.md#options-with-topics)."
   default     = []
 }
 
@@ -80,12 +80,12 @@ variable "quotas" {
     producer_byte_rate = optional(number, -1)
     consumer_byte_rate = optional(number, -1)
   }))
-  description = "Quotas to be applied to the Event Streams instance. Entity may be 'default' to apply to all users, or an IAM ServiceID for a specific user. Rates are bytes/second, with -1 meaning no quota. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/security-enforced-gen2/DA-types.md#quotas)"
+  description = "Quotas to be applied to the Event Streams instance. Entity may be 'default' to apply to all users, or an IAM ServiceID for a specific user. Rates are bytes/second, with -1 meaning no quota. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/fully-configurable-gen2/DA-types.md#quotas)"
   default     = []
 }
 
 variable "resource_keys" {
-  description = "A list of service credential resource keys to be created for the Event Streams instance. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/security-enforced-gen2/DA-types.md#resource-keys)."
+  description = "A list of service credential resource keys to be created for the Event Streams instance. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/fully-configurable-gen2/DA-types.md#resource-keys)."
   type = list(object({
     name     = string
     role     = optional(string, "Reader")
@@ -133,6 +133,23 @@ variable "throughput" {
 ########################################################################################################################
 # Key Protect
 ########################################################################################################################
+
+variable "kms_encryption_enabled" {
+  type        = bool
+  description = "Set to true to encrypt the Event Streams instance with a customer-managed key in Key Protect. When enabled, you must provide a value for `existing_kms_instance_crn` (to create a new key) or `existing_kms_key_crn` (to use an existing key). If set to false, IBM-owned encryption is used (i.e., encryption keys managed and held by IBM). The encryption key must be set when the instance is provisioned; it cannot be added to an existing instance."
+  default     = false
+  nullable    = false
+
+  validation {
+    condition     = !var.kms_encryption_enabled || var.existing_kms_instance_crn != null || var.existing_kms_key_crn != null
+    error_message = "When 'kms_encryption_enabled' is true, you must provide either 'existing_kms_instance_crn' (to create a new key) or 'existing_kms_key_crn' (to use an existing key)."
+  }
+
+  validation {
+    condition     = (var.existing_kms_instance_crn == null && var.existing_kms_key_crn == null) || var.kms_encryption_enabled
+    error_message = "When either 'existing_kms_instance_crn' or 'existing_kms_key_crn' is set, 'kms_encryption_enabled' must be set to true."
+  }
+}
 
 variable "skip_event_streams_kms_auth_policy" {
   type        = bool
@@ -182,6 +199,32 @@ variable "ibmcloud_kms_api_key" {
   description = "The IBM Cloud API key that can create a root key and key ring in the key management service (KMS) instance. If not specified, the 'ibmcloud_api_key' variable is used. Specify this key if the instance in `existing_kms_instance_crn` is in an account that's different from the Event Streams instance. Leave this input empty if the same account owns both instances."
   sensitive   = true
   default     = null
+}
+
+variable "kms_endpoint_type" {
+  type        = string
+  description = "The type of endpoint to use for communicating with the Key Protect instance. Possible values: `public`, `private`. Applies only if `existing_kms_key_crn` is not specified."
+  default     = "private"
+
+  validation {
+    condition     = contains(["public", "private"], var.kms_endpoint_type)
+    error_message = "The kms_endpoint_type value must be 'public' or 'private'."
+  }
+}
+
+##############################################################
+# Endpoint Configuration
+##############################################################
+
+variable "provider_visibility" {
+  type        = string
+  description = "Set the visibility value for the IBM terraform provider. Supported values are `public`, `private`, `public-and-private`. [Learn more](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/guides/custom-service-endpoints)."
+  default     = "private"
+
+  validation {
+    condition     = contains(["public", "private", "public-and-private"], var.provider_visibility)
+    error_message = "Invalid visibility option. Allowed values are 'public', 'private', or 'public-and-private'."
+  }
 }
 
 ##############################################################
@@ -255,7 +298,7 @@ variable "cbr_rules" {
     }))) }))
     enforcement_mode = string
   }))
-  description = "A single context-based restriction rule to create. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/security-enforced-gen2/DA-schemas-topics-cbr.md#options-with-cbr)."
+  description = "A single context-based restriction rule to create. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/fully-configurable-gen2/DA-schemas-topics-cbr.md#options-with-cbr)."
   default     = []
   nullable    = false
   # Additional validation happens in the rule module
@@ -301,7 +344,7 @@ variable "service_credential_secrets" {
   }))
   default     = []
   nullable    = false
-  description = "Service credential secrets configuration for Event Streams. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/security-enforced-gen2/DA-types.md#service-credential-secrets)."
+  description = "Service credential secrets configuration for Event Streams. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/tree/main/solutions/fully-configurable-gen2/DA-types.md#service-credential-secrets)."
   validation {
     # Service roles CRNs can be found at https://cloud.ibm.com/iam/roles, select Event Streams and select the role
     condition = alltrue([

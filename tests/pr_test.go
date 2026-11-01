@@ -21,7 +21,7 @@ const completeExampleTerraformDir = "examples/complete"
 const quickstartTerraformDir = "solutions/quickstart"
 const fsCloudTerraformDir = "examples/fscloud"
 const securityEnforcedDir = "solutions/security-enforced"
-const securityEnforcedGen2Dir = "solutions/security-enforced-gen2"
+const fullyConfigurableGen2Dir = "solutions/fully-configurable-gen2"
 const terraformVersion = "terraform_v1.12.2" // This should match the version in the ibm_catalog.json
 
 // Use existing group for tests
@@ -333,7 +333,7 @@ func TestSecurityEnforcedUpgradeSchematics(t *testing.T) {
 	}
 }
 
-func setupSecurityEnforcedGen2Options(t *testing.T, prefix string) *testschematic.TestSchematicOptions {
+func setupFullyConfigurableGen2Options(t *testing.T, prefix string) *testschematic.TestSchematicOptions {
 	agentResourceGroup := permanentResources["schematics_agent_resource_group"].(string)
 	resourceGroupID, err := sharedInfoSvc.GetResourceGroupIDByName(agentResourceGroup)
 	require.NoError(t, err, "Failed to get the ID of resource group %s", agentResourceGroup)
@@ -345,9 +345,9 @@ func setupSecurityEnforcedGen2Options(t *testing.T, prefix string) *testschemati
 		ResourceGroup:     resourceGroupID,
 		TarIncludePatterns: []string{
 			"*.tf",
-			securityEnforcedGen2Dir + "/*.tf",
+			fullyConfigurableGen2Dir + "/*.tf",
 		},
-		TemplateFolder:         securityEnforcedGen2Dir,
+		TemplateFolder:         fullyConfigurableGen2Dir,
 		Tags:                   []string{"test-schematic", permanentResources["schematics_agent_workspace_tag"].(string)},
 		DeleteWorkspaceOnFail:  false,
 		WaitJobCompleteMinutes: 360,
@@ -415,6 +415,7 @@ func setupSecurityEnforcedGen2Options(t *testing.T, prefix string) *testschemati
 		{Name: "prefix", Value: options.Prefix, DataType: "string"},
 		{Name: "region", Value: "us-south", DataType: "string"},
 		{Name: "existing_resource_group_name", Value: agentResourceGroup, DataType: "string"},
+		{Name: "kms_encryption_enabled", Value: true, DataType: "bool"},
 		{Name: "existing_kms_instance_crn", Value: permanentResources["kp_dedicated_us_south_crn"], DataType: "string"},
 		{Name: "vpe_vpc_id", Value: permanentResources["schematics_agent_vpc_id"], DataType: "string"},
 		{Name: "vpe_subnet_ids", Value: []string{permanentResources["schematics_agent_vpe_subnet_id"].(string)}, DataType: "list(string)"},
@@ -432,11 +433,11 @@ func setupSecurityEnforcedGen2Options(t *testing.T, prefix string) *testschemati
 	return options
 }
 
-// TestSecurityEnforcedGen2Schematics tests provisioning of the security-enforced-gen2 DA
-func TestSecurityEnforcedGen2Schematics(t *testing.T) {
+// TestFullyConfigurableGen2Schematics tests provisioning of the fully-configurable-gen2 DA
+func TestFullyConfigurableGen2Schematics(t *testing.T) {
 	t.Parallel()
 
-	options := setupSecurityEnforcedGen2Options(t, "es-sen-gen2")
+	options := setupFullyConfigurableGen2Options(t, "es-fc-gen2")
 	err := options.RunSchematicTest()
 	assert.Nil(t, err, "This should not have errored")
 }

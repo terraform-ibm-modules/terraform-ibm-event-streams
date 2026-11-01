@@ -1027,29 +1027,29 @@
           "ignore_readme": true
         },
         {
-          "label": "Security-enforced Gen 2 (VPC)",
-          "name": "security-enforced-gen2",
+          "label": "Fully configurable Gen 2 (VPC)",
+          "name": "fully-configurable-gen2",
           "index": 3,
           "install_type": "fullstack",
-          "working_directory": "solutions/security-enforced-gen2",
+          "working_directory": "solutions/fully-configurable-gen2",
           "release_notes_url": "https://github.com/terraform-ibm-modules/terraform-ibm-event-streams/releases",
-          "short_description": "Ideal for users who want locked down enforced security for IBM Cloud Event Streams on VPC (Gen2).",
+          "short_description": "Ideal for users who want flexibility with a reliable starting point for IBM Cloud Event Streams on VPC (Gen2).",
           "architecture": {
-            "descriptions": "This architecture supports provisioning and configuring a security enforced Event Streams Gen 2 instance.",
+            "descriptions": "This architecture supports provisioning and configuring a fully configurable Event Streams Gen 2 instance.",
             "features": [
               {
-                "title": "Security enforced variation",
-                "description": "Configured to use IBM Cloud Event Streams Gen 2 (VPC) by default standards that can't be changed."
+                "title": "Fully configurable variation",
+                "description": "Configured to use IBM Cloud Event Streams Gen 2 (VPC) with secure defaults; editable to fit your use case."
               }
             ],
             "diagrams": [
               {
                 "diagram": {
-                  "caption": "Event Streams Gen 2 Security Enforced topology",
+                  "caption": "Event Streams Gen 2 Fully Configurable topology",
                   "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-streams/main/reference-architectures/deployable-architecture-event-streams-security-enforced.svg",
                   "type": "image/svg+xml"
                 },
-                "description": "- Provisions a security enforced IBM Cloud® Event Streams Gen 2 (enterprise-gen2) environment.\n- Supports creation of Kafka topics and quotas.\n- Deploys resources within a defined region and resource group.\n- Enables customer-managed encryption using IBM Key Protect.\n- Allows use of an existing Key Protect instance and keys.\n- Creates a virtual private endpoint (VPE) in an existing VPC.\n- Supports Context-Based Restrictions (CBRs) to enforce secure access policies.\n- Provides a secure, event-driven messaging infrastructure on IBM Cloud."
+                "description": "- Provisions a configurable IBM Cloud® Event Streams Gen 2 (enterprise-gen2) environment.\n- Supports creation of Kafka topics and quotas.\n- Deploys resources within a defined region and resource group.\n- Enables customer-managed encryption using IBM Key Protect.\n- Allows use of an existing Key Protect instance and keys.\n- Creates a virtual private endpoint (VPE) in an existing VPC.\n- Supports Context-Based Restrictions (CBRs) to enforce secure access policies.\n- Provides a secure, event-driven messaging infrastructure on IBM Cloud."
               }
             ]
           },
@@ -1173,6 +1173,9 @@
               }
             },
             {
+              "key": "kms_encryption_enabled"
+            },
+            {
               "key": "skip_event_streams_kms_auth_policy"
             },
             {
@@ -1203,6 +1206,14 @@
             },
             {
               "key": "kms_key_ring_name"
+            },
+            {
+              "key": "kms_endpoint_type",
+              "hidden": true
+            },
+            {
+              "key": "provider_visibility",
+              "hidden": true
             },
             {
               "key": "storage_size"
@@ -1359,7 +1370,7 @@
               ],
               "catalog_id": "7a4d68b4-cf8b-40cd-a3d1-f49aff526eb3",
               "optional": true,
-              "on_by_default": true,
+              "on_by_default": false,
               "ignore_auto_referencing": [
                 "*"
               ],
