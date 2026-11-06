@@ -1543,7 +1543,7 @@
                   "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-streams/main/reference-architectures/deployable-architecture-event-streams-fully-configurable.svg",
                   "type": "image/svg+xml"
                 },
-                "description": "- Provisions a fully configurable IBM Cloud® Event Streams Gen 2 (enterprise-gen2) environment.\n- Supports creation of Kafka topics and quotas.\n- Deploys resources within a defined region and resource group.\n- Optionally enables customer-managed encryption using IBM Key Protect.\n- Allows use of an existing Key Protect instance and keys.\n- Optionally creates a virtual private endpoint (VPE) in an existing VPC. A VPE is required to create topics.\n- Optionally supports Context-Based Restrictions (CBRs) to enforce secure access policies.\n- Optionally stores service credentials in an existing Secrets Manager instance.\n- Provides a secure, event-driven messaging infrastructure on IBM Cloud."
+                "description": "- Provisions a fully configurable IBM Cloud® Event Streams Gen 2 (enterprise-gen2) instance.\n- Supports creation of Kafka topics and quotas.\n- Optionally enables customer-managed encryption using IBM Key Protect.\n- Optionally creates a virtual private endpoint (VPE) in an existing VPC."
               }
             ]
           },
