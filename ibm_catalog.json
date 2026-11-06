@@ -1536,16 +1536,7 @@
                 "description": "Configured to use IBM Cloud Event Streams Gen 2 (VPC) with secure defaults; editable to fit your use case."
               }
             ],
-            "diagrams": [
-              {
-                "diagram": {
-                  "caption": "Event Streams Gen 2 Fully Configurable topology",
-                  "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-event-streams/main/reference-architectures/deployable-architecture-event-streams-security-enforced.svg",
-                  "type": "image/svg+xml"
-                },
-                "description": "- Provisions a configurable IBM Cloud® Event Streams Gen 2 (enterprise-gen2) environment.\n- Supports creation of Kafka topics and quotas.\n- Deploys resources within a defined region and resource group.\n- Enables customer-managed encryption using IBM Key Protect.\n- Allows use of an existing Key Protect instance and keys.\n- Creates a virtual private endpoint (VPE) in an existing VPC.\n- Supports Context-Based Restrictions (CBRs) to enforce secure access policies.\n- Provides a secure, event-driven messaging infrastructure on IBM Cloud."
-              }
-            ]
+            "diagrams": []
           },
           "iam_permissions": [
             {
