@@ -8,8 +8,12 @@ import (
 
 	/*	"encoding/json" */
 
+	"github.com/IBM/go-sdk-core/v5/core"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/cloudinfo"
+	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/testaddons"
 	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/testschematic"
 )
 
@@ -189,4 +193,61 @@ func TestSecurityEnforcedSolutionInSchematics(t *testing.T) {
 	options := setupSecurityEnforcedOptions(t, "es-sen")
 	err := options.RunSchematicTest()
 	assert.Nil(t, err, "This should not have errored")
+}
+
+func TestEventStreamsDefaultConfiguration(t *testing.T) {
+	t.Parallel()
+
+	options := testaddons.TestAddonsOptionsDefault(&testaddons.TestAddonOptions{
+		Testing:               t,
+		Prefix:                "esdeft",
+		ResourceGroup:         resourceGroup,
+		QuietMode:             true, // Suppress logs except on failure
+		OverrideInputMappings: core.BoolPtr(true),
+	})
+
+	options.AddonConfig = cloudinfo.NewAddonConfigTerraform(
+		options.Prefix,
+		"deploy-arch-ibm-event-streams",
+		"quickstart",
+		map[string]interface{}{
+			"prefix":                       options.Prefix,
+			"existing_resource_group_name": resourceGroup,
+		},
+	)
+
+	// Disable target / route creation to prevent hitting quota in account
+	// Use existing SM instance to prevent hitting quota in account
+	options.AddonConfig.Dependencies = []cloudinfo.AddonConfig{
+		{
+			OfferingName:   "deploy-arch-ibm-cloud-monitoring",
+			OfferingFlavor: "fully-configurable",
+			Inputs: map[string]interface{}{
+				"enable_metrics_routing_to_cloud_monitoring": false,
+			},
+			Enabled: core.BoolPtr(true),
+		},
+		{
+			OfferingName:   "deploy-arch-ibm-activity-tracker",
+			OfferingFlavor: "fully-configurable",
+			Inputs: map[string]interface{}{
+				"enable_activity_tracker_event_routing_to_cloud_logs": false,
+			},
+			Enabled: core.BoolPtr(true),
+		},
+		{
+			OfferingName:   "deploy-arch-ibm-secrets-manager",
+			OfferingFlavor: "fully-configurable",
+			Inputs: map[string]interface{}{
+				"existing_secrets_manager_crn":         permanentResources["privateOnlySecMgrCRN"],
+				"service_plan":                         "__NULL__", // no plan value needed when using existing SM
+				"skip_secrets_manager_iam_auth_policy": true,       // since using an existing Secrets Manager instance, attempting to re-create auth policy can cause conflicts if the policy already exists
+				"secret_groups":                        []string{}, // passing empty array for secret groups as default value is creating general group and it will cause conflicts as we are using an existing SM
+			},
+			Enabled: core.BoolPtr(true),
+		},
+	}
+
+	err := options.RunAddonTest()
+	require.NoError(t, err)
 }
