@@ -551,6 +551,17 @@ func TestFullyConfigurableGen2Schematics(t *testing.T) {
 	assert.Nil(t, err, "This should not have errored")
 }
 
+// Upgrade test for fully-configurable-gen2 DA
+func TestFullyConfigurableGen2UpgradeSchematics(t *testing.T) {
+	t.Parallel()
+
+	options := setupFullyConfigurableGen2Options(t, "fc-up-g2")
+	err := options.RunSchematicUpgradeTest()
+	if !options.UpgradeTestSkipped {
+		assert.Nil(t, err, "This should not have errored")
+	}
+}
+
 func TestEventStreamsDefaultConfiguration(t *testing.T) {
 	t.Parallel()
 
