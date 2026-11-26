@@ -555,7 +555,7 @@ func TestFullyConfigurableGen2Schematics(t *testing.T) {
 func TestFullyConfigurableGen2UpgradeSchematics(t *testing.T) {
 	t.Parallel()
 
-	options := setupFullyConfigurableGen2Options(t, "es-fc-up-gen2")
+	options := setupFullyConfigurableGen2Options(t, "fc-up-g2")
 	err := options.RunSchematicUpgradeTest()
 	if !options.UpgradeTestSkipped {
 		assert.Nil(t, err, "This should not have errored")
